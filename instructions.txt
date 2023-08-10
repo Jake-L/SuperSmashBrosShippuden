@@ -1,0 +1,20 @@
+Instructions:
+
+Character Select:
+- Use the left thumbstick to move your token over the character you wish to play
+- Player 1 is red, player 2 is blue, player 3 is yellow, and player 4 is green
+- Once all players have selected their character, player 1 can press start to begin the game
+
+In game:
+- Use the left thumbstick to make your character move
+- Press X or Y to jump
+- Press A to do a basic attack
+- Press B to do a special attack
+- Press up on the d-pad as Luigi to dance
+
+The idea of this game is to knock your enemies off the screen. Each time you attack them, their damage will increase, 
+which is indicated at the bottom of the screen. The more damage someone has taken, the further they will go flying 
+when you hit them. If you get knocked off the stage, remember to jump back on right away. Each match lasts two minutes,
+and will then display each player's score. You earn points each time you get a kill, and lose points each time you die.  
+
+If only one player selects a character, a computer controlled character will appear to fight them. 
