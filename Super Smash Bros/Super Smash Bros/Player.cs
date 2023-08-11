@@ -183,7 +183,7 @@ namespace Super_Smash_Bros
                 widthScaling = 1.7f;
             }
 
-            if (character == "Charizard" || character == "CharizardX")
+            if (character == "Charizard")
             {
                 spriteAttack1Length = 4;
                 spriteAttack2Length = 4;
@@ -660,7 +660,7 @@ namespace Super_Smash_Bros
             }
 
             //Charizard fires a projectile
-            if ((character == "Charizard" || character == "CharizardX") && counterSprite == 2 && counter % counterSpriteModifier == 0)
+            if ((character == "Charizard") && counterSprite == 2 && counter % counterSpriteModifier == 0)
             {
                 if (direction == "Left")
                 {

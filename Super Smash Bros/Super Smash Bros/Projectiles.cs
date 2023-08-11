@@ -174,7 +174,7 @@ namespace Super_Smash_Bros
                         ProjectileLeft[i] = content.Load<Texture2D>("Blastoise/blastoiseWaterLeft" + (i + 1));
                         ProjectileRight[i] = content.Load<Texture2D>("Blastoise/blastoiseWaterRight" + (i + 1));
                     }
-                    if (character == "Charizard" || character == "CharizardX")
+                    if (character == "Charizard")
                     {
                         ProjectileLeft[i] = content.Load<Texture2D>(character + "/fireLeft" + (i + 1));
                         ProjectileRight[i] = content.Load<Texture2D>(character + "/fireRight" + (i + 1));

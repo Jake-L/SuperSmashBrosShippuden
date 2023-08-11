@@ -48,7 +48,6 @@ namespace Super_Smash_Bros
         int stagetimer = 0;
         Random NumberGenerator = new Random();
         bool player2Bot = false;
-        bool[] charizardx = new bool[4] { false, false, false, false };
 
 
         //background images
@@ -346,7 +345,7 @@ namespace Super_Smash_Bros
                     {
                         if (character[i] != null && picBoxWidthScaling[i] == 0)
                         {
-                            if (character[i] == "Knuckles" || character[i] == "Mewtwo" || character[i] == "King" || character[i] == "Sonic" || character[i] == "Pichu" || character[i] == "Charizard" || character[i] == "CharizardX")
+                            if (character[i] == "Knuckles" || character[i] == "Mewtwo" || character[i] == "King" || character[i] == "Sonic" || character[i] == "Pichu" || character[i] == "Charizard")
                             {
                                 picBoxWidthScaling[i] = (PlayerPicBox[i].Width / 5);
                             }
@@ -445,15 +444,6 @@ namespace Super_Smash_Bros
                 dy[0] = 4;
             }
 
-            if (pad1.Buttons.RightShoulder == ButtonState.Pressed)
-            {
-                charizardx[0] = true;
-            }
-
-            if (pad1.Buttons.LeftShoulder == ButtonState.Pressed)
-            {
-                charizardx[0] = false;
-            }
 
             //get input for player 2
             if (pad2.ThumbSticks.Left.X > 0)
@@ -476,15 +466,6 @@ namespace Super_Smash_Bros
                 dy[1] = 4;
             }
 
-            if (pad2.Buttons.RightShoulder == ButtonState.Pressed)
-            {
-                charizardx[1] = true;
-            }
-
-            if (pad2.Buttons.LeftShoulder == ButtonState.Pressed)
-            {
-                charizardx[1] = false;
-            }
 
             //get input for player 3
             if (pad3.ThumbSticks.Left.X > 0)
@@ -550,11 +531,6 @@ namespace Super_Smash_Bros
                             if (midPointX[i] > characterIconsRectangle[j].Left && midPointX[i] < characterIconsRectangle[j].Right && midPointY[i] > characterIconsRectangle[j].Top && midPointY[i] < characterIconsRectangle[j].Bottom)
                             {
                                 tempCharacter[i] = charNum[j];
-                            }
-
-                            if (tempCharacter[i] == "Charizard" && charizardx[i] == true)
-                            {
-                                tempCharacter[i] = "CharizardX";
                             }
                         }
                     }
@@ -704,7 +680,7 @@ namespace Super_Smash_Bros
                     attackType[i] = PlayerClass[i].attackType();
 
                     //deal different amounts of damage based on who the character is
-                    if (attackType[i] == 1 || (attackType[i] == 2 && (character[i] == "Seiar" || character[i] == "Knuckles" || character[i] == "Kirby" || character[i] == "Link")))
+                    if (attackType[i] == 1 || (attackType[i] == 2 && (character[i] == "Knuckles" || character[i] == "Kirby" || character[i] == "Link")))
                     {
                         if (character[i] == "Mario")
                         {

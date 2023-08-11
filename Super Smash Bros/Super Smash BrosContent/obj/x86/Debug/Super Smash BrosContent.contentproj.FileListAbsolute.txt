@@ -13,3 +13,4 @@ F:\Super Smash Bros 4\Super Smash Bros - Classes - Copy - Copy\Super Smash Bros\
 E:\Super Smash Bros 4\Super Smash Bros\Super Smash Bros\Super Smash BrosContent\obj\x86\Debug\Super Smash BrosContent.contentprojResolveAssemblyReference.cache
 C:\Users\ryand_000\Documents\Smash Bros Backups\Super Smash Bros 4\Super Smash Bros\Super Smash Bros\Super Smash BrosContent\obj\x86\Debug\Super Smash BrosContent.contentprojResolveAssemblyReference.cache
 C:\Users\ryand_000\Documents\My Games\Smash Bros Backups\Super Smash Bros 4\Super Smash Bros\Super Smash Bros\Super Smash BrosContent\obj\x86\Debug\Super Smash BrosContent.contentprojResolveAssemblyReference.cache
+C:\Users\Jake\Github\SuperSmashBrosShippuden\Super Smash Bros\Super Smash BrosContent\obj\x86\Debug\Super Smash BrosContent.contentprojResolveAssemblyReference.cache
