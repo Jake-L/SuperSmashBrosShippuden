@@ -21,6 +21,9 @@ namespace Super_Smash_Bros
         int startpointX;
         int startpointbot;
         int counter;
+        int dx = 0;
+        int damage;
+        int knockback;
 
         Texture2D[] ProjectileLeft;
         Texture2D[] ProjectileRight;
@@ -46,22 +49,25 @@ namespace Super_Smash_Bros
             startpointX = newRectangle.Left + (newRectangle.Width / 2);
             startpointbot = newRectangle.Bottom;
 
-            if (character == "Mewtwo")
+            if (character == "Blastoise") 
             {
-                spriteLength = 2;
+                damage = 4;
+                knockback = 0;
             }
-            if (character == "Luigi" || character == "Mario" || character == "Blastoise" || character == "Charizard" || character == "CharizardX")
+            else if (character == "Mario" || character == "Luigi")
             {
-                spriteLength = 4;
+                damage = 4;
+                knockback = 0;
             }
-            if (character == "Pichu")
+            else if (character == "Mewtwo")
             {
-                PichuCloudDraw = content.Load<Texture2D>("Pichu/cloud1");
+                damage = 4;
+                knockback = 1;
             }
-            else
+            else if (character == "Pichu")
             {
-                ProjectileLeft = new Texture2D[spriteLength];
-                ProjectileRight = new Texture2D[spriteLength];
+                damage = 2;
+                knockback = 1;
             }
             
             Initialize();
@@ -69,48 +75,27 @@ namespace Super_Smash_Bros
 
         public void Update(GameTime gameTime)
         {      
-            if (character == "Mewtwo" || character == "Blastoise" || character == "Charizard" || character == "CharizardX")
+            if (character != "Pichu")
             {
                 if (direction == "Left")
                 {
-                    texture = ProjectileLeft[(gameTime.TotalGameTime.Milliseconds / 100) % 2];
+                    texture = ProjectileLeft[(gameTime.TotalGameTime.Milliseconds / 100) % spriteLength];
+                    rectangle.X -= dx;
                 }
 
                 if (direction == "Right")
                 {
-                    texture = ProjectileRight[(gameTime.TotalGameTime.Milliseconds / 100) % 2];
+                    texture = ProjectileRight[(gameTime.TotalGameTime.Milliseconds / 100) % spriteLength];
+                    rectangle.X += dx;
                 }
-            }
 
-            if (character == "Mario")
-            {
-                texture = ProjectileLeft[(gameTime.TotalGameTime.Milliseconds / 100) % 4];
-                rectangle.Y = startpointY + (int)(Math.Sin((gameTime.TotalGameTime.Milliseconds / 100)) * 15); 
-            }
-
-            if (character == "Luigi")
-            {
-                texture = ProjectileLeft[(gameTime.TotalGameTime.Milliseconds / 100) % 4];
-                rectangle.Y = startpointY + (int)(Math.Sin((gameTime.TotalGameTime.Milliseconds / 100)) * 15);  
-            }
-
-            if (character != "Pichu")
-            {
                 rectangle.Width = ProjectileLeft[0].Width * 4;
                 rectangle.Height = ProjectileLeft[0].Height * 4;
             }
 
-            if (character == "Mewtwo")
+            if (new [] {"Mario", "Luigi", "Mewtwo"}.Contains(character))
             {
-                if (direction == "Right")
-                {
-                    rectangle.X += 6;
-                }
-
-                if (direction == "Left")
-                {
-                    rectangle.X -= 6;
-                }
+                rectangle.Y = startpointY + (int)(Math.Sin((gameTime.TotalGameTime.Milliseconds / 100)) * 20); 
             }
 
             else if (character == "Pichu")
@@ -121,30 +106,26 @@ namespace Super_Smash_Bros
                 }
                 Pichu();
             }
-
-            else if (direction == "Right" && character != "Blastoise")
-            {
-                rectangle.X += 4;
-            }
-
-            else if (direction == "Left" && character != "Blastoise")
-            {
-                rectangle.X -= 4;
-            }
         }
 
         public void Initialize()
         {
             if (character == "Mewtwo")
             {
+                spriteLength = 2;
+                ProjectileLeft = new Texture2D[spriteLength];
+                ProjectileRight = new Texture2D[spriteLength];
                 ProjectileLeft[0] = content.Load<Texture2D>("Mewtwo/mewtwoBallLeft1");
                 ProjectileLeft[1] = content.Load<Texture2D>("Mewtwo/mewtwoBallLeft2");
                 ProjectileRight[0] = content.Load<Texture2D>("Mewtwo/mewtwoBallRight1");
                 ProjectileRight[1] = content.Load<Texture2D>("Mewtwo/mewtwoBallRight2");
+                
+                dx = 6;
             }
 
             else if (character == "Pichu")
             {
+                PichuCloudDraw = content.Load<Texture2D>("Pichu/cloud1");
                 PichuCloud[0] = content.Load<Texture2D>("Pichu/cloud1");
                 PichuCloud[1] = content.Load<Texture2D>("Pichu/cloud2");
                 PichuCloud[2] = content.Load<Texture2D>("Pichu/cloud3");
@@ -159,15 +140,27 @@ namespace Super_Smash_Bros
 
             else
             {
-                for (int i = 0; i < 4; i++)
+                if (character != "Blastoise")
+                {
+                    dx = 4;
+                }
+                spriteLength = 4;
+                ProjectileLeft = new Texture2D[spriteLength];
+                ProjectileRight = new Texture2D[spriteLength];
+                Console.Write(spriteLength);
+
+                for (int i = 0; i < spriteLength; i++)
                 {
                     if (character == "Mario")
                     {
+                        Console.Write("loading fireball");
                         ProjectileLeft[i] = content.Load<Texture2D>("Mario/marioFire" + (i + 1));
+                        ProjectileRight[i] = content.Load<Texture2D>("Mario/marioFire" + (i + 1));
                     }
                     if (character == "Luigi")
                     {
                         ProjectileLeft[i] = content.Load<Texture2D>("Luigi/luigiFire" + (i + 1));
+                        ProjectileRight[i] = content.Load<Texture2D>("Mario/marioFire" + (i + 1));
                     }
                     if (character == "Blastoise")
                     {

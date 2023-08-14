@@ -73,7 +73,7 @@ namespace Super_Smash_Bros
         //Displaying the characters
         Rectangle[] PlayerPicBox = new Rectangle[4];
         Rectangle[] ProjectPicBox = new Rectangle[4];
-        Player[] PlayerClass = new Player[4];
+        Character[] PlayerClass = new Character[4];
 
         //create waddledees
         Enemy[] waddle = new Enemy[12];
@@ -323,7 +323,7 @@ namespace Super_Smash_Bros
                             {
                                 if (waddle[j] == null)
                                 {
-                                    waddle[j] = new Enemy(new Rectangle(PlayerPicBox[i].X + (PlayerPicBox[i].Width / 2), PlayerPicBox[i].Y + (PlayerPicBox[i].Height / 2), 100, 100), null, i, "waddle", Content, displayWidth, displayHeight, finalDestinationRec, stageHeightAdjustment);
+                                    waddle[j] = new Enemy(new Rectangle(PlayerPicBox[i].X + (PlayerPicBox[i].Width / 2), PlayerPicBox[i].Y + (PlayerPicBox[i].Height / 2), 56, 52), null, "Left", i, "waddle", Content, displayWidth, displayHeight, finalDestinationRec, stageHeightAdjustment, true);
                                     break;
                                 }
                             }
@@ -649,11 +649,11 @@ namespace Super_Smash_Bros
                             {
                                 if (character[k] != null)
                                 {
-                                    PlayerClass[k] = new Player(PlayerPicBox[k], null, direction[k], k, character[k], Content, displayWidth, displayHeight, finalDestinationRec, stageHeightAdjustment, false);
+                                    PlayerClass[k] = new Character(PlayerPicBox[k], null, direction[k], k, character[k], Content, displayWidth, displayHeight, finalDestinationRec, stageHeightAdjustment, false);
 
                                     if (character[k] == "Pichu")
                                     {
-                                        pichuBro[k] = new Enemy(new Rectangle(PlayerPicBox[k].X - 50, PlayerPicBox[k].Y, PlayerPicBox[k].Width, PlayerPicBox[k].Height), null, k, character[k], Content, displayWidth, displayHeight, finalDestinationRec, stageHeightAdjustment);
+                                        pichuBro[k] = new Enemy(new Rectangle(PlayerPicBox[k].X - 50, PlayerPicBox[k].Y, PlayerPicBox[k].Width, PlayerPicBox[k].Height), null, "Left", k, character[k], Content, displayWidth, displayHeight, finalDestinationRec, stageHeightAdjustment, true);
                                     }
                                 }
                             }
@@ -662,7 +662,7 @@ namespace Super_Smash_Bros
                             {
                                 player2Bot = true;
                                 character[1] = "Mario";
-                                PlayerClass[1] = new Player(PlayerPicBox[1], null, direction[1], 1, character[1], Content, displayWidth, displayHeight, finalDestinationRec, stageHeightAdjustment, true);
+                                PlayerClass[1] = new Character(PlayerPicBox[1], null, direction[1], 1, character[1], Content, displayWidth, displayHeight, finalDestinationRec, stageHeightAdjustment, true);
                             }
                         }
                     }
@@ -983,11 +983,11 @@ namespace Super_Smash_Bros
                         {
                             if (intersection(PlayerPicBox[j], waddle[i].setRec(), 0, "Left"))//(PlayerPicBox[j].Left < waddle[i].setRec().Right && PlayerPicBox[j].Left > waddle[i].setRec().Left && direction[j] == "Left") 
                             {
-                                waddle[i].takeDamage(100, -10);
+                                waddle[i].getDamage(100, -10);
                             }
                             else if (intersection(PlayerPicBox[j], waddle[i].setRec(), 0, "Right"))//(PlayerPicBox[j].Right < waddle[i].setRec().Right && PlayerPicBox[j].Right > waddle[i].setRec().Left && direction[j] == "Right") 
                             {
-                                waddle[i].takeDamage(100, 10);
+                                waddle[i].getDamage(100, 10);
                             }
                         }
 
@@ -996,12 +996,12 @@ namespace Super_Smash_Bros
                         {
                             if (intersection(ProjectPicBox[j], waddle[i].setRec(), 0, "Left")) //(ProjectPicBox[j].Left < waddle[i].setRec().Right && ProjectPicBox[j].Left > waddle[i].setRec().Left)
                             {
-                                waddle[i].takeDamage(100, -10);
+                                waddle[i].getDamage(100, -10);
                                 PlayerClass[j].destroyProjectileRec();
                             }
                             else if (intersection(ProjectPicBox[j], waddle[i].setRec(), 0, "Right"))//(ProjectPicBox[j].Right < waddle[i].setRec().Right && ProjectPicBox[j].Right > waddle[i].setRec().Left)
                             {
-                                waddle[i].takeDamage(100, 10);
+                                waddle[i].getDamage(100, 10);
                                 PlayerClass[j].destroyProjectileRec();
                             }
                         }
@@ -1021,7 +1021,7 @@ namespace Super_Smash_Bros
                     }
 
                     //check if a waddle has died
-                    if (waddle[i].enemyIsDead() == true)
+                    if (waddle[i].setDeath() == true)
                     {
                         waddle[i] = null;
                     }
@@ -1059,11 +1059,11 @@ namespace Super_Smash_Bros
                         {
                             if (intersection(PlayerPicBox[j], pichuBro[i].setRec(), 0, "Left") && direction[j] == "Left")
                             {
-                                pichuBro[i].takeDamage(10, -2);
+                                pichuBro[i].getDamage(10, -2);
                             }
                             else if (intersection(PlayerPicBox[j], pichuBro[i].setRec(), 0, "Right") && direction[j] == "Right")
                             {
-                                pichuBro[i].takeDamage(10, 2);
+                                pichuBro[i].getDamage(10, 2);
                             }
                         }
 
@@ -1072,12 +1072,12 @@ namespace Super_Smash_Bros
                         {
                             if (intersection(ProjectPicBox[j], pichuBro[i].setRec(), 0, "Left"))
                             {
-                                pichuBro[i].takeDamage(6, 0);
+                                pichuBro[i].getDamage(6, 0);
                                 PlayerClass[j].destroyProjectileRec();
                             }
                             else if (intersection(ProjectPicBox[j], pichuBro[i].setRec(), 0, "Right"))
                             {
-                                pichuBro[i].takeDamage(6,0);
+                                pichuBro[i].getDamage(6,0);
                                 PlayerClass[j].destroyProjectileRec();
                             }
                         }
@@ -1087,7 +1087,7 @@ namespace Super_Smash_Bros
                         {
                             if (intersection(pichuBro[i].setRec(), PlayerPicBox[j], picBoxWidthScaling[j], "Left"))
                             {
-                                if (pichuBro[i].isAttacking())
+                                if (pichuBro[i].attackType() > 0)
                                 {
                                     PlayerClass[j].getDamage(5, -1);
                                 }
@@ -1098,7 +1098,7 @@ namespace Super_Smash_Bros
                             }
                             else if (intersection(pichuBro[i].setRec(), PlayerPicBox[j], picBoxWidthScaling[j], "Right"))
                             {
-                                if (pichuBro[i].isAttacking())
+                                if (pichuBro[i].attackType() > 0)
                                 {
                                     PlayerClass[j].getDamage(5, 1);
                                 }
@@ -1125,7 +1125,7 @@ namespace Super_Smash_Bros
                     }
 
                     //check if pichu has died
-                    if (pichuBro[i].enemyIsDead() == true)
+                    if (pichuBro[i].setDeath() == true)
                     {
                         pichuBro[i] = null;
                     }
@@ -1219,7 +1219,7 @@ namespace Super_Smash_Bros
                                 pichuBro[i] = null;
                             }
 
-                            pichuBro[i] = new Enemy(new Rectangle(PlayerPicBox[i].X - 50, PlayerPicBox[i].Y, PlayerPicBox[i].Width, PlayerPicBox[i].Height), null, i, character[i], Content, displayWidth, displayHeight, finalDestinationRec, stageHeightAdjustment);
+                            pichuBro[i] = new Enemy(new Rectangle(PlayerPicBox[i].X - 50, PlayerPicBox[i].Y, PlayerPicBox[i].Width, PlayerPicBox[i].Height), null, "Left", i, character[i], Content, displayWidth, displayHeight, finalDestinationRec, stageHeightAdjustment, true);
                         }
                     }
                 }
@@ -1330,7 +1330,6 @@ namespace Super_Smash_Bros
                     if (pichuBro[i] != null)
                     {
                         pichuBro[i].Draw(spriteBatch);
-                        pichuBro[i].Draw2(spriteBatch);
                     }
                 }
             }

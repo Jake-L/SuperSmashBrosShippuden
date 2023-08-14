@@ -7468,6 +7468,24 @@
       <Extra>C:\Users\Jake\Github\SuperSmashBrosShippuden\Super Smash Bros\Super Smash Bros\bin\x86\Debug\Content\smashtrailer.wmv</Extra>
       <Time>2023-08-10T17:20:03.0266755-04:00</Time>
     </Item>
+    <Item>
+      <Source>waddle\waddleJumpLeft.png</Source>
+      <Name>waddle\waddleJumpLeft</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Jake\Github\SuperSmashBrosShippuden\Super Smash Bros\Super Smash Bros\bin\x86\Debug\Content\waddle\waddleJumpLeft.xnb</Output>
+      <Time>2023-08-10T17:20:03.0579255-04:00</Time>
+    </Item>
+    <Item>
+      <Source>waddle\waddleJumpRight.png</Source>
+      <Name>waddle\waddleJumpRight</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Jake\Github\SuperSmashBrosShippuden\Super Smash Bros\Super Smash Bros\bin\x86\Debug\Content\waddle\waddleJumpRight.xnb</Output>
+      <Time>2023-08-10T17:20:03.0579255-04:00</Time>
+    </Item>
     <BuildSuccessful>true</BuildSuccessful>
     <Settings>
       <TargetPlatform>Windows</TargetPlatform>
