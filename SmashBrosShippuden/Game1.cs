@@ -1,21 +1,15 @@
-//Jake Loftus
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.GamerServices;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using System;
 
-namespace Super_Smash_Bros
+namespace SmashBrosShippuden
 {
-    public class Game1 : Microsoft.Xna.Framework.Game
+    public class Game1 : Game
     {
-        GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
+        private GraphicsDeviceManager _graphics;
+        private SpriteBatch _spriteBatch;
 
         GamePadState pad1;
         GamePadState pad2;
@@ -23,9 +17,9 @@ namespace Super_Smash_Bros
         GamePadState pad4;
 
         //variables to make the game work
-        string[] character = new string[4]; 
+        string[] character = new string[4];
         string[] tempCharacter = new string[4];
-        string[] direction = new string[4] {"Right", "Right", "Left", "Left"};
+        string[] direction = new string[4] { "Right", "Right", "Left", "Left" };
         string[] charNum; //= new string[10];
         int[] attackType = new int[4];
         int numberPlayers = 1;
@@ -51,7 +45,7 @@ namespace Super_Smash_Bros
 
 
         //background images
-        Texture2D[] finalDestination = new Texture2D[5];        
+        Texture2D[] finalDestination = new Texture2D[5];
         Texture2D background;
         Rectangle finalDestinationRec;
         Rectangle backgroundRec;
@@ -83,7 +77,7 @@ namespace Super_Smash_Bros
         //display settings
         int displayWidth;
         int displayHeight;
-        
+
         /*
         //opening trailer
         Video video;
@@ -100,27 +94,26 @@ namespace Super_Smash_Bros
         System.IO.StreamReader read;
         int plays = 0;
         string address = "";
-                
+
         public Game1()
         {
-            graphics = new GraphicsDeviceManager(this);
+            _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-
+            IsMouseVisible = true;
         }
 
-        //setting screen size
         protected override void Initialize()
         {
             //Set the size of the window
             background = this.Content.Load<Texture2D>("background");
-            this.graphics.PreferredBackBufferHeight = 720; // (int)((GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width / (double)background.Width) * (double)background.Height);
-            this.graphics.PreferredBackBufferWidth = 1280; //GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
-            this.graphics.ApplyChanges();  
+            this._graphics.PreferredBackBufferHeight = 720; // (int)((GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width / (double)background.Width) * (double)background.Height);
+            this._graphics.PreferredBackBufferWidth = 1280; //GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+            this._graphics.ApplyChanges();
 
             //Display settings
             displayWidth = GraphicsDevice.Viewport.Width;
             displayHeight = GraphicsDevice.Viewport.Height;
-            
+
             //load fonts
             font1 = Content.Load<SpriteFont>("SpriteFont1");
 
@@ -150,7 +143,7 @@ namespace Super_Smash_Bros
 
             //prepare text writing variables
             address = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            
+
             if (System.IO.File.Exists(address + "\\smashbros.txt"))
             {
                 read = new System.IO.StreamReader(address + "\\smashbros.txt");
@@ -184,10 +177,9 @@ namespace Super_Smash_Bros
             base.Initialize();
         }
 
-        //loading images
         protected override void LoadContent()
         {
-            spriteBatch = new SpriteBatch(GraphicsDevice);
+            _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             for (int i = 0; i < charNum.Length; i++)
             {
@@ -203,7 +195,7 @@ namespace Super_Smash_Bros
             charSelectTokens[1] = this.Content.Load<Texture2D>("Icon/player2Icon");
             charSelectTokens[2] = this.Content.Load<Texture2D>("Icon/player3Icon");
             charSelectTokens[3] = this.Content.Load<Texture2D>("Icon/player4Icon");
-            
+
             //rectangles to display the characters artwork
             characterSplashRec[0] = new Rectangle(50, (displayHeight * 3) / 5, characterSplash[0].Width / 2, characterSplash[0].Height / 2);
             characterSplashRec[1] = new Rectangle(((displayWidth) / 5) + 50, (displayHeight * 3) / 5, characterSplash[0].Width / 2, characterSplash[0].Height / 2);
@@ -211,7 +203,7 @@ namespace Super_Smash_Bros
             characterSplashRec[3] = new Rectangle(((displayWidth * 3) / 5) + 50, (displayHeight * 3) / 5, characterSplash[0].Width / 2, characterSplash[0].Height / 2);
 
             //loading character select backgrounds
-            for (int i = 0; i < characterSelect.Length; i++) 
+            for (int i = 0; i < characterSelect.Length; i++)
             {
                 characterSelect[i] = this.Content.Load<Texture2D>("characterselectbox" + (i + 1));
                 characterSelectRec[i] = new Rectangle(((displayWidth * i) / 5) + 20, (displayHeight * 3) / 5, characterSelect[i].Width, characterSelect[i].Height);
@@ -231,8 +223,8 @@ namespace Super_Smash_Bros
             charSelectTokensRec[0] = new Rectangle(100, 100, charSelectTokens[0].Width * 2, charSelectTokens[0].Height * 2);
             charSelectTokensRec[1] = new Rectangle(100, 150, charSelectTokens[1].Width * 2, charSelectTokens[1].Height * 2);
             charSelectTokensRec[2] = new Rectangle(100, 200, charSelectTokens[2].Width * 2, charSelectTokens[2].Height * 2);
-            charSelectTokensRec[3] = new Rectangle(100, 250, charSelectTokens[3].Width * 2, charSelectTokens[3].Height * 2);    
-        
+            charSelectTokensRec[3] = new Rectangle(100, 250, charSelectTokens[3].Width * 2, charSelectTokens[3].Height * 2);
+
             //create icons for the stage select screen
             stageIcons[0] = this.Content.Load<Texture2D>("stageicon1");
             stageIcons[1] = this.Content.Load<Texture2D>("stageicon2");
@@ -256,23 +248,13 @@ namespace Super_Smash_Bros
 
             //creating the waddle dee
             waddleSprite = this.Content.Load<Texture2D>("waddle/waddleRunLeft1");
-
-            /*
-            //trailer
-            video = this.Content.Load<Video>("smashtrailer");
-            mediaPlayer = new VideoPlayer();
-            mediaPlayer.Play(video); */
-        }
-        
-        //delete things when program closes (DONT TOUCH)
-        protected override void UnloadContent()
-        {
-
         }
 
-        //this is where everything is run and methods are called
         protected override void Update(GameTime gameTime)
         {
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+                Exit();
+
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
 
@@ -284,7 +266,7 @@ namespace Super_Smash_Bros
 
             //show character select screen
             if (character[0] == null || stage == 0)
-            {   
+            {
                 /*
                 if (mediaPlayer.State == MediaState.Playing && pad1.Buttons.Start == ButtonState.Pressed)
                 {
@@ -330,14 +312,14 @@ namespace Super_Smash_Bros
                         }
                     }
                 }
-                
+
                 lives();
 
                 damage();
                 damageWaddle(gameTime);
                 damagePichu(gameTime);
-                
-                
+
+
                 //correcting hitboxes, only character not adjusted here is blastoise
                 if (counter == 1)
                 {
@@ -392,11 +374,11 @@ namespace Super_Smash_Bros
                     counter = 0;
                 }
             }
-            
+
             if (counter % 5 == 0)
-                {
-                    counterAnimation++;
-                }
+            {
+                counterAnimation++;
+            }
 
 
             if (MediaPlayer.State != MediaState.Playing && stage != 0)
@@ -410,7 +392,7 @@ namespace Super_Smash_Bros
 
                 MediaPlayer.Play(backgroundMusic[song]);
             }
-        
+
             //control the bot
             if (player2Bot == true)
             {
@@ -669,7 +651,7 @@ namespace Super_Smash_Bros
                 }
             }
         }
-            
+
         //massive damage
         public void damage()
         {
@@ -734,7 +716,7 @@ namespace Super_Smash_Bros
                         {
                             damageDealt = 8;
                             knockbackAbility = 1;
-                        } 
+                        }
                         if (character[i] == "Charizard")
                         {
                             damageDealt = 10;
@@ -1077,7 +1059,7 @@ namespace Super_Smash_Bros
                             }
                             else if (intersection(ProjectPicBox[j], pichuBro[i].setRec(), 0, "Right"))
                             {
-                                pichuBro[i].getDamage(6,0);
+                                pichuBro[i].getDamage(6, 0);
                                 PlayerClass[j].destroyProjectileRec();
                             }
                         }
@@ -1231,26 +1213,26 @@ namespace Super_Smash_Bros
         {
             GraphicsDevice.Clear(Color.LightSlateGray);
 
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise);
+            _spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise);
             /*
             //character select screen
             if (mediaPlayer.State == MediaState.Playing)
             {                
                 background = mediaPlayer.GetTexture();
-                spriteBatch.Draw(background, backgroundRec, Color.White);
+                _spriteBatch.Draw(background, backgroundRec, Color.White);
             }*/
             if (character[0] == null)
             {
                 for (int i = 0; i < charNum.Length; i++)
                 {
-                    spriteBatch.Draw(characterIcons[i], characterIconsRectangle[i], Color.White);
-                }                
-                
+                    _spriteBatch.Draw(characterIcons[i], characterIconsRectangle[i], Color.White);
+                }
+
                 for (int i = 0; i < numberPlayers; i++)
                 {
-                    spriteBatch.Draw(characterSelect[i], characterSelectRec[i], Color.White);
-                    spriteBatch.Draw(charSelectTokens[i], charSelectTokensRec[i], Color.White);
-                }                
+                    _spriteBatch.Draw(characterSelect[i], characterSelectRec[i], Color.White);
+                    _spriteBatch.Draw(charSelectTokens[i], charSelectTokensRec[i], Color.White);
+                }
 
                 //display their character portrait
                 for (int i = 0; i < numberPlayers; i++)
@@ -1259,7 +1241,7 @@ namespace Super_Smash_Bros
                     {
                         if (tempCharacter[i] == charNum[j])
                         {
-                            spriteBatch.Draw(characterSplash[j], characterSplashRec[i], Color.White);
+                            _spriteBatch.Draw(characterSplash[j], characterSplashRec[i], Color.White);
                         }
                     }
                 }
@@ -1269,67 +1251,67 @@ namespace Super_Smash_Bros
             {
                 for (int i = 0; i < stageIconsRec.Length; i++)
                 {
-                    spriteBatch.Draw(stageIcons[i], stageIconsRec[i], Color.White);
+                    _spriteBatch.Draw(stageIcons[i], stageIconsRec[i], Color.White);
                 }
 
-                spriteBatch.Draw(charSelectTokens[0], charSelectTokensRec[0], Color.White);
+                _spriteBatch.Draw(charSelectTokens[0], charSelectTokensRec[0], Color.White);
             }
 
             else if (counter < 7200)
             {
                 //backgrounds
-                spriteBatch.Draw(background, backgroundRec, Color.White);
-                spriteBatch.Draw(finalDestination[(counterAnimation % 5)], finalDestinationRec, Color.White);
+                _spriteBatch.Draw(background, backgroundRec, Color.White);
+                _spriteBatch.Draw(finalDestination[(counterAnimation % 5)], finalDestinationRec, Color.White);
 
                 //health
                 for (int i = 0; i < 4; i++)
                 {
                     if (character[i] != null)
                     {
-                        PlayerClass[i].DrawText(spriteBatch);
+                        PlayerClass[i].DrawText(_spriteBatch);
                     }
                 }
 
                 //display a timer at the top of the screen
                 if ((((7200 - counter) / 60) % 60) > 9)
                 {
-                    spriteBatch.DrawString(font1, (((7200 - counter) / 3600).ToString() + ":" + (((7200 - counter) / 60) % 60)), new Vector2(5 + (displayWidth * 2 / 5), 5 + (displayHeight / 20)), Color.Black);
-                    spriteBatch.DrawString(font1, (((7200 - counter) / 3600).ToString() + ":" + (((7200 - counter) / 60) % 60)), new Vector2(displayWidth * 2 / 5, displayHeight / 20), Color.White);
+                    _spriteBatch.DrawString(font1, (((7200 - counter) / 3600).ToString() + ":" + (((7200 - counter) / 60) % 60)), new Vector2(5 + (displayWidth * 2 / 5), 5 + (displayHeight / 20)), Color.Black);
+                    _spriteBatch.DrawString(font1, (((7200 - counter) / 3600).ToString() + ":" + (((7200 - counter) / 60) % 60)), new Vector2(displayWidth * 2 / 5, displayHeight / 20), Color.White);
                 }
                 else
                 {
-                    spriteBatch.DrawString(font1, (((7200 - counter) / 3600).ToString() + ":0" + (((7200 - counter) / 60) % 60)), new Vector2(5 + (displayWidth * 2 / 5), 5 + (displayHeight / 20)), Color.Black);
-                    spriteBatch.DrawString(font1, (((7200 - counter) / 3600).ToString() + ":0" + (((7200 - counter) / 60) % 60)), new Vector2(displayWidth * 2 / 5, displayHeight / 20), Color.White);
+                    _spriteBatch.DrawString(font1, (((7200 - counter) / 3600).ToString() + ":0" + (((7200 - counter) / 60) % 60)), new Vector2(5 + (displayWidth * 2 / 5), 5 + (displayHeight / 20)), Color.Black);
+                    _spriteBatch.DrawString(font1, (((7200 - counter) / 3600).ToString() + ":0" + (((7200 - counter) / 60) % 60)), new Vector2(displayWidth * 2 / 5, displayHeight / 20), Color.White);
                 }
 
                 //draw the characters on the screen
-                PlayerClass[0].Draw(spriteBatch);
+                PlayerClass[0].Draw(_spriteBatch);
 
                 if (character[1] != null)
                 {
-                    PlayerClass[1].Draw(spriteBatch);
+                    PlayerClass[1].Draw(_spriteBatch);
                 }
                 if (character[2] != null)
                 {
-                    PlayerClass[2].Draw(spriteBatch);
+                    PlayerClass[2].Draw(_spriteBatch);
                 }
                 if (character[3] != null)
                 {
-                    PlayerClass[3].Draw(spriteBatch);
+                    PlayerClass[3].Draw(_spriteBatch);
                 }
 
                 for (int i = 0; i < waddle.Length; i++)
                 {
                     if (waddle[i] != null)
                     {
-                        waddle[i].Draw(spriteBatch);
+                        waddle[i].Draw(_spriteBatch);
                     }
                 }
                 for (int i = 0; i < pichuBro.Length; i++)
                 {
                     if (pichuBro[i] != null)
                     {
-                        pichuBro[i].Draw(spriteBatch);
+                        pichuBro[i].Draw(_spriteBatch);
                     }
                 }
             }
@@ -1341,15 +1323,15 @@ namespace Super_Smash_Bros
                 {
                     if (PlayerClass[i] != null)
                     {
-                        spriteBatch.DrawString(font1, "Player " + (i + 1).ToString() + " scored " + score[i].ToString() + " points!", new Vector2(displayWidth / 5, (displayHeight * (i + 1) / 6)), Color.White);
-                        spriteBatch.Draw(this.Content.Load<Texture2D>("Splash/" + character[i]+ "Art"), characterSplashRec[i], Color.White);
+                        _spriteBatch.DrawString(font1, "Player " + (i + 1).ToString() + " scored " + score[i].ToString() + " points!", new Vector2(displayWidth / 5, (displayHeight * (i + 1) / 6)), Color.White);
+                        _spriteBatch.Draw(this.Content.Load<Texture2D>("Splash/" + character[i] + "Art"), characterSplashRec[i], Color.White);
                     }
                 }
 
-                spriteBatch.DrawString(font1, "Plays " + plays.ToString(), new Vector2(displayWidth * 3 / 5, displayHeight * 4 / 5), Color.White);
+                _spriteBatch.DrawString(font1, "Plays " + plays.ToString(), new Vector2(displayWidth * 3 / 5, displayHeight * 4 / 5), Color.White);
             }
 
-            spriteBatch.End();
+            _spriteBatch.End();
 
             base.Draw(gameTime);
         }

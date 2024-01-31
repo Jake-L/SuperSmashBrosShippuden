@@ -1,18 +1,13 @@
 ﻿//Jake Loftus
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
 
-namespace Super_Smash_Bros
+namespace SmashBrosShippuden
 {
-    class Projectiles:Sprite
+    class Projectiles : Sprite
     {
         string direction;
         string character;
@@ -39,7 +34,7 @@ namespace Super_Smash_Bros
 
         //Game1 game = new Game1();
 
-        public Projectiles(Rectangle newRectangle, Texture2D newTexture, string newDirection, int newPlayer, string newCharacter, ContentManager cnt):base(newTexture, newRectangle)
+        public Projectiles(Rectangle newRectangle, Texture2D newTexture, string newDirection, int newPlayer, string newCharacter, ContentManager cnt) : base(newTexture, newRectangle)
         {
             direction = newDirection;
             player = newPlayer;
@@ -49,7 +44,7 @@ namespace Super_Smash_Bros
             startpointX = newRectangle.Left + (newRectangle.Width / 2);
             startpointbot = newRectangle.Bottom;
 
-            if (character == "Blastoise") 
+            if (character == "Blastoise")
             {
                 damage = 4;
                 knockback = 0;
@@ -69,12 +64,12 @@ namespace Super_Smash_Bros
                 damage = 2;
                 knockback = 1;
             }
-            
+
             Initialize();
         }
 
         public void Update(GameTime gameTime)
-        {      
+        {
             if (character != "Pichu")
             {
                 if (direction == "Left")
@@ -93,16 +88,16 @@ namespace Super_Smash_Bros
                 rectangle.Height = ProjectileLeft[0].Height * 4;
             }
 
-            if (new [] {"Mario", "Luigi", "Mewtwo"}.Contains(character))
+            if (new[] { "Mario", "Luigi", "Mewtwo" }.Contains(character))
             {
-                rectangle.Y = startpointY + (int)(Math.Sin((gameTime.TotalGameTime.Milliseconds / 100)) * 20); 
+                rectangle.Y = startpointY + (int)(Math.Sin((gameTime.TotalGameTime.Milliseconds / 100)) * 20);
             }
 
             else if (character == "Pichu")
             {
                 if (gameTime.TotalGameTime.Milliseconds % 100 == 0)
                 {
-                    counter++;                    
+                    counter++;
                 }
                 Pichu();
             }
@@ -119,7 +114,7 @@ namespace Super_Smash_Bros
                 ProjectileLeft[1] = content.Load<Texture2D>("Mewtwo/mewtwoBallLeft2");
                 ProjectileRight[0] = content.Load<Texture2D>("Mewtwo/mewtwoBallRight1");
                 ProjectileRight[1] = content.Load<Texture2D>("Mewtwo/mewtwoBallRight2");
-                
+
                 dx = 6;
             }
 

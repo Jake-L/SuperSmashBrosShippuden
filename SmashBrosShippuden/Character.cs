@@ -1,16 +1,13 @@
 ﻿//Jake Loftus
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
-namespace Super_Smash_Bros
+namespace SmashBrosShippuden
 {
     class Character : Sprite
     {
@@ -94,7 +91,7 @@ namespace Super_Smash_Bros
             finalDestinationRec = stage;
             stageHeightAdjustment = stageHeight;
             isBot = bot;
-            
+
             Initialize();
         }
 
@@ -344,18 +341,18 @@ namespace Super_Smash_Bros
                 seriesSymbol = content.Load<Texture2D>("Symbol/" + character + "Symbol");
                 seriesSymbolRec = new Rectangle(175 + (player * 200), ((displayHeight * 4) / 5) - 25, (seriesSymbol.Width * 3) / 4, (seriesSymbol.Height * 3) / 4);
 
-                for (int i = 0; i < spriteSounds.Length; i++)
-                {
-                    spriteSounds[i] = content.Load<SoundEffect>(character + "/" + character.ToLower() + "00" + (i + 1));
-                }
+                //for (int i = 0; i < spriteSounds.Length; i++)
+                //{
+                //    spriteSounds[i] = content.Load<SoundEffect>(character + "/" + character.ToLower() + "00" + (i + 1));
+                //}
 
-                for (int i = 0; i < spriteSounds2.Length; i++)
-                {
-                    if (character == "Link" || character == "Pichu")
-                    {
-                        spriteSounds2[i] = content.Load<SoundEffect>(character + "/" + character.ToLower() + "10" + (i + 1));
-                    }
-                }
+                //for (int i = 0; i < spriteSounds2.Length; i++)
+                //{
+                //    if (character == "Link" || character == "Pichu")
+                //    {
+                //        spriteSounds2[i] = content.Load<SoundEffect>(character + "/" + character.ToLower() + "10" + (i + 1));
+                //    }
+                //}
             }
 
             BlastoiseWaterLeft = content.Load<Texture2D>("Blastoise/blastoiseWaterLeft1");
@@ -466,10 +463,10 @@ namespace Super_Smash_Bros
                     {
                         attackFrame = true;
                     }
-                    if (counterSprite == 2 && counter % counterSpriteModifier == 1 && (character != "Shrek" && character != "King") || (counterSprite == 5 && counter % counterSpriteModifier == 1 && character == "King"))
-                    {
-                        spriteSounds[NumberGenerator.Next(0, 4)].Play();
-                    }
+                    //if (counterSprite == 2 && counter % counterSpriteModifier == 1 && (character != "Shrek" && character != "King") || (counterSprite == 5 && counter % counterSpriteModifier == 1 && character == "King"))
+                    //{
+                    //    spriteSounds[NumberGenerator.Next(0, 4)].Play();
+                    //}
                 }
                 else
                 {
@@ -491,10 +488,10 @@ namespace Super_Smash_Bros
             {
                 texture = luigiTaunt[counterTaunt % luigiTaunt.Length];
 
-                if (counter % 50 == 0)
-                {
-                    goWeegee.Play();
-                }
+                //if (counter % 50 == 0)
+                //{
+                //    goWeegee.Play();
+                //}
             }
 
             //If the player isnt doing anything, display running animation
@@ -622,7 +619,6 @@ namespace Super_Smash_Bros
             {
                 rectangle.Y += 3; //was 2
             }
-
             if (jump == true)
             {
                 rectangle.Y -= jumpHeight;
@@ -633,7 +629,6 @@ namespace Super_Smash_Bros
             {
                 jumpHeight -= 1;
             }
-
             if (rectangle.Bottom - picboxHeightModifier >= finalDestinationRec.Top + stageHeightAdjustment && rectangle.Bottom - picboxHeightModifier <= finalDestinationRec.Top + stageHeightAdjustment + 15 && rectangle.Left + (rectangle.Width / 2) >= finalDestinationRec.Left && rectangle.Right - (rectangle.Width / 2) <= finalDestinationRec.Right)
             {
                 jumpHeight = 0;
@@ -650,13 +645,12 @@ namespace Super_Smash_Bros
             {
                 if (direction == "Left")
                 {
-                    projectileRec = new Rectangle(rectangle.X - (rectangle.Width / 4), rectangle.Y + (rectangle.Height / 4), 10,10);
+                    projectileRec = new Rectangle(rectangle.X - (rectangle.Width / 4), rectangle.Y + (rectangle.Height / 4), 10, 10);
                 }
                 if (direction == "Right")
                 {
-                    projectileRec = new Rectangle(rectangle.X + (rectangle.Width / 4), rectangle.Y + (rectangle.Height / 4), 10,10);
+                    projectileRec = new Rectangle(rectangle.X + (rectangle.Width / 4), rectangle.Y + (rectangle.Height / 4), 10, 10);
                 }
-
                 PlayerProjectiles = new Projectiles(projectileRec, null, direction, player, character, content);
             }
 
@@ -665,11 +659,11 @@ namespace Super_Smash_Bros
             {
                 if (direction == "Left")
                 {
-                    projectileRec = new Rectangle(rectangle.X - (rectangle.Width / 4), rectangle.Y + (rectangle.Height / 4), 10,10);
+                    projectileRec = new Rectangle(rectangle.X - (rectangle.Width / 4), rectangle.Y + (rectangle.Height / 4), 10, 10);
                 }
                 if (direction == "Right")
                 {
-                    projectileRec = new Rectangle(rectangle.X + (rectangle.Width / 4), rectangle.Y + (rectangle.Height / 4), 10,10);
+                    projectileRec = new Rectangle(rectangle.X + (rectangle.Width / 4), rectangle.Y + (rectangle.Height / 4), 10, 10);
                 }
 
                 PlayerProjectiles = new Projectiles(projectileRec, null, direction, player, character, content);
@@ -686,7 +680,6 @@ namespace Super_Smash_Bros
                 {
                     projectileRec = new Rectangle(rectangle.Right - (rectangle.Width / 4), rectangle.Y + (rectangle.Height / 2), 10, 10);
                 }
-
                 PlayerProjectiles = new Projectiles(projectileRec, null, direction, player, character, content);
             }
 
@@ -730,10 +723,8 @@ namespace Super_Smash_Bros
                 {
                     projectileRec = new Rectangle(rectangle.Right - (rectangle.Width / 4), rectangle.Y, BlastoiseWaterLeft.Width * 4, BlastoiseWaterLeft.Height * 4);
                 }
-
                 PlayerProjectiles = new Projectiles(projectileRec, BlastoiseWaterLeft, direction, player, character, content);
             }
-
             if (character == "Blastoise" && counter % 10 == 0)
             {
                 attackFrame = true;
@@ -813,8 +804,8 @@ namespace Super_Smash_Bros
         //send the projectile rectangle
         public Rectangle setProjectileRec()
         {
-             return PlayerProjectiles.getRectangle();
-        } 
+            return PlayerProjectiles.getRectangle();
+        }
 
         //destory the projectile rectangle
         public void destroyProjectileRec()
@@ -835,7 +826,7 @@ namespace Super_Smash_Bros
                 rectangle.X += knockback;
 
                 //make the knockback decay over time
-                if (counter % 10 == 0 && knockback > 0) 
+                if (counter % 10 == 0 && knockback > 0)
                 {
                     knockback -= 1;
                 }
@@ -881,12 +872,12 @@ namespace Super_Smash_Bros
                 knockback = (newKnockback * (damageTaken / 25));
             }
         }
-        
+
         //death and respawning
         private void deathMethod()
         {
             if (rectangle.Right < 0 || rectangle.Left > displayWidth || rectangle.Bottom < -100 || rectangle.Top > displayHeight || (rectangle.X == 0 && rectangle.Y == 0))
-            {                
+            {
                 //check if they were killed
                 if (damageTaken > 0)
                 {
@@ -925,8 +916,8 @@ namespace Super_Smash_Bros
                 dy = 0;
                 taunt = false;
                 jump = false;
-                jumpHeight = 0;                
-                
+                jumpHeight = 0;
+
                 //small hitbox corrections for characters with space below their feet
                 if (character == "Shadow")
                 {
@@ -950,7 +941,7 @@ namespace Super_Smash_Bros
                 {
                     picboxHeightModifier = 0;
                 }
-                
+
                 //spawn the character
                 if (isBot == false)
                 {
@@ -961,7 +952,7 @@ namespace Super_Smash_Bros
                 if (isBot == true)
                 {
                     rectangle = new Rectangle((displayWidth * 3) / 5, (displayHeight) / 4 - (rectangle.Height + 20), (int)(displayWidth * widthScaling / 15), (int)(aspectRatio * widthScaling * (displayWidth / 15)));
-                }                 
+                }
             }
         }
 
@@ -984,7 +975,7 @@ namespace Super_Smash_Bros
         {
             return isDead;
         }
-    
+
         //draw their health
         public void DrawText(SpriteBatch spriteBatch)
         {
