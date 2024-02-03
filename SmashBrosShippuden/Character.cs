@@ -30,7 +30,7 @@ namespace SmashBrosShippuden
         protected int spriteAttack1Length;
         protected int spriteAttack2Length;
         protected int jumpHeight;
-        protected int damageTaken;
+        public int damageTaken;
         protected int picboxHeightModifier;
         protected bool attack;
         protected bool attack2;
@@ -56,8 +56,8 @@ namespace SmashBrosShippuden
         Texture2D[] spriteJump = new Texture2D[2];
         Texture2D[] spriteHurt = new Texture2D[2];
         Texture2D[] luigiTaunt = new Texture2D[12];
-        Texture2D LivesIcon;
-        Texture2D seriesSymbol;
+        public Texture2D LivesIcon;
+        public Texture2D seriesSymbol;
         Texture2D BlastoiseWaterLeft;
         Texture2D pichuCloud;
 
@@ -66,8 +66,8 @@ namespace SmashBrosShippuden
         SoundEffect[] spriteSounds2 = new SoundEffect[3];
         SoundEffect goWeegee;
 
-        Rectangle seriesSymbolRec;
-        Rectangle LivesIconRec;
+        public Rectangle seriesSymbolRec;
+        public Rectangle LivesIconRec;
         Rectangle projectileRec;
         protected Rectangle finalDestinationRec = new Rectangle();
         protected Projectiles PlayerProjectiles;
@@ -83,7 +83,7 @@ namespace SmashBrosShippuden
         {
             //rectangle = newRectangle;
             direction = newDirection;
-            player = newPlayer + 1;
+            player = newPlayer;
             character = newCharacter;
             content = cnt;
             displayWidth = disWidth;
@@ -511,19 +511,19 @@ namespace SmashBrosShippuden
         //getting input
         private void getInput()
         {
-            if (player == 1)
+            if (player == 0)
             {
                 pad1 = GamePad.GetState(PlayerIndex.One);
             }
-            if (player == 2)
+            if (player == 1)
             {
                 pad1 = GamePad.GetState(PlayerIndex.Two);
             }
-            if (player == 3)
+            if (player == 2)
             {
                 pad1 = GamePad.GetState(PlayerIndex.Three);
             }
-            if (player == 4)
+            if (player == 3)
             {
                 pad1 = GamePad.GetState(PlayerIndex.Four);
             }
@@ -979,22 +979,6 @@ namespace SmashBrosShippuden
         //draw their health
         public void DrawText(SpriteBatch spriteBatch)
         {
-            if (isBot == false)
-            {
-                spriteBatch.Draw(seriesSymbol, seriesSymbolRec, Color.White);
-                spriteBatch.DrawString(font1, damageTaken.ToString() + "%", new Vector2(205 + (player * 200), 5 + (displayHeight * 4) / 5), Color.Black);
-                spriteBatch.DrawString(font1, damageTaken.ToString() + "%", new Vector2(200 + (player * 200), (displayHeight * 4) / 5), Color.White);
-                spriteBatch.Draw(LivesIcon, LivesIconRec, Color.White);
-            }
-
-            else
-            {
-                spriteBatch.Draw(seriesSymbol, seriesSymbolRec, Color.White);
-                spriteBatch.DrawString(font1, damageTaken.ToString() + "%", new Vector2(205 + (2 * 200), 5 + (displayHeight * 4) / 5), Color.Black);
-                spriteBatch.DrawString(font1, damageTaken.ToString() + "%", new Vector2(200 + (2 * 200), (displayHeight * 4) / 5), Color.White);
-                spriteBatch.Draw(LivesIcon, LivesIconRec, Color.White);
-            }
-
             if (PlayerProjectiles != null)
             {
                 PlayerProjectiles.Draw(spriteBatch);
