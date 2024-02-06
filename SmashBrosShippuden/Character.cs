@@ -12,8 +12,8 @@ namespace SmashBrosShippuden
     class Character : Sprite
     {
         //a ton of variables that make the game work
-        protected string direction;
-        protected string character;
+        public string direction;
+        public string character;
         protected int player;
         protected int knockback;
         protected int knockup;
@@ -68,24 +68,17 @@ namespace SmashBrosShippuden
 
         public Rectangle seriesSymbolRec;
         public Rectangle LivesIconRec;
-        Rectangle projectileRec;
         protected Rectangle finalDestinationRec = new Rectangle();
-        protected Projectiles PlayerProjectiles;
 
         GamePadState pad1;
 
-        SpriteFont font1;
-
-        protected ContentManager content;
-
-        public Character(Rectangle newRectangle, Texture2D newTexture, string newDirection, int newPlayer, string newCharacter, ContentManager cnt, int disWidth, int disHeight, Rectangle stage, int stageHeight, bool bot)
+        public Character(Rectangle newRectangle, Texture2D newTexture, string newDirection, int newPlayer, string newCharacter, int disWidth, int disHeight, Rectangle stage, int stageHeight, bool bot)
             : base(newTexture, newRectangle)
         {
             //rectangle = newRectangle;
             direction = newDirection;
             player = newPlayer;
             character = newCharacter;
-            content = cnt;
             displayWidth = disWidth;
             displayHeight = disHeight;
             finalDestinationRec = stage;
@@ -109,15 +102,6 @@ namespace SmashBrosShippuden
             rectangle.Y += dy;
             dx = 0;
             dy = 0;
-            if (PlayerProjectiles != null)
-            {
-                PlayerProjectiles.Update(gameTime);
-
-                if (character == "Blastoise" && pad1.Buttons.X == ButtonState.Released)
-                {
-                    destroyProjectileRec();
-                }
-            }
 
             if (counter % 3 == 0)
             {
@@ -135,7 +119,6 @@ namespace SmashBrosShippuden
 
         private void Initialize()
         {
-            //CAUTION: magic numbers
             if (character == "Mario")
             {
                 spriteAttack1Length = 8;
@@ -147,7 +130,7 @@ namespace SmashBrosShippuden
                 widthScaling = 2;
             }
 
-            if (character == "Luigi")
+            else if (character == "Luigi")
             {
                 spriteAttack1Length = 7;
                 spriteAttack2Length = 5;
@@ -158,7 +141,7 @@ namespace SmashBrosShippuden
                 widthScaling = 2.2f;
             }
 
-            if (character == "Pichu")
+            else if (character == "Pichu")
             {
                 spriteAttack1Length = 5;
                 spriteAttack2Length = 5;
@@ -169,7 +152,7 @@ namespace SmashBrosShippuden
                 widthScaling = 1.5f;
             }
 
-            if (character == "Mewtwo")
+            else if (character == "Mewtwo")
             {
                 spriteAttack1Length = 4;
                 spriteAttack2Length = 4;
@@ -180,7 +163,7 @@ namespace SmashBrosShippuden
                 widthScaling = 1.7f;
             }
 
-            if (character == "Charizard")
+            else if (character == "Charizard")
             {
                 spriteAttack1Length = 4;
                 spriteAttack2Length = 4;
@@ -191,7 +174,7 @@ namespace SmashBrosShippuden
                 widthScaling = 2;
             }
 
-            if (character == "Shadow")
+            else if (character == "Shadow")
             {
                 spriteAttack1Length = 9;
                 spriteAttack2Length = 17;
@@ -202,7 +185,7 @@ namespace SmashBrosShippuden
                 widthScaling = 2.2f;
             }
 
-            if (character == "Knuckles")
+            else if (character == "Knuckles")
             {
                 spriteAttack1Length = 6;
                 spriteAttack2Length = 5;
@@ -213,7 +196,7 @@ namespace SmashBrosShippuden
                 widthScaling = 1.5f;
             }
 
-            if (character == "Sonic")
+            else if (character == "Sonic")
             {
                 spriteAttack1Length = 5;
                 spriteAttack2Length = 9;
@@ -224,7 +207,7 @@ namespace SmashBrosShippuden
                 widthScaling = 1.7f;
             }
 
-            if (character == "Link")
+            else if (character == "Link")
             {
                 spriteAttack1Length = 7;
                 spriteAttack2Length = 8;
@@ -235,7 +218,7 @@ namespace SmashBrosShippuden
                 widthScaling = 2.3f;
             }
 
-            if (character == "Shrek")
+            else if (character == "Shrek")
             {
                 spriteAttack1Length = 6;
                 spriteAttack2Length = 8;
@@ -246,7 +229,7 @@ namespace SmashBrosShippuden
                 widthScaling = 2;
             }
 
-            if (character == "Blastoise")
+            else if (character == "Blastoise")
             {
                 spriteAttack1Length = 4;
                 spriteAttack2Length = 3;
@@ -257,7 +240,7 @@ namespace SmashBrosShippuden
                 widthScaling = 1.4f;
             }
 
-            if (character == "Metaknight")
+            else if (character == "Metaknight")
             {
                 spriteAttack1Length = 9;
                 spriteAttack2Length = 8;
@@ -268,7 +251,7 @@ namespace SmashBrosShippuden
                 widthScaling = 4f;
             }
 
-            if (character == "Kirby")
+            else if (character == "Kirby")
             {
                 spriteAttack1Length = 4;
                 spriteAttack2Length = 5;
@@ -279,7 +262,7 @@ namespace SmashBrosShippuden
                 widthScaling = 2.2f;
             }
 
-            if (character == "King")
+            else if (character == "King")
             {
                 spriteAttack1Length = 6;
                 spriteAttack2Length = 5;
@@ -290,14 +273,17 @@ namespace SmashBrosShippuden
                 widthScaling = 3;
             }
 
-            if (character == "waddle")
+            else if (character == "waddle")
             {
                 widthScaling = 0.9f;
                 spriteRunLength = 8;
                 counterSpriteModifier = 6;
                 counterSpriteModRun = 6;
             }
+        }
 
+        public override void LoadContent(ContentManager content)
+        { 
             spriteRunLeft = new Texture2D[spriteRunLength];
             spriteRunRight = new Texture2D[spriteRunLength];
             spriteSmashLeft = new Texture2D[spriteAttack1Length];
@@ -368,7 +354,29 @@ namespace SmashBrosShippuden
 
             aspectRatio = (float)spriteRunLeft[0].Height / spriteRunLeft[0].Width;
 
-            font1 = content.Load<SpriteFont>("SpriteFont1");
+            //small hitbox corrections for characters with space below their feet
+            if (character == "Shadow")
+            {
+                picboxHeightModifier = (int)(aspectRatio * widthScaling * (displayWidth / 15)) / 10;
+                //rectangle.Y = (displayHeight / 5) - picboxHeightModifier;
+            }
+
+            else if (character == "Metaknight" || character == "Kirby")
+            {
+                picboxHeightModifier = (int)(aspectRatio * widthScaling * (displayWidth / 15)) / 5;
+                //rectangle.Y = (displayHeight / 5) - picboxHeightModifier;
+            }
+
+            else if (character == "Link")
+            {
+                picboxHeightModifier = (int)((aspectRatio * widthScaling * (displayWidth / 15)) / 3.5);
+                //rectangle.Y = (displayHeight / 5) - picboxHeightModifier;
+            }
+
+            else
+            {
+                picboxHeightModifier = 0;
+            }
 
             deathMethod();
         }
@@ -394,11 +402,6 @@ namespace SmashBrosShippuden
                 attack = false;
                 attack2 = false;
                 jump = false;
-
-                if (PlayerProjectiles != null)
-                {
-                    destroyProjectileRec();
-                }
             }
 
             else if (knockback < -4)
@@ -407,11 +410,6 @@ namespace SmashBrosShippuden
                 attack = false;
                 attack2 = false;
                 jump = false;
-
-                if (PlayerProjectiles != null)
-                {
-                    destroyProjectileRec();
-                }
             }
 
             //make the character do their special attack
@@ -639,57 +637,8 @@ namespace SmashBrosShippuden
         //the special attack
         private void specialAttack()
         {
-            //all attacks damage gets applied in Game1
-            //Mewtwo fires a projectile
-            if (character == "Mewtwo" && counterSprite == 3 && counter % counterSpriteModifier == 0)
-            {
-                if (direction == "Left")
-                {
-                    projectileRec = new Rectangle(rectangle.X - (rectangle.Width / 4), rectangle.Y + (rectangle.Height / 4), 10, 10);
-                }
-                if (direction == "Right")
-                {
-                    projectileRec = new Rectangle(rectangle.X + (rectangle.Width / 4), rectangle.Y + (rectangle.Height / 4), 10, 10);
-                }
-                PlayerProjectiles = new Projectiles(projectileRec, null, direction, player, character, content);
-            }
-
-            //Charizard fires a projectile
-            if ((character == "Charizard") && counterSprite == 2 && counter % counterSpriteModifier == 0)
-            {
-                if (direction == "Left")
-                {
-                    projectileRec = new Rectangle(rectangle.X - (rectangle.Width / 4), rectangle.Y + (rectangle.Height / 4), 10, 10);
-                }
-                if (direction == "Right")
-                {
-                    projectileRec = new Rectangle(rectangle.X + (rectangle.Width / 4), rectangle.Y + (rectangle.Height / 4), 10, 10);
-                }
-
-                PlayerProjectiles = new Projectiles(projectileRec, null, direction, player, character, content);
-            }
-
-            //Mario and Luigi fire projectiles
-            if ((character == "Mario" || character == "Luigi") && counterSprite == 4 && counter % counterSpriteModifier == 0)
-            {
-                if (direction == "Left")
-                {
-                    projectileRec = new Rectangle(rectangle.X + (rectangle.Width / 4), rectangle.Y + (rectangle.Height / 2), 10, 10);
-                }
-                if (direction == "Right")
-                {
-                    projectileRec = new Rectangle(rectangle.Right - (rectangle.Width / 4), rectangle.Y + (rectangle.Height / 2), 10, 10);
-                }
-                PlayerProjectiles = new Projectiles(projectileRec, null, direction, player, character, content);
-            }
-
-            if (character == "Pichu" && counterSprite == 1 && counter % counterSpriteModifier == 0)
-            {
-                PlayerProjectiles = new Projectiles(rectangle, pichuCloud, direction, player, character, content);
-            }
-
             //Shrek does a special punch
-            if ((character == "Shrek" || character == "Seiar" || character == "Metaknight" || character == "Sonic") && counterSprite == 4 && counter % counterSpriteModifier == 0)
+            if ((character == "Shrek" || character == "Metaknight" || character == "Sonic") && counterSprite == 4 && counter % counterSpriteModifier == 0)
             {
                 attackFrame = true;
             }
@@ -712,19 +661,6 @@ namespace SmashBrosShippuden
                 attackFrame = true;
             }
 
-            //blastoise fires a projectile
-            if (character == "Blastoise" && counterSprite >= 2 && counter % counterSpriteModifier == 0)
-            {
-                if (direction == "Left")
-                {
-                    projectileRec = new Rectangle(rectangle.Left + (rectangle.Width / 4) - (BlastoiseWaterLeft.Width * 4), rectangle.Y, BlastoiseWaterLeft.Width * 4, BlastoiseWaterLeft.Height * 4);
-                }
-                if (direction == "Right")
-                {
-                    projectileRec = new Rectangle(rectangle.Right - (rectangle.Width / 4), rectangle.Y, BlastoiseWaterLeft.Width * 4, BlastoiseWaterLeft.Height * 4);
-                }
-                PlayerProjectiles = new Projectiles(projectileRec, BlastoiseWaterLeft, direction, player, character, content);
-            }
             if (character == "Blastoise" && counter % 10 == 0)
             {
                 attackFrame = true;
@@ -733,6 +669,48 @@ namespace SmashBrosShippuden
             if (character == "Link" && (counterSprite == 3 || counterSprite == 7) && counter % counterSpriteModifier == 0)
             {
                 attackFrame = true;
+            }
+        }
+
+        public bool createProjectile()
+        {
+            if (counter % counterSpriteModifier != 0 || !attack2)
+            {
+                return false;
+            }
+
+            //Mewtwo fires a projectile
+            else if (character == "Mewtwo" && counterSprite == 3)
+            {
+                return true;
+            }
+
+            //Charizard fires a projectile
+            else if ((character == "Charizard") && counterSprite == 2)
+            {
+                return true;
+            }
+
+            //Mario and Luigi fire projectiles
+            else if ((character == "Mario" || character == "Luigi") && counterSprite == 4)
+            {
+                return true;
+            }
+
+            else if (character == "Pichu" && counterSprite == 1)
+            {
+                return true;
+            }
+
+            //blastoise fires a projectile
+            else if (character == "Blastoise" && counterSprite >= 2)
+            {
+                return true;
+            }
+
+            else
+            {
+                return false;
             }
         }
 
@@ -785,36 +763,6 @@ namespace SmashBrosShippuden
         public Rectangle setRectangle()
         {
             return rectangle;
-        }
-
-        //check if the projectile has been created
-        public bool checkProjectile()
-        {
-            if (PlayerProjectiles == null)
-            {
-                return false;
-            }
-
-            else
-            {
-                return true;
-            }
-        }
-
-        //send the projectile rectangle
-        public Rectangle setProjectileRec()
-        {
-            return PlayerProjectiles.getRectangle();
-        }
-
-        //destory the projectile rectangle
-        public void destroyProjectileRec()
-        {
-            //destroy the projectiles
-            if (character != "Pichu")
-            {
-                PlayerProjectiles.destroyRec();
-            }
         }
 
         //knockback
@@ -882,30 +830,6 @@ namespace SmashBrosShippuden
                 if (damageTaken > 0)
                 {
                     isDead = true;
-
-                    if (isBot == true)
-                    {
-                        if (character == "Mario")
-                        {
-                            character = "Luigi";
-                        }
-                        else if (character == "Luigi")
-                        {
-                            character = "Mewtwo";
-                        }
-                        else if (character == "Mewtwo")
-                        {
-                            character = "Shadow";
-                        }
-                        else if (character == "Shadow")
-                        {
-                            character = "Metaknight";
-                        }
-                        else if (character == "Metaknight")
-                        {
-                            character = "Mario";
-                        }
-                    }
                 }
 
                 //make sure the newly spawned character isnt moving
@@ -917,30 +841,6 @@ namespace SmashBrosShippuden
                 taunt = false;
                 jump = false;
                 jumpHeight = 0;
-
-                //small hitbox corrections for characters with space below their feet
-                if (character == "Shadow")
-                {
-                    picboxHeightModifier = (int)(aspectRatio * widthScaling * (displayWidth / 15)) / 10;
-                    //rectangle.Y = (displayHeight / 5) - picboxHeightModifier;
-                }
-
-                else if (character == "Metaknight" || character == "Kirby")
-                {
-                    picboxHeightModifier = (int)(aspectRatio * widthScaling * (displayWidth / 15)) / 5;
-                    //rectangle.Y = (displayHeight / 5) - picboxHeightModifier;
-                }
-
-                else if (character == "Link")
-                {
-                    picboxHeightModifier = (int)((aspectRatio * widthScaling * (displayWidth / 15)) / 3.5);
-                    //rectangle.Y = (displayHeight / 5) - picboxHeightModifier;
-                }
-
-                else
-                {
-                    picboxHeightModifier = 0;
-                }
 
                 //spawn the character
                 if (isBot == false)
@@ -974,20 +874,6 @@ namespace SmashBrosShippuden
         public bool setDeath()
         {
             return isDead;
-        }
-
-        //draw their health
-        public void DrawText(SpriteBatch spriteBatch)
-        {
-            if (PlayerProjectiles != null)
-            {
-                PlayerProjectiles.Draw(spriteBatch);
-
-                if (character == "Pichu")
-                {
-                    PlayerProjectiles.Draw2(spriteBatch);
-                }
-            }
         }
     }
 }

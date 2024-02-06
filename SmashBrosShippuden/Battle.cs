@@ -5,12 +5,6 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.Metrics;
-using System.Linq;
-using System.Reflection;
-using System.Reflection.Metadata;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SmashBrosShippuden
 {
@@ -37,7 +31,6 @@ namespace SmashBrosShippuden
         //create waddledees
         Enemy[] waddle = new Enemy[12];
         Enemy[] pichuBro = new Enemy[4];
-        Texture2D waddleSprite;
 
         int stageIndex;
         int stageHeightAdjustment = 0;
@@ -51,6 +44,8 @@ namespace SmashBrosShippuden
         int displayWidth;
         int displayHeight;
         Random NumberGenerator = new Random();
+
+        List<Projectiles> projectiles = new List<Projectiles>();
 
         // TODO: remove this
         ContentManager content;
@@ -135,8 +130,6 @@ namespace SmashBrosShippuden
             finalDestinationRec = new Rectangle(displayWidth / 10, (displayHeight * 2) / 5, displayWidth - (displayWidth / 5), (int)((displayWidth - (displayWidth / 5)) * ((float)finalDestination.Height / finalDestination.Width)));
             backgroundRec = new Rectangle(0, 0, displayWidth, displayHeight);
 
-            //creating the waddle dee
-            waddleSprite = Content.Load<Texture2D>("waddle/waddleRunLeft1");
             this.content = Content;
 
             // TODO: move this to initialize, remove Content argument from Character class
@@ -144,11 +137,13 @@ namespace SmashBrosShippuden
             {
                 if (character[k] != null)
                 {
-                    PlayerClass[k] = new Character(PlayerPicBox[k], null, direction[k], k, character[k], Content, displayWidth, displayHeight, finalDestinationRec, stageHeightAdjustment, false);
+                    PlayerClass[k] = new Character(PlayerPicBox[k], null, direction[k], k, character[k], displayWidth, displayHeight, finalDestinationRec, stageHeightAdjustment, false);
+                    PlayerClass[k].LoadContent(content);
 
                     if (character[k] == "Pichu")
                     {
-                        pichuBro[k] = new Enemy(new Rectangle(PlayerPicBox[k].X - 50, PlayerPicBox[k].Y, PlayerPicBox[k].Width, PlayerPicBox[k].Height), null, "Left", k, character[k], Content, displayWidth, displayHeight, finalDestinationRec, stageHeightAdjustment, true);
+                        pichuBro[k] = new Enemy(new Rectangle(PlayerPicBox[k].X - 50, PlayerPicBox[k].Y, PlayerPicBox[k].Width, PlayerPicBox[k].Height), null, "Left", k, character[k], displayWidth, displayHeight, finalDestinationRec, stageHeightAdjustment, true);
+                        pichuBro[k].LoadContent(this.content);
                     }
                 }
             }
@@ -156,8 +151,9 @@ namespace SmashBrosShippuden
             if (character[0] != null && character[1] == null && character[2] == null && character[3] == null)
             {
                 player2Bot = true;
-                character[1] = "Mario";
-                PlayerClass[1] = new Character(PlayerPicBox[1], null, direction[1], 1, character[1], Content, displayWidth, displayHeight, finalDestinationRec, stageHeightAdjustment, true);
+                character[1] = "Kirby";
+                PlayerClass[1] = new Character(PlayerPicBox[1], null, direction[1], 1, character[1], displayWidth, displayHeight, finalDestinationRec, stageHeightAdjustment, true);
+                PlayerClass[1].LoadContent(this.content);
             }
 
             for (int i = 0; i < 4; i++)
@@ -172,7 +168,7 @@ namespace SmashBrosShippuden
                     {
                         picBoxWidthScaling[i] = (PlayerPicBox[i].Width / 4);
                     }
-                    else if (character[i] == "Metaknight" || character[i] == "Seiar" || character[i] == "Kirby" || character[i] == "Mario" || character[i] == "Luigi" || character[i] == "Link")
+                    else if (character[i] == "Metaknight" || character[i] == "Kirby" || character[i] == "Mario" || character[i] == "Luigi" || character[i] == "Link")
                     {
                         picBoxWidthScaling[i] = (PlayerPicBox[i].Width / 3);
                     }
@@ -199,9 +195,9 @@ namespace SmashBrosShippuden
                     direction[i] = PlayerClass[i].directionPlayer();
 
                     //update the projectiles location
-                    if (PlayerClass[i].checkProjectile() == true)
+                    if (PlayerClass[i].createProjectile())
                     {
-                        ProjectPicBox[i] = PlayerClass[i].setProjectileRec();
+                        this.createProjectile(PlayerClass[i], i);
                     }
 
                     if (character[i] == "King" && attackType[i] == 2)
@@ -210,12 +206,23 @@ namespace SmashBrosShippuden
                         {
                             if (waddle[j] == null)
                             {
-                                waddle[j] = new Enemy(new Rectangle(PlayerPicBox[i].X + (PlayerPicBox[i].Width / 2), PlayerPicBox[i].Y + (PlayerPicBox[i].Height / 2), 56, 52), null, "Left", i, "waddle", this.content, displayWidth, displayHeight, finalDestinationRec, stageHeightAdjustment, true);
+                                waddle[j] = new Enemy(new Rectangle(PlayerPicBox[i].X + (PlayerPicBox[i].Width / 2), PlayerPicBox[i].Y + (PlayerPicBox[i].Height / 2), 56, 52), null, "Left", i, "waddle", displayWidth, displayHeight, finalDestinationRec, stageHeightAdjustment, true);
+                                waddle[j].LoadContent(this.content);
                                 break;
                             }
                         }
                     }
+
+                    if (character[i] == "Pichu" && pichuBro[i].createProjectile())
+                    {
+                        this.createProjectile(pichuBro[i], i);
+                    }
                 }
+            }
+
+            foreach (Projectiles p in this.projectiles)
+            {
+                p.Update(gameTime);
             }
 
             lives();
@@ -243,7 +250,6 @@ namespace SmashBrosShippuden
             {
                 if (character[i] != null)
                 {
-                    PlayerClass[i].DrawText(_spriteBatch);
                     _spriteBatch.Draw(PlayerClass[i].seriesSymbol, PlayerClass[i].seriesSymbolRec, Color.White);
                     _spriteBatch.DrawString(font1, PlayerClass[i].damageTaken.ToString() + "%", new Vector2(205 + (i * 200), 5 + (displayHeight * 4) / 5), Color.Black);
                     _spriteBatch.DrawString(font1, PlayerClass[i].damageTaken.ToString() + "%", new Vector2(200 + (i * 200), (displayHeight * 4) / 5), Color.White);
@@ -292,6 +298,11 @@ namespace SmashBrosShippuden
                 {
                     pichuBro[i].Draw(_spriteBatch);
                 }
+            }
+
+            foreach (Projectiles p in this.projectiles)
+            {
+                p.Draw(_spriteBatch);
             }
         }
 
@@ -398,19 +409,6 @@ namespace SmashBrosShippuden
                             {
                                 damageDealt = 9;
                                 knockbackAbility = 2;
-                            }
-                        }
-                        if (character[i] == "Seiar")
-                        {
-                            if (attackType[i] == 1)
-                            {
-                                damageDealt = 7;
-                                knockbackAbility = 1;
-                            }
-                            else if (attackType[i] == 2)
-                            {
-                                damageDealt = 12;
-                                knockbackAbility = 3;
                             }
                         }
 
@@ -537,12 +535,13 @@ namespace SmashBrosShippuden
                         }
                     }
 
-                    for (int j = 0; j < 4; j++)
+                    // check if any players were hit by projectiles
+                    for (int j = 0; j < this.projectiles.Count; j++)
                     {
-                        if (j != i && ProjectPicBox[j].IsEmpty == false && ProjectPicBox[j].Intersects(PlayerPicBox[i]))
+                        if (this.projectiles[j].player != i && this.projectiles[j].getRectangle().Intersects(PlayerPicBox[i]))
                         {
                             //check if the projectile has hit a character
-                            if ((ProjectPicBox[j].Left < (PlayerPicBox[i].Right - picBoxWidthScaling[i]) && ProjectPicBox[j].Left > (PlayerPicBox[i].Left + picBoxWidthScaling[i])) || (ProjectPicBox[j].Right < (PlayerPicBox[i].Right - picBoxWidthScaling[i]) && ProjectPicBox[j].Right > (PlayerPicBox[i].Left + picBoxWidthScaling[i])) || (ProjectPicBox[j].Left < (PlayerPicBox[i].Left + picBoxWidthScaling[i]) && ProjectPicBox[j].Right > (PlayerPicBox[i].Right - picBoxWidthScaling[i])))
+                            if (intersection(this.projectiles[j].getRectangle(), PlayerPicBox[i], picBoxWidthScaling[i], "Left") || intersection(this.projectiles[j].getRectangle(), PlayerPicBox[i], picBoxWidthScaling[i], "Right"))
                             {
                                 //projectile gets destroyed if it hits shadow's shield
                                 if (character[i] == "Shadow" && (PlayerClass[i].attackType() == 2 || PlayerClass[i].attackType() == 3))
@@ -551,11 +550,11 @@ namespace SmashBrosShippuden
                                 else
                                 {
                                     //player takes damage from projectile
-                                    if (character[j] == "Blastoise" && attackType[j] == 2)
+                                    if (character[this.projectiles[j].player] == "Blastoise" && attackType[j] == 2)
                                     {
                                         PlayerClass[i].getDamage(6, 0);
                                     }
-                                    else if (character[j] == "Pichu")
+                                    else if (character[this.projectiles[j].player] == "Pichu")
                                     {
                                         if (direction[i] == "Left")
                                         {
@@ -566,17 +565,17 @@ namespace SmashBrosShippuden
                                             PlayerClass[i].getDamage(2, -1);
                                         }
                                     }
-                                    else if (character[j] != "Blastoise")
+                                    else if (character[this.projectiles[j].player] != "Blastoise")
                                     {
                                         PlayerClass[i].getDamage(4, 0);
                                     }
-                                    playerLastHit[i] = j;
+                                    playerLastHit[i] = this.projectiles[j].player;
                                 }
 
                                 //projectile gets destoryed after making contact
-                                if (character[j] != "Blastoise")
+                                if (character[this.projectiles[j].player] != "Blastoise")
                                 {
-                                    PlayerClass[j].destroyProjectileRec();
+                                    this.projectiles.RemoveAt(j);
                                 }
                             }
                         }
@@ -621,12 +620,12 @@ namespace SmashBrosShippuden
                             if (intersection(ProjectPicBox[j], waddle[i].setRec(), 0, "Left")) //(ProjectPicBox[j].Left < waddle[i].setRec().Right && ProjectPicBox[j].Left > waddle[i].setRec().Left)
                             {
                                 waddle[i].getDamage(100, -10);
-                                PlayerClass[j].destroyProjectileRec();
+                                this.projectiles.RemoveAt(j);
                             }
                             else if (intersection(ProjectPicBox[j], waddle[i].setRec(), 0, "Right"))//(ProjectPicBox[j].Right < waddle[i].setRec().Right && ProjectPicBox[j].Right > waddle[i].setRec().Left)
                             {
                                 waddle[i].getDamage(100, 10);
-                                PlayerClass[j].destroyProjectileRec();
+                                this.projectiles.RemoveAt(j);
                             }
                         }
 
@@ -679,7 +678,7 @@ namespace SmashBrosShippuden
                     for (int j = 0; j < 4; j++)
                     {
                         //check if anyone has hit pichu with an attack
-                        if (j != i && PlayerPicBox[j].IsEmpty == false && PlayerPicBox[j].Intersects(pichuBro[i].setRec()) && (attackType[j] == 1 || (attackType[j] == 2 && (character[j] == "Knuckles" || character[j] == "Kirby" || character[j] == "Seiar" || character[j] == "Link"))))
+                        if (j != i && PlayerPicBox[j].IsEmpty == false && PlayerPicBox[j].Intersects(pichuBro[i].setRec()) && (attackType[j] == 1 || (attackType[j] == 2 && (character[j] == "Knuckles" || character[j] == "Kirby" || character[j] == "Link"))))
                         {
                             if (intersection(PlayerPicBox[j], pichuBro[i].setRec(), 0, "Left") && direction[j] == "Left")
                             {
@@ -697,12 +696,12 @@ namespace SmashBrosShippuden
                             if (intersection(ProjectPicBox[j], pichuBro[i].setRec(), 0, "Left"))
                             {
                                 pichuBro[i].getDamage(6, 0);
-                                PlayerClass[j].destroyProjectileRec();
+                                this.projectiles.RemoveAt(j);
                             }
                             else if (intersection(ProjectPicBox[j], pichuBro[i].setRec(), 0, "Right"))
                             {
                                 pichuBro[i].getDamage(6, 0);
-                                PlayerClass[j].destroyProjectileRec();
+                                this.projectiles.RemoveAt(j);
                             }
                         }
 
@@ -732,19 +731,6 @@ namespace SmashBrosShippuden
                                 }
                             }
 
-                        }
-
-                        if (pichuBro[i].checkProjectile())
-                        {
-                            //check if pichu's lightning is hitting anyone
-                            if (intersection(pichuBro[i].setProjectileRec(), PlayerPicBox[j], picBoxWidthScaling[j], "Left") && i != j)
-                            {
-                                PlayerClass[j].getDamage(1, 0);
-                            }
-                            else if (intersection(pichuBro[i].setProjectileRec(), PlayerPicBox[j], picBoxWidthScaling[j], "Right") && i != j)
-                            {
-                                PlayerClass[j].getDamage(1, 0);
-                            }
                         }
                     }
 
@@ -843,11 +829,84 @@ namespace SmashBrosShippuden
                                 pichuBro[i] = null;
                             }
 
-                            pichuBro[i] = new Enemy(new Rectangle(PlayerPicBox[i].X - 50, PlayerPicBox[i].Y, PlayerPicBox[i].Width, PlayerPicBox[i].Height), null, "Left", i, character[i], this.content, displayWidth, displayHeight, finalDestinationRec, stageHeightAdjustment, true);
+                            pichuBro[i] = new Enemy(new Rectangle(PlayerPicBox[i].X - 50, PlayerPicBox[i].Y, PlayerPicBox[i].Width, PlayerPicBox[i].Height), null, "Left", i, character[i], displayWidth, displayHeight, finalDestinationRec, stageHeightAdjustment, true);
+                            pichuBro[i].LoadContent(this.content);
                         }
                     }
                 }
             }
+        }
+
+        private void createProjectile(Character character, int player)
+        {
+            Rectangle characterRec = character.setRectangle();
+            Rectangle projectileRec;
+
+            //Mewtwo fires a projectile
+            if (character.character == "Mewtwo")
+            {
+                if (character.direction == "Left")
+                {
+                    projectileRec = new Rectangle(characterRec.X - (characterRec.Width / 4), characterRec.Y + (characterRec.Height / 4), 10, 10);
+                }
+                else
+                {
+                    projectileRec = new Rectangle(characterRec.X + (characterRec.Width / 4), characterRec.Y + (characterRec.Height / 4), 10, 10);
+                }
+            }
+
+            //Charizard fires a projectile
+            else if (character.character == "Charizard")
+            {
+                if (character.direction == "Left")
+                {
+                    projectileRec = new Rectangle(characterRec.X - (characterRec.Width / 4), characterRec.Y + (characterRec.Height / 4), 10, 10);
+                }
+                else
+                {
+                    projectileRec = new Rectangle(characterRec.X + (characterRec.Width / 4), characterRec.Y + (characterRec.Height / 4), 10, 10);
+                }
+            }
+
+            //Mario and Luigi fire projectiles
+            else if (character.character == "Mario" || character.character == "Luigi")
+            {
+                if (character.direction == "Left")
+                {
+                    projectileRec = new Rectangle(characterRec.X + (characterRec.Width / 4), characterRec.Y + (characterRec.Height / 2), 10, 10);
+                }
+                else
+                {
+                    projectileRec = new Rectangle(characterRec.Right - (characterRec.Width / 4), characterRec.Y + (characterRec.Height / 2), 10, 10);
+                }
+            }
+
+            else if (character.character == "Pichu")
+            {
+                projectileRec = new Rectangle(characterRec.X + (characterRec.Width / 4), characterRec.Y + (characterRec.Height / 4), 10, 10);
+            }
+
+            //blastoise fires a projectile
+            else if (character.character == "Blastoise")
+            {
+                if (character.direction == "Left")
+                {
+                    projectileRec = new Rectangle(characterRec.Left + (characterRec.Width / 4) - (characterRec.Width), characterRec.Y, characterRec.Width, characterRec.Height);
+                }
+                else
+                {
+                    projectileRec = new Rectangle(characterRec.Right - (characterRec.Width / 4), characterRec.Y, characterRec.Width, characterRec.Height);
+                }
+            }
+
+            else
+            {
+                return;
+            }
+
+            Projectiles p = new Projectiles(projectileRec, null, character.direction, player, character.character);
+            p.LoadContent(this.content);
+            this.projectiles.Add(p);
         }
     }
 }

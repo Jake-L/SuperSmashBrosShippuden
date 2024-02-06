@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace SmashBrosShippuden
@@ -7,6 +8,8 @@ namespace SmashBrosShippuden
     {
         protected Rectangle rectangle;
         protected Texture2D texture;
+        public int dx = 0;
+        public int dy = 0;
 
         public Sprite(Texture2D newTexture, Rectangle newRectangle)
         {
@@ -14,7 +17,12 @@ namespace SmashBrosShippuden
             texture = newTexture;
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public virtual void LoadContent(ContentManager content)
+        {
+
+        }
+
+        public virtual void Draw(SpriteBatch spriteBatch)
         {
             if (texture != null)
             {

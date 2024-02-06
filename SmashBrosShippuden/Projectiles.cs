@@ -11,7 +11,7 @@ namespace SmashBrosShippuden
     {
         string direction;
         string character;
-        int player;
+        public int player;
         int startpointY;
         int startpointX;
         int startpointbot;
@@ -29,16 +29,14 @@ namespace SmashBrosShippuden
 
         Texture2D PichuCloudDraw;
 
-        ContentManager content;
         Rectangle cloudRec;
 
         //Game1 game = new Game1();
 
-        public Projectiles(Rectangle newRectangle, Texture2D newTexture, string newDirection, int newPlayer, string newCharacter, ContentManager cnt) : base(newTexture, newRectangle)
+        public Projectiles(Rectangle newRectangle, Texture2D newTexture, string newDirection, int newPlayer, string newCharacter) : base(newTexture, newRectangle)
         {
             direction = newDirection;
             player = newPlayer;
-            content = cnt;
             character = newCharacter;
             startpointY = newRectangle.Top;
             startpointX = newRectangle.Left + (newRectangle.Width / 2);
@@ -108,14 +106,44 @@ namespace SmashBrosShippuden
             if (character == "Mewtwo")
             {
                 spriteLength = 2;
-                ProjectileLeft = new Texture2D[spriteLength];
-                ProjectileRight = new Texture2D[spriteLength];
+                dx = 6;
+                damage = 4;
+                knockback = 1;
+            }
+
+            else if (character == "Pichu")
+            {
+                damage = 2;
+                knockback = 1;
+            }
+
+            else if (character == "Blastoise")
+            {
+                spriteLength = 4;
+                damage = 4;
+                knockback = 0;
+            }
+
+            else // Mario, Luigi, Charizard
+            {
+                spriteLength = 4;
+                dx = 4;
+                damage = 4;
+                knockback = 0;
+            }
+        }
+
+        public override void LoadContent(ContentManager content)
+        {
+            ProjectileLeft = new Texture2D[spriteLength];
+            ProjectileRight = new Texture2D[spriteLength];
+
+            if (character == "Mewtwo")
+            {
                 ProjectileLeft[0] = content.Load<Texture2D>("Mewtwo/mewtwoBallLeft1");
                 ProjectileLeft[1] = content.Load<Texture2D>("Mewtwo/mewtwoBallLeft2");
                 ProjectileRight[0] = content.Load<Texture2D>("Mewtwo/mewtwoBallRight1");
                 ProjectileRight[1] = content.Load<Texture2D>("Mewtwo/mewtwoBallRight2");
-
-                dx = 6;
             }
 
             else if (character == "Pichu")
@@ -135,20 +163,10 @@ namespace SmashBrosShippuden
 
             else
             {
-                if (character != "Blastoise")
-                {
-                    dx = 4;
-                }
-                spriteLength = 4;
-                ProjectileLeft = new Texture2D[spriteLength];
-                ProjectileRight = new Texture2D[spriteLength];
-                Console.Write(spriteLength);
-
                 for (int i = 0; i < spriteLength; i++)
                 {
                     if (character == "Mario")
                     {
-                        Console.Write("loading fireball");
                         ProjectileLeft[i] = content.Load<Texture2D>("Mario/marioFire" + (i + 1));
                         ProjectileRight[i] = content.Load<Texture2D>("Mario/marioFire" + (i + 1));
                     }
@@ -206,12 +224,13 @@ namespace SmashBrosShippuden
             startpointY = 9999;
         }
 
-        public void Draw2(SpriteBatch spriteBatch)
+        public override void Draw(SpriteBatch spriteBatch)
         {
             if (character == "Pichu" && counter < PichuCloud.Length + PichuLightning.Length)
             {
                 spriteBatch.Draw(PichuCloudDraw, cloudRec, Color.White);
             }
+            base.Draw(spriteBatch);
         }
     }
 }

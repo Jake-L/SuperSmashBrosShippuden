@@ -13,8 +13,8 @@ namespace SmashBrosShippuden
         int closestPlayer;
         Rectangle[] playerPicBox = new Rectangle[4];
 
-        public Enemy(Rectangle newRectangle, Texture2D newTexture, string newDirection, int newPlayer, string newCharacter, ContentManager cnt, int disWidth, int disHeight, Rectangle stage, int stageHeight, bool bot)
-            : base(newRectangle, newTexture, newDirection, newPlayer, newCharacter, cnt, disWidth, disHeight, stage, stageHeight, bot)
+        public Enemy(Rectangle newRectangle, Texture2D newTexture, string newDirection, int newPlayer, string newCharacter, int disWidth, int disHeight, Rectangle stage, int stageHeight, bool bot)
+            : base(newRectangle, newTexture, newDirection, newPlayer, newCharacter, disWidth, disHeight, stage, stageHeight, bot)
         {
             // all logic handled in base class
         }
@@ -119,7 +119,6 @@ namespace SmashBrosShippuden
             {
                 attack2 = true;
                 counterSprite = 0;
-                PlayerProjectiles = new Projectiles(rectangle, texture, "left", player, "Pichu", content);
             }
         }
     }
