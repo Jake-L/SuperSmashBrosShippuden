@@ -29,5 +29,11 @@ namespace SmashBrosShippuden
                 spriteBatch.Draw(texture, rectangle, Color.White);
             }
         }
+
+        //send the players rectangle
+        public Rectangle getRectangle()
+        {
+            return rectangle;
+        }
     }
 }

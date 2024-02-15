@@ -14,7 +14,7 @@ namespace SmashBrosShippuden
         //a ton of variables that make the game work
         public string direction;
         public string character;
-        protected int player;
+        public int player;
         protected int knockback;
         protected int knockup;
         protected int counter;
@@ -93,7 +93,6 @@ namespace SmashBrosShippuden
             isDead = false;
             attackFrame = false;
             counter++;
-            deathMethod();
             getInput();
             displaySprite();
             gravity();
@@ -378,7 +377,7 @@ namespace SmashBrosShippuden
                 picboxHeightModifier = 0;
             }
 
-            deathMethod();
+            this.rectangle = new Rectangle(displayWidth * (player) / 5, (finalDestinationRec.Top + stageHeightAdjustment - (int)(aspectRatio * widthScaling * (displayWidth / 15)) + picboxHeightModifier), (int)(displayWidth * widthScaling / 15), (int)(aspectRatio * widthScaling * (displayWidth / 15)));
         }
 
         //display the sprite for each characters animations
@@ -759,12 +758,6 @@ namespace SmashBrosShippuden
             }
         }
 
-        //send the players rectangle
-        public Rectangle setRectangle()
-        {
-            return rectangle;
-        }
-
         //knockback
         private void knockbackMethod()
         {
@@ -818,41 +811,6 @@ namespace SmashBrosShippuden
             if (newKnockback < 0 && Math.Abs(knockback) < Math.Abs(newKnockback * (damageTaken / 30)))
             {
                 knockback = (newKnockback * (damageTaken / 25));
-            }
-        }
-
-        //death and respawning
-        private void deathMethod()
-        {
-            if (rectangle.Right < 0 || rectangle.Left > displayWidth || rectangle.Bottom < -100 || rectangle.Top > displayHeight || (rectangle.X == 0 && rectangle.Y == 0))
-            {
-                //check if they were killed
-                if (damageTaken > 0)
-                {
-                    isDead = true;
-                }
-
-                //make sure the newly spawned character isnt moving
-                damageTaken = 0;
-                knockback = 0;
-                knockup = 0;
-                dx = 0;
-                dy = 0;
-                taunt = false;
-                jump = false;
-                jumpHeight = 0;
-
-                //spawn the character
-                if (isBot == false)
-                {
-                    //rectangle = new Rectangle(displayWidth * (player) / 5, (displayHeight / 5) - picboxHeightModifier, (int)(displayWidth * widthScaling / 15), (int)(aspectRatio * widthScaling * (displayWidth / 15)));
-                    //finalDestinationRec.Top + (finalDestinationRec.Height / 5) - 5
-                    rectangle = new Rectangle(displayWidth * (player) / 5, (finalDestinationRec.Top + stageHeightAdjustment - (int)(aspectRatio * widthScaling * (displayWidth / 15)) + picboxHeightModifier), (int)(displayWidth * widthScaling / 15), (int)(aspectRatio * widthScaling * (displayWidth / 15)));
-                }
-                if (isBot == true)
-                {
-                    rectangle = new Rectangle((displayWidth * 3) / 5, (displayHeight) / 4 - (rectangle.Height + 20), (int)(displayWidth * widthScaling / 15), (int)(aspectRatio * widthScaling * (displayWidth / 15)));
-                }
             }
         }
 

@@ -28,15 +28,10 @@ namespace SmashBrosShippuden
         Rectangle finalDestinationRec;
         Rectangle backgroundRec;
 
-        //create waddledees
-        Enemy[] waddle = new Enemy[12];
-        Enemy[] pichuBro = new Enemy[4];
-
         int stageIndex;
         int stageHeightAdjustment = 0;
 
         string[] direction = new string[4] { "Right", "Right", "Left", "Left" };
-        int[] attackType = new int[4];
         int[] knockback = new int[4];
         int[] knockup = new int[4];
 
@@ -46,6 +41,7 @@ namespace SmashBrosShippuden
         Random NumberGenerator = new Random();
 
         List<Projectiles> projectiles = new List<Projectiles>();
+        List<Enemy> companions = new List<Enemy>();
 
         // TODO: remove this
         ContentManager content;
@@ -142,8 +138,9 @@ namespace SmashBrosShippuden
 
                     if (character[k] == "Pichu")
                     {
-                        pichuBro[k] = new Enemy(new Rectangle(PlayerPicBox[k].X - 50, PlayerPicBox[k].Y, PlayerPicBox[k].Width, PlayerPicBox[k].Height), null, "Left", k, character[k], displayWidth, displayHeight, finalDestinationRec, stageHeightAdjustment, true);
-                        pichuBro[k].LoadContent(this.content);
+                        Enemy companion = new Enemy(new Rectangle(PlayerPicBox[k].X - 50, PlayerPicBox[k].Y, PlayerPicBox[k].Width, PlayerPicBox[k].Height), null, "Left", k, character[k], displayWidth, displayHeight, finalDestinationRec, stageHeightAdjustment, true);
+                        companion.LoadContent(this.content);
+                        this.companions.Add(companion);
                     }
                 }
             }
@@ -191,45 +188,56 @@ namespace SmashBrosShippuden
 
                     //update the characters locations
                     PlayerClass[i].Update(gameTime);
-                    PlayerPicBox[i] = PlayerClass[i].setRectangle();
+                    PlayerPicBox[i] = PlayerClass[i].getRectangle();
                     direction[i] = PlayerClass[i].directionPlayer();
+                    damage(PlayerClass[i]);
 
                     //update the projectiles location
                     if (PlayerClass[i].createProjectile())
                     {
                         this.createProjectile(PlayerClass[i], i);
                     }
-
-                    if (character[i] == "King" && attackType[i] == 2)
-                    {
-                        for (int j = (i) * 3; j < ((i + 1) * 3); j++)
-                        {
-                            if (waddle[j] == null)
-                            {
-                                waddle[j] = new Enemy(new Rectangle(PlayerPicBox[i].X + (PlayerPicBox[i].Width / 2), PlayerPicBox[i].Y + (PlayerPicBox[i].Height / 2), 56, 52), null, "Left", i, "waddle", displayWidth, displayHeight, finalDestinationRec, stageHeightAdjustment, true);
-                                waddle[j].LoadContent(this.content);
-                                break;
-                            }
-                        }
-                    }
-
-                    if (character[i] == "Pichu" && pichuBro[i].createProjectile())
-                    {
-                        this.createProjectile(pichuBro[i], i);
-                    }
                 }
             }
 
-            foreach (Projectiles p in this.projectiles)
+            for (int i = 0; i < this.companions.Count; i++)
             {
+                Enemy companion = this.companions[i];
+                companion.Update(gameTime);
+                damage(companion);
+
+                // delete any projectiles that have moved offscreen
+                if (this.isOffscreen(companion))
+                {
+                    this.companions.RemoveAt(i);
+                    i--;
+                }
+            }
+
+            for (int i = 0; i < this.projectiles.Count; i++)
+            {
+                Projectiles p = this.projectiles[i];
                 p.Update(gameTime);
+
+                // delete any projectiles that have moved offscreen
+                if (this.isOffscreen(p))
+                {
+                    this.projectiles.RemoveAt(i);
+                    i--;
+                }
             }
 
             lives();
 
-            damage();
-            damageWaddle(gameTime);
-            damagePichu(gameTime);
+            for (int i = 0; i < this.PlayerClass.Length; i++)
+            {
+                if (this.PlayerClass[i] != null && this.isOffscreen(this.PlayerClass[i]))
+                {
+                    Rectangle rectangle = new Rectangle(0, 0, 0, 0);
+                    this.PlayerClass[i] = new Character(rectangle, null, "Right", i, character[i], displayWidth, displayHeight, finalDestinationRec, stageHeightAdjustment, false);
+                    this.PlayerClass[i].LoadContent(this.content);
+                }
+            }
 
 
             //correcting hitboxes, only character not adjusted here is blastoise
@@ -245,18 +253,6 @@ namespace SmashBrosShippuden
             _spriteBatch.Draw(background, backgroundRec, Color.White);
             _spriteBatch.Draw(finalDestination, finalDestinationRec, Color.White);
 
-            //health
-            for (int i = 0; i < 4; i++)
-            {
-                if (character[i] != null)
-                {
-                    _spriteBatch.Draw(PlayerClass[i].seriesSymbol, PlayerClass[i].seriesSymbolRec, Color.White);
-                    _spriteBatch.DrawString(font1, PlayerClass[i].damageTaken.ToString() + "%", new Vector2(205 + (i * 200), 5 + (displayHeight * 4) / 5), Color.Black);
-                    _spriteBatch.DrawString(font1, PlayerClass[i].damageTaken.ToString() + "%", new Vector2(200 + (i * 200), (displayHeight * 4) / 5), Color.White);
-                    _spriteBatch.Draw(PlayerClass[i].LivesIcon, PlayerClass[i].LivesIconRec, Color.White);
-                }
-            }
-
             //display a timer at the top of the screen
             if ((((7200 - counter) / 60) % 60) > 9)
             {
@@ -270,33 +266,25 @@ namespace SmashBrosShippuden
             }
 
             //draw the characters on the screen
-            PlayerClass[0].Draw(_spriteBatch);
-
-            if (character[1] != null)
+            foreach (Character c in this.PlayerClass)
             {
-                PlayerClass[1].Draw(_spriteBatch);
-            }
-            if (character[2] != null)
-            {
-                PlayerClass[2].Draw(_spriteBatch);
-            }
-            if (character[3] != null)
-            {
-                PlayerClass[3].Draw(_spriteBatch);
-            }
-
-            for (int i = 0; i < waddle.Length; i++)
-            {
-                if (waddle[i] != null)
+                if (c != null)
                 {
-                    waddle[i].Draw(_spriteBatch);
+                    c.Draw(_spriteBatch);
+
+                    // health
+                    _spriteBatch.Draw(c.seriesSymbol, c.seriesSymbolRec, Color.White);
+                    _spriteBatch.DrawString(font1, c.damageTaken.ToString() + "%", new Vector2(205 + (c.player * 200), 5 + (displayHeight * 4) / 5), Color.Black);
+                    _spriteBatch.DrawString(font1, c.damageTaken.ToString() + "%", new Vector2(200 + (c.player * 200), (displayHeight * 4) / 5), Color.White);
+                    _spriteBatch.Draw(c.LivesIcon, c.LivesIconRec, Color.White);
                 }
             }
-            for (int i = 0; i < pichuBro.Length; i++)
+
+            foreach (Character c in this.companions)
             {
-                if (pichuBro[i] != null)
+                if (c != null)
                 {
-                    pichuBro[i].Draw(_spriteBatch);
+                    c.Draw(_spriteBatch);
                 }
             }
 
@@ -306,438 +294,284 @@ namespace SmashBrosShippuden
             }
         }
 
-        public void damage()
+        public void damage(Character playerClass)
         {
-            for (int i = 0; i < 4; i++)
+            if (playerClass != null)
             {
-                if (PlayerPicBox[i].IsEmpty == false)
-                {
-                    attackType[i] = PlayerClass[i].attackType();
+                int attackType = playerClass.attackType();
+                int i = playerClass.player;
 
-                    //deal different amounts of damage based on who the character is
-                    if (attackType[i] == 1 || (attackType[i] == 2 && (character[i] == "Knuckles" || character[i] == "Kirby" || character[i] == "Link")))
+                //deal different amounts of damage based on who the character is
+                if (attackType == 1 || (attackType == 2 && (character[i] == "Knuckles" || character[i] == "Kirby" || character[i] == "Link")))
+                {
+                    if (character[i] == "Mario")
                     {
-                        if (character[i] == "Mario")
-                        {
-                            damageDealt = 10;
-                            knockbackAbility = 2;
-                        }
-                        if (character[i] == "Luigi")
-                        {
-                            damageDealt = 10;
-                            knockbackAbility = 2;
-                        }
-                        if (character[i] == "Mewtwo")
-                        {
-                            damageDealt = 13;
-                            knockbackAbility = 2;
-                        }
-                        if (character[i] == "Shadow")
-                        {
-                            damageDealt = 13;
-                            knockbackAbility = 2;
-                        }
-                        if (character[i] == "Knuckles")
-                        {
-                            if (attackType[i] == 1)
-                            {
-                                damageDealt = 9;
-                                knockbackAbility = 2;
-                            }
-                            if (attackType[i] == 2)
-                            {
-                                damageDealt = 13;
-                                knockbackAbility = 1;
-                            }
-                        }
-                        if (character[i] == "Sonic")
+                        damageDealt = 10;
+                        knockbackAbility = 2;
+                    }
+                    if (character[i] == "Luigi")
+                    {
+                        damageDealt = 10;
+                        knockbackAbility = 2;
+                    }
+                    if (character[i] == "Mewtwo")
+                    {
+                        damageDealt = 13;
+                        knockbackAbility = 2;
+                    }
+                    if (character[i] == "Shadow")
+                    {
+                        damageDealt = 13;
+                        knockbackAbility = 2;
+                    }
+                    if (character[i] == "Knuckles")
+                    {
+                        if (attackType == 1)
                         {
                             damageDealt = 9;
                             knockbackAbility = 2;
                         }
-                        if (character[i] == "Shrek")
+                        if (attackType == 2)
                         {
-                            damageDealt = 10;
+                            damageDealt = 13;
                             knockbackAbility = 1;
                         }
-                        if (character[i] == "Blastoise")
+                    }
+                    if (character[i] == "Sonic")
+                    {
+                        damageDealt = 9;
+                        knockbackAbility = 2;
+                    }
+                    if (character[i] == "Shrek")
+                    {
+                        damageDealt = 10;
+                        knockbackAbility = 1;
+                    }
+                    if (character[i] == "Blastoise")
+                    {
+                        damageDealt = 8;
+                        knockbackAbility = 2;
+                    }
+                    if (character[i] == "Pichu")
+                    {
+                        damageDealt = 8;
+                        knockbackAbility = 1;
+                    }
+                    if (character[i] == "Charizard")
+                    {
+                        damageDealt = 10;
+                        knockbackAbility = 2;
+                    }
+                    if (character[i] == "Kirby")
+                    {
+                        if (attackType == 1)
                         {
-                            damageDealt = 8;
-                            knockbackAbility = 2;
-                        }
-                        if (character[i] == "Pichu")
-                        {
-                            damageDealt = 8;
+                            damageDealt = 7;
                             knockbackAbility = 1;
                         }
-                        if (character[i] == "Charizard")
-                        {
-                            damageDealt = 10;
-                            knockbackAbility = 2;
-                        }
-                        if (character[i] == "Kirby")
-                        {
-                            if (attackType[i] == 1)
-                            {
-                                damageDealt = 7;
-                                knockbackAbility = 1;
-                            }
-                            if (attackType[i] == 2)
-                            {
-                                damageDealt = 9;
-                                knockbackAbility = 2;
-                            }
-                        }
-                        if (character[i] == "Metaknight")
+                        if (attackType == 2)
                         {
                             damageDealt = 9;
-                            knockbackAbility = 1;
-                        }
-                        if (character[i] == "King")
-                        {
-                            damageDealt = 15;
                             knockbackAbility = 2;
                         }
-                        if (character[i] == "Link")
+                    }
+                    if (character[i] == "Metaknight")
+                    {
+                        damageDealt = 9;
+                        knockbackAbility = 1;
+                    }
+                    if (character[i] == "King")
+                    {
+                        damageDealt = 15;
+                        knockbackAbility = 2;
+                    }
+                    if (character[i] == "Link")
+                    {
+                        if (attackType == 1)
                         {
-                            if (attackType[i] == 1)
+                            damageDealt = 8;
+                            knockbackAbility = 1;
+                        }
+                        else
+                        {
+                            damageDealt = 9;
+                            knockbackAbility = 2;
+                        }
+                    }
+
+                    //check if the players attacks hit anyone
+                    for (int j = 0; j < 4; j++)
+                    {
+                        if (j != i && PlayerPicBox[j].IsEmpty == false)
+                        {
+                            if (PlayerPicBox[i].Intersects(PlayerPicBox[j]))
                             {
-                                damageDealt = 8;
-                                knockbackAbility = 1;
+                                if ((direction[i] == "Left" || character[i] == "Blastoise" || character[i] == "Pichu") && intersection(PlayerPicBox[i], PlayerPicBox[j], picBoxWidthScaling[j], "Left"))
+                                {
+                                    PlayerClass[j].getDamage(damageDealt + NumberGenerator.Next(-3, 4), -(knockbackAbility));
+                                    playerLastHit[j] = i;
+                                }
+
+                                else if ((direction[i] == "Right" || character[i] == "Blastoise" || character[i] == "Pichu") && intersection(PlayerPicBox[i], PlayerPicBox[j], picBoxWidthScaling[j], "Right"))
+                                {
+                                    PlayerClass[j].getDamage(damageDealt + NumberGenerator.Next(-3, 4), (knockbackAbility));
+                                    playerLastHit[j] = i;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                //apply damage from special attacks
+                else if (attackType == 2)
+                {
+                    if (character[i] == "Shrek" || character[i] == "Metaknight" || character[i] == "Sonic")
+                    {
+                        for (int j = 0; j < 4; j++)
+                        {
+                            if (j != i && PlayerPicBox[j].IsEmpty == false)
+                            {
+                                if (PlayerPicBox[i].Intersects(PlayerPicBox[j]))
+                                {
+                                    if (PlayerPicBox[i].Top < PlayerPicBox[j].Bottom && PlayerPicBox[i].Top > PlayerPicBox[j].Top)
+                                    {
+                                        if (direction[i] == "Right")
+                                        {
+                                            if (character[i] == "Shrek")
+                                            {
+                                                PlayerClass[j].getDamage(15, 2);
+                                                playerLastHit[j] = i;
+                                            }
+                                            if (character[i] == "Metaknight")
+                                            {
+                                                PlayerClass[j].getDamage(13, 2);
+                                                playerLastHit[j] = i;
+                                            }
+                                        }
+                                        if (direction[i] == "Left")
+                                        {
+                                            if (character[i] == "Shrek")
+                                            {
+                                                PlayerClass[j].getDamage(15, -2);
+                                                playerLastHit[j] = i;
+                                            }
+                                            if (character[i] == "Metaknight")
+                                            {
+                                                PlayerClass[j].getDamage(13, -2);
+                                                playerLastHit[j] = i;
+                                            }
+                                        }
+                                    }
+
+                                    if (character[i] == "Sonic")
+                                    {
+                                        if (direction[i] == "Left" && (PlayerPicBox[i].Left > (PlayerPicBox[j].Left + picBoxWidthScaling[j]) && PlayerPicBox[i].Left < (PlayerPicBox[j].Right - picBoxWidthScaling[j]) || PlayerPicBox[i].Top < PlayerPicBox[j].Bottom && PlayerPicBox[i].Top > PlayerPicBox[j].Top))
+                                        {
+                                            PlayerClass[j].getDamage(14, 2);
+                                            playerLastHit[j] = i;
+                                        }
+                                        else if (direction[i] == "Right" && (PlayerPicBox[i].Right > (PlayerPicBox[j].Left + picBoxWidthScaling[j]) && PlayerPicBox[i].Right < (PlayerPicBox[j].Right - picBoxWidthScaling[j]) || PlayerPicBox[i].Top < PlayerPicBox[j].Bottom && PlayerPicBox[i].Top > PlayerPicBox[j].Top))
+                                        {
+                                            PlayerClass[j].getDamage(14, -2);
+                                            playerLastHit[j] = i;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    else if (character[i] == "Shadow")
+                    {
+                        for (int j = 0; j < 4; j++)
+                        {
+                            if (j != i && PlayerPicBox[j].IsEmpty == false)
+                            {
+                                if (PlayerPicBox[i].Intersects(PlayerPicBox[j]))
+                                {
+                                    PlayerClass[j].getDamage(2, 0);
+                                    playerLastHit[j] = i;
+                                }
+                            }
+                        }
+                    }
+
+                    else if (character[i] == "King")
+                    {
+                        Enemy companion = new Enemy(new Rectangle(PlayerPicBox[i].X + (PlayerPicBox[i].Width / 2), PlayerPicBox[i].Y + (PlayerPicBox[i].Height / 2), 56, 52), null, "Left", i, "waddle", displayWidth, displayHeight, finalDestinationRec, stageHeightAdjustment, true);
+                        companion.LoadContent(this.content);
+                        this.companions.Add(companion);
+                    }
+                }
+
+                //check if Link's special attack hit anyone behind him
+                else if (attackType == 4)
+                {
+                    for (int j = 0; j < 4; j++)
+                    {
+                        if (j != i && PlayerPicBox[j].IsEmpty == false)
+                        {
+                            if (PlayerPicBox[i].Intersects(PlayerPicBox[j]))
+                            {
+                                if ((direction[i] == "Left" && intersection(PlayerPicBox[i], PlayerPicBox[j], picBoxWidthScaling[j], "Right")))
+                                {
+                                    PlayerClass[j].getDamage(9 + NumberGenerator.Next(-3, 4), 2);
+                                    playerLastHit[j] = i;
+                                }
+
+                                else if ((direction[i] == "Right" && intersection(PlayerPicBox[i], PlayerPicBox[j], picBoxWidthScaling[j], "Left")))
+                                {
+                                    PlayerClass[j].getDamage(9 + NumberGenerator.Next(-3, 4), -2);
+                                    playerLastHit[j] = i;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // check if any players were hit by projectiles
+                for (int j = 0; j < this.projectiles.Count; j++)
+                {
+                    if (this.projectiles[j].player != i && this.projectiles[j].getRectangle().Intersects(PlayerPicBox[i]))
+                    {
+                        //check if the projectile has hit a character
+                        if (intersection(this.projectiles[j].getRectangle(), PlayerPicBox[i], picBoxWidthScaling[i], "Left") || intersection(this.projectiles[j].getRectangle(), PlayerPicBox[i], picBoxWidthScaling[i], "Right"))
+                        {
+                            //projectile gets destroyed if it hits shadow's shield
+                            if (character[i] == "Shadow" && (playerClass.attackType() == 2 || playerClass.attackType() == 3))
+                            {
                             }
                             else
                             {
-                                damageDealt = 9;
-                                knockbackAbility = 2;
-                            }
-                        }
-
-                        //check if the players attacks hit anyone
-                        for (int j = 0; j < 4; j++)
-                        {
-                            if (j != i && PlayerPicBox[j].IsEmpty == false)
-                            {
-                                if (PlayerPicBox[i].Intersects(PlayerPicBox[j]))
+                                //player takes damage from projectile
+                                if (character[this.projectiles[j].player] == "Blastoise" && PlayerClass[j].attackType() == 2)
                                 {
-                                    if ((direction[i] == "Left" || character[i] == "Blastoise" || character[i] == "Pichu") && intersection(PlayerPicBox[i], PlayerPicBox[j], picBoxWidthScaling[j], "Left"))
+                                    playerClass.getDamage(6, 0);
+                                }
+                                else if (character[this.projectiles[j].player] == "Pichu")
+                                {
+                                    if (direction[i] == "Left")
                                     {
-                                        PlayerClass[j].getDamage(damageDealt + NumberGenerator.Next(-3, 4), -(knockbackAbility));
-                                        playerLastHit[j] = i;
+                                        playerClass.getDamage(2, 1);
                                     }
-
-                                    else if ((direction[i] == "Right" || character[i] == "Blastoise" || character[i] == "Pichu") && intersection(PlayerPicBox[i], PlayerPicBox[j], picBoxWidthScaling[j], "Right"))
+                                    else if (direction[i] == "Right")
                                     {
-                                        PlayerClass[j].getDamage(damageDealt + NumberGenerator.Next(-3, 4), (knockbackAbility));
-                                        playerLastHit[j] = i;
+                                        playerClass.getDamage(2, -1);
                                     }
                                 }
-                            }
-                        }
-                    }
-
-                    //apply damage from special attacks
-                    else if (attackType[i] == 2)
-                    {
-                        if (character[i] == "Shrek" || character[i] == "Metaknight" || character[i] == "Sonic")
-                        {
-                            for (int j = 0; j < 4; j++)
-                            {
-                                if (j != i && PlayerPicBox[j].IsEmpty == false)
+                                else if (character[this.projectiles[j].player] != "Blastoise")
                                 {
-                                    if (PlayerPicBox[i].Intersects(PlayerPicBox[j]))
-                                    {
-                                        if (PlayerPicBox[i].Top < PlayerPicBox[j].Bottom && PlayerPicBox[i].Top > PlayerPicBox[j].Top)
-                                        {
-                                            if (direction[i] == "Right")
-                                            {
-                                                if (character[i] == "Shrek")
-                                                {
-                                                    PlayerClass[j].getDamage(15, 2);
-                                                    playerLastHit[j] = i;
-                                                }
-                                                if (character[i] == "Metaknight")
-                                                {
-                                                    PlayerClass[j].getDamage(13, 2);
-                                                    playerLastHit[j] = i;
-                                                }
-                                            }
-                                            if (direction[i] == "Left")
-                                            {
-                                                if (character[i] == "Shrek")
-                                                {
-                                                    PlayerClass[j].getDamage(15, -2);
-                                                    playerLastHit[j] = i;
-                                                }
-                                                if (character[i] == "Metaknight")
-                                                {
-                                                    PlayerClass[j].getDamage(13, -2);
-                                                    playerLastHit[j] = i;
-                                                }
-                                            }
-                                        }
-
-                                        if (character[i] == "Sonic")
-                                        {
-                                            if (direction[i] == "Left" && (PlayerPicBox[i].Left > (PlayerPicBox[j].Left + picBoxWidthScaling[j]) && PlayerPicBox[i].Left < (PlayerPicBox[j].Right - picBoxWidthScaling[j]) || PlayerPicBox[i].Top < PlayerPicBox[j].Bottom && PlayerPicBox[i].Top > PlayerPicBox[j].Top))
-                                            {
-                                                PlayerClass[j].getDamage(14, 2);
-                                                playerLastHit[j] = i;
-                                            }
-                                            else if (direction[i] == "Right" && (PlayerPicBox[i].Right > (PlayerPicBox[j].Left + picBoxWidthScaling[j]) && PlayerPicBox[i].Right < (PlayerPicBox[j].Right - picBoxWidthScaling[j]) || PlayerPicBox[i].Top < PlayerPicBox[j].Bottom && PlayerPicBox[i].Top > PlayerPicBox[j].Top))
-                                            {
-                                                PlayerClass[j].getDamage(14, -2);
-                                                playerLastHit[j] = i;
-                                            }
-                                        }
-                                    }
+                                    playerClass.getDamage(4, 0);
                                 }
+                                playerLastHit[i] = this.projectiles[j].player;
                             }
-                        }
 
-                        if (character[i] == "Shadow")
-                        {
-                            for (int j = 0; j < 4; j++)
+                            //projectile gets destoryed after making contact
+                            if (character[this.projectiles[j].player] != "Blastoise")
                             {
-                                if (j != i && PlayerPicBox[j].IsEmpty == false)
-                                {
-                                    if (PlayerPicBox[i].Intersects(PlayerPicBox[j]))
-                                    {
-                                        PlayerClass[j].getDamage(2, 0);
-                                        playerLastHit[j] = i;
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    //check if Link's special attack hit anyone behind him
-                    else if (attackType[i] == 4)
-                    {
-                        for (int j = 0; j < 4; j++)
-                        {
-                            if (j != i && PlayerPicBox[j].IsEmpty == false)
-                            {
-                                if (PlayerPicBox[i].Intersects(PlayerPicBox[j]))
-                                {
-                                    if ((direction[i] == "Left" && intersection(PlayerPicBox[i], PlayerPicBox[j], picBoxWidthScaling[j], "Right")))
-                                    {
-                                        PlayerClass[j].getDamage(9 + NumberGenerator.Next(-3, 4), 2);
-                                        playerLastHit[j] = i;
-                                    }
-
-                                    else if ((direction[i] == "Right" && intersection(PlayerPicBox[i], PlayerPicBox[j], picBoxWidthScaling[j], "Left")))
-                                    {
-                                        PlayerClass[j].getDamage(9 + NumberGenerator.Next(-3, 4), -2);
-                                        playerLastHit[j] = i;
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    // check if any players were hit by projectiles
-                    for (int j = 0; j < this.projectiles.Count; j++)
-                    {
-                        if (this.projectiles[j].player != i && this.projectiles[j].getRectangle().Intersects(PlayerPicBox[i]))
-                        {
-                            //check if the projectile has hit a character
-                            if (intersection(this.projectiles[j].getRectangle(), PlayerPicBox[i], picBoxWidthScaling[i], "Left") || intersection(this.projectiles[j].getRectangle(), PlayerPicBox[i], picBoxWidthScaling[i], "Right"))
-                            {
-                                //projectile gets destroyed if it hits shadow's shield
-                                if (character[i] == "Shadow" && (PlayerClass[i].attackType() == 2 || PlayerClass[i].attackType() == 3))
-                                {
-                                }
-                                else
-                                {
-                                    //player takes damage from projectile
-                                    if (character[this.projectiles[j].player] == "Blastoise" && attackType[j] == 2)
-                                    {
-                                        PlayerClass[i].getDamage(6, 0);
-                                    }
-                                    else if (character[this.projectiles[j].player] == "Pichu")
-                                    {
-                                        if (direction[i] == "Left")
-                                        {
-                                            PlayerClass[i].getDamage(2, 1);
-                                        }
-                                        else if (direction[i] == "Right")
-                                        {
-                                            PlayerClass[i].getDamage(2, -1);
-                                        }
-                                    }
-                                    else if (character[this.projectiles[j].player] != "Blastoise")
-                                    {
-                                        PlayerClass[i].getDamage(4, 0);
-                                    }
-                                    playerLastHit[i] = this.projectiles[j].player;
-                                }
-
-                                //projectile gets destoryed after making contact
-                                if (character[this.projectiles[j].player] != "Blastoise")
-                                {
-                                    this.projectiles.RemoveAt(j);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        //damage waddles
-        public void damageWaddle(GameTime gameTime)
-        {
-            for (int i = 0; i < waddle.Length; i++)
-            {
-                if (waddle[i] != null)
-                {
-                    waddle[i].Update(gameTime);
-
-                    //send every players position to the waddle, so he can find the closest enemy
-                    if (gameTime.TotalGameTime.Milliseconds % 1000 == 0)
-                    {
-                        waddle[i].getRec(PlayerPicBox[0], PlayerPicBox[1], PlayerPicBox[2], PlayerPicBox[3]);
-                    }
-
-                    for (int j = 0; j < 4; j++)
-                    {
-                        //check if anyone has hit a waddle with an attack
-                        if (j != Math.Floor(i / 3.0) && PlayerPicBox[j].IsEmpty == false && PlayerPicBox[j].Intersects(waddle[i].setRec()) && (attackType[j] == 1 || (attackType[j] == 2 && (character[j] == "Knuckles" || character[j] == "Kirby"))))
-                        {
-                            if (intersection(PlayerPicBox[j], waddle[i].setRec(), 0, "Left"))//(PlayerPicBox[j].Left < waddle[i].setRec().Right && PlayerPicBox[j].Left > waddle[i].setRec().Left && direction[j] == "Left") 
-                            {
-                                waddle[i].getDamage(100, -10);
-                            }
-                            else if (intersection(PlayerPicBox[j], waddle[i].setRec(), 0, "Right"))//(PlayerPicBox[j].Right < waddle[i].setRec().Right && PlayerPicBox[j].Right > waddle[i].setRec().Left && direction[j] == "Right") 
-                            {
-                                waddle[i].getDamage(100, 10);
-                            }
-                        }
-
-                        //check if anyone has hit a waddle with a projectile
-                        else if (j != Math.Floor(i / 3.0) && ProjectPicBox[j].IsEmpty == false && ProjectPicBox[j].Intersects(waddle[i].setRec()))
-                        {
-                            if (intersection(ProjectPicBox[j], waddle[i].setRec(), 0, "Left")) //(ProjectPicBox[j].Left < waddle[i].setRec().Right && ProjectPicBox[j].Left > waddle[i].setRec().Left)
-                            {
-                                waddle[i].getDamage(100, -10);
-                                this.projectiles.RemoveAt(j);
-                            }
-                            else if (intersection(ProjectPicBox[j], waddle[i].setRec(), 0, "Right"))//(ProjectPicBox[j].Right < waddle[i].setRec().Right && ProjectPicBox[j].Right > waddle[i].setRec().Left)
-                            {
-                                waddle[i].getDamage(100, 10);
                                 this.projectiles.RemoveAt(j);
                             }
                         }
-
-                        //check if a waddle is hitting anyone
-                        else if (waddle[i].setRec().Intersects(PlayerPicBox[j]) && j != Math.Floor(i / 3.0) && gameTime.TotalGameTime.Milliseconds % 100 == 0)
-                        {
-                            if (intersection(waddle[i].setRec(), PlayerPicBox[j], picBoxWidthScaling[j], "Left"))//(waddle[i].setRec().Left < PlayerPicBox[j].Right && waddle[i].setRec().Left > PlayerPicBox[j].Left)
-                            {
-                                PlayerClass[j].getDamage(1, 0);
-                            }
-                            else if (intersection(waddle[i].setRec(), PlayerPicBox[j], picBoxWidthScaling[j], "Right"))//(waddle[i].setRec().Right < PlayerPicBox[j].Right && waddle[i].setRec().Right > PlayerPicBox[j].Left)
-                            {
-                                PlayerClass[j].getDamage(1, 0);
-                            }
-                        }
-                    }
-
-                    //check if a waddle has died
-                    if (waddle[i].setDeath() == true)
-                    {
-                        waddle[i] = null;
-                    }
-                }
-            }
-        }
-
-        //damage pichu
-        public void damagePichu(GameTime gameTime)
-        {
-            for (int i = 0; i < 4; i++)
-            {
-                if (character[i] == "Pichu" && pichuBro[i] != null)
-                {
-                    if (PlayerClass[i].pichuAttack() == 1)
-                    {
-                        pichuBro[i].getAttack1();
-                    }
-                    else if (PlayerClass[i].pichuAttack() == 2)
-                    {
-                        pichuBro[i].getAttack2();
-                    }
-                    pichuBro[i].Update(gameTime);
-
-                    //send every players position to pichu, so he can find the closest enemy
-                    if (gameTime.TotalGameTime.Milliseconds % 10 == 0)
-                    {
-                        pichuBro[i].getRec(PlayerPicBox[0], PlayerPicBox[1], PlayerPicBox[2], PlayerPicBox[3]);
-                    }
-
-                    for (int j = 0; j < 4; j++)
-                    {
-                        //check if anyone has hit pichu with an attack
-                        if (j != i && PlayerPicBox[j].IsEmpty == false && PlayerPicBox[j].Intersects(pichuBro[i].setRec()) && (attackType[j] == 1 || (attackType[j] == 2 && (character[j] == "Knuckles" || character[j] == "Kirby" || character[j] == "Link"))))
-                        {
-                            if (intersection(PlayerPicBox[j], pichuBro[i].setRec(), 0, "Left") && direction[j] == "Left")
-                            {
-                                pichuBro[i].getDamage(10, -2);
-                            }
-                            else if (intersection(PlayerPicBox[j], pichuBro[i].setRec(), 0, "Right") && direction[j] == "Right")
-                            {
-                                pichuBro[i].getDamage(10, 2);
-                            }
-                        }
-
-                        //check if anyone has hit a pichuBro with a projectile
-                        else if (j != i && ProjectPicBox[j].IsEmpty == false && ProjectPicBox[j].Intersects(pichuBro[i].setRec()))
-                        {
-                            if (intersection(ProjectPicBox[j], pichuBro[i].setRec(), 0, "Left"))
-                            {
-                                pichuBro[i].getDamage(6, 0);
-                                this.projectiles.RemoveAt(j);
-                            }
-                            else if (intersection(ProjectPicBox[j], pichuBro[i].setRec(), 0, "Right"))
-                            {
-                                pichuBro[i].getDamage(6, 0);
-                                this.projectiles.RemoveAt(j);
-                            }
-                        }
-
-                        //check if pichuBro is hitting anyone
-                        else if (pichuBro[i].setRec().Intersects(PlayerPicBox[j]) && j != i)
-                        {
-                            if (intersection(pichuBro[i].setRec(), PlayerPicBox[j], picBoxWidthScaling[j], "Left"))
-                            {
-                                if (pichuBro[i].attackType() > 0)
-                                {
-                                    PlayerClass[j].getDamage(5, -1);
-                                }
-                                else
-                                {
-                                    pichuBro[i].getAttack1();
-                                }
-                            }
-                            else if (intersection(pichuBro[i].setRec(), PlayerPicBox[j], picBoxWidthScaling[j], "Right"))
-                            {
-                                if (pichuBro[i].attackType() > 0)
-                                {
-                                    PlayerClass[j].getDamage(5, 1);
-                                }
-                                else
-                                {
-                                    pichuBro[i].getAttack1();
-                                }
-                            }
-
-                        }
-                    }
-
-                    //check if pichu has died
-                    if (pichuBro[i].setDeath() == true)
-                    {
-                        pichuBro[i] = null;
                     }
                 }
             }
@@ -822,15 +656,21 @@ namespace SmashBrosShippuden
                         score[playerLastHit[i]] += 2;
                         score[i]--;
 
-                        if (character[i] == "Pichu")
+                        for (int j = 0; j < this.companions.Count; j++)
                         {
-                            //if (pichuBro[i] != null)
+                            // delete any companions spawn the player that died
+                            if (this.companions[j].player == i)
                             {
-                                pichuBro[i] = null;
+                                this.companions.RemoveAt(j);
+
+                                if (character[i] == "Pichu")
+                                {
+                                    Enemy companion = new Enemy(new Rectangle(PlayerPicBox[i].X - 50, PlayerPicBox[i].Y, PlayerPicBox[i].Width, PlayerPicBox[i].Height), null, "Left", i, character[i], displayWidth, displayHeight, finalDestinationRec, stageHeightAdjustment, true);
+                                    companion.LoadContent(this.content);
+                                    this.companions.Insert(0, companion);
+                                }
                             }
 
-                            pichuBro[i] = new Enemy(new Rectangle(PlayerPicBox[i].X - 50, PlayerPicBox[i].Y, PlayerPicBox[i].Width, PlayerPicBox[i].Height), null, "Left", i, character[i], displayWidth, displayHeight, finalDestinationRec, stageHeightAdjustment, true);
-                            pichuBro[i].LoadContent(this.content);
                         }
                     }
                 }
@@ -839,7 +679,7 @@ namespace SmashBrosShippuden
 
         private void createProjectile(Character character, int player)
         {
-            Rectangle characterRec = character.setRectangle();
+            Rectangle characterRec = character.getRectangle();
             Rectangle projectileRec;
 
             //Mewtwo fires a projectile
@@ -907,6 +747,19 @@ namespace SmashBrosShippuden
             Projectiles p = new Projectiles(projectileRec, null, character.direction, player, character.character);
             p.LoadContent(this.content);
             this.projectiles.Add(p);
+        }
+
+        private bool isOffscreen(Sprite sprite)
+        {
+            Rectangle rectangle = sprite.getRectangle();
+            if (rectangle.Right < 0 || rectangle.Left > displayWidth || rectangle.Bottom < -100 || rectangle.Top > displayHeight || (rectangle.X == 0 && rectangle.Y == 0))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }

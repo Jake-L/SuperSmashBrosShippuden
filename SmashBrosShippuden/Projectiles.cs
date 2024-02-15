@@ -189,11 +189,6 @@ namespace SmashBrosShippuden
             }
         }
 
-        public Rectangle getRectangle()
-        {
-            return rectangle;
-        }
-
         //display Pichu's cloud and lightning
         public void Pichu()
         {
