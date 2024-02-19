@@ -12,7 +12,6 @@ namespace SmashBrosShippuden
     {
         //Displaying the characters
         Rectangle[] PlayerPicBox = new Rectangle[4];
-        Rectangle[] ProjectPicBox = new Rectangle[4];
         Character[] PlayerClass = new Character[4];
         string[] character = new string[4];
         int[] picBoxWidthScaling = new int[4];
@@ -32,8 +31,6 @@ namespace SmashBrosShippuden
         int stageHeightAdjustment = 0;
 
         string[] direction = new string[4] { "Right", "Right", "Left", "Left" };
-        int[] knockback = new int[4];
-        int[] knockup = new int[4];
 
         Song[] backgroundMusic = new Song[3];
         int displayWidth;
@@ -184,6 +181,10 @@ namespace SmashBrosShippuden
                     if (i == 1 && this.player2Bot)
                     {
                         this.controlBot();
+                    }
+                    else
+                    {
+                        PlayerClass[i].getInput(gamePad[i]);
                     }
 
                     //update the characters locations

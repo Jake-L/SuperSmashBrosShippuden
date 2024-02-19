@@ -32,8 +32,7 @@ namespace SmashBrosShippuden
         protected int jumpHeight;
         public int damageTaken;
         protected int picboxHeightModifier;
-        protected bool attack;
-        protected bool attack2;
+        protected AttackType attack;
         protected bool jump;
         protected bool taunt;
         protected bool attackFrame;
@@ -93,7 +92,6 @@ namespace SmashBrosShippuden
             isDead = false;
             attackFrame = false;
             counter++;
-            getInput();
             displaySprite();
             gravity();
             knockbackMethod();
@@ -398,21 +396,19 @@ namespace SmashBrosShippuden
             if (knockback > 4)
             {
                 texture = spriteHurt[1];
-                attack = false;
-                attack2 = false;
+                this.attack = AttackType.None;
                 jump = false;
             }
 
             else if (knockback < -4)
             {
                 texture = spriteHurt[0];
-                attack = false;
-                attack2 = false;
+                this.attack = AttackType.None;
                 jump = false;
             }
 
             //make the character do their special attack
-            else if (attack2 == true)
+            else if (this.attack == AttackType.Special)
             {
                 specialAttack();
                 if (character != "Knuckles" && character != "Pichu")
@@ -439,12 +435,12 @@ namespace SmashBrosShippuden
 
                 else
                 {
-                    attack2 = false;
+                    this.attack = AttackType.None;
                 }
             }
 
             //Display the attack animation when a player attacks
-            else if (attack == true)
+            else if (this.attack == AttackType.Jab)
             {
                 if (counterSprite < spriteAttack1Length)
                 {
@@ -467,7 +463,7 @@ namespace SmashBrosShippuden
                 }
                 else
                 {
-                    attack = false;
+                    this.attack = AttackType.None;
                 }
             }
 
@@ -506,28 +502,11 @@ namespace SmashBrosShippuden
         }
 
         //getting input
-        private void getInput()
+        public void getInput(GamePadState pad1)
         {
-            if (player == 0)
-            {
-                pad1 = GamePad.GetState(PlayerIndex.One);
-            }
-            if (player == 1)
-            {
-                pad1 = GamePad.GetState(PlayerIndex.Two);
-            }
-            if (player == 2)
-            {
-                pad1 = GamePad.GetState(PlayerIndex.Three);
-            }
-            if (player == 3)
-            {
-                pad1 = GamePad.GetState(PlayerIndex.Four);
-            }
-
             if (pad1.ThumbSticks.Left.X < -0.1)
             {
-                if ((attack == true || attack2 == true) && direction == "Right")
+                if (this.attack != AttackType.None && direction == "Right")
                 {
 
                 }
@@ -540,7 +519,7 @@ namespace SmashBrosShippuden
             }
             if (pad1.ThumbSticks.Left.X > 0.1)
             {
-                if ((attack == true || attack2 == true) && direction == "Left")
+                if (this.attack != AttackType.None && direction == "Left")
                 {
 
                 }
@@ -552,7 +531,7 @@ namespace SmashBrosShippuden
                 }
             }
 
-            if ((pad1.Buttons.B == ButtonState.Pressed || pad1.Buttons.Y == ButtonState.Pressed) && jump == false && attack == false && attack2 == false)
+            if ((pad1.Buttons.B == ButtonState.Pressed || pad1.Buttons.Y == ButtonState.Pressed) && jump == false && this.attack == AttackType.None)
             {
                 jump = true;
                 jumpHeight = 9;
@@ -560,16 +539,16 @@ namespace SmashBrosShippuden
                 taunt = false;
             }
 
-            if (pad1.Buttons.X == ButtonState.Pressed && attack == false && attack2 == false)
+            if (pad1.Buttons.X == ButtonState.Pressed && this.attack == AttackType.None)
             {
-                attack2 = true;
+                this.attack = AttackType.Special;
                 counterSprite = 0;
                 taunt = false;
             }
 
-            if (pad1.Buttons.A == ButtonState.Pressed && attack == false && attack2 == false)
+            if (pad1.Buttons.A == ButtonState.Pressed && this.attack == AttackType.None)
             {
-                attack = true;
+                this.attack = AttackType.Jab;
                 counterSprite = 0;
                 taunt = false;
             }
@@ -600,9 +579,9 @@ namespace SmashBrosShippuden
 
             direction = newDirection;
 
-            if (attack == false && attacking == true)
+            if (this.attack == AttackType.None && attacking == true)
             {
-                attack = true;
+                this.attack = AttackType.Jab;
                 counterSprite = 0;
                 taunt = false;
             }
@@ -614,7 +593,7 @@ namespace SmashBrosShippuden
             //make characters fall if they are not on a platform
             if ((rectangle.Bottom - picboxHeightModifier >= finalDestinationRec.Top + stageHeightAdjustment && rectangle.Bottom - picboxHeightModifier <= finalDestinationRec.Top + stageHeightAdjustment + 15 && rectangle.Left + (rectangle.Width / 2) >= finalDestinationRec.Left && rectangle.Right - (rectangle.Width / 2) <= finalDestinationRec.Right) == false)
             {
-                rectangle.Y += 3; //was 2
+                rectangle.Y += 4; //was 2
             }
             if (jump == true)
             {
@@ -673,7 +652,7 @@ namespace SmashBrosShippuden
 
         public bool createProjectile()
         {
-            if (counter % counterSpriteModifier != 0 || !attack2)
+            if (counter % counterSpriteModifier != 0 || this.attack != AttackType.Special)
             {
                 return false;
             }
@@ -716,25 +695,25 @@ namespace SmashBrosShippuden
         //send the damage being dealt
         public int attackType()
         {
-            if (attack == true && attackFrame == true)
+            if (this.attack == AttackType.Jab && attackFrame == true)
             {
                 attackFrame = false;
                 return 1;
             }
 
-            else if (attack2 == true && attackFrame == true && character == "Link" && counterSprite == 7)
+            else if (this.attack == AttackType.Special && attackFrame == true && character == "Link" && counterSprite == 7)
             {
                 attackFrame = false;
                 return 4;
             }
 
-            else if (attack2 == true && attackFrame == true)
+            else if (this.attack == AttackType.Special && attackFrame == true)
             {
                 attackFrame = false;
                 return 2;
             }
 
-            else if (attack2 == true && character == "Shadow")
+            else if (this.attack == AttackType.Special && character == "Shadow")
             {
                 return 3;
             }
@@ -748,14 +727,7 @@ namespace SmashBrosShippuden
         //send the players direction
         public string directionPlayer()
         {
-            if (direction == "Left")
-            {
-                return "Left";
-            }
-            else
-            {
-                return "Right";
-            }
+            return direction;
         }
 
         //knockback
@@ -812,20 +784,6 @@ namespace SmashBrosShippuden
             {
                 knockback = (newKnockback * (damageTaken / 25));
             }
-        }
-
-        //tell the other pichu what attack to use
-        public int pichuAttack()
-        {
-            if (attack == true)
-            {
-                return 1;
-            }
-            if (attack2 == true)
-            {
-                return 2;
-            }
-            return 0;
         }
 
         //tell Game1 when the player dies

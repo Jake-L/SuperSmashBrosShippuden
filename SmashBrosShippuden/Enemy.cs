@@ -101,25 +101,5 @@ namespace SmashBrosShippuden
         {
             return rectangle;
         }
-
-        //check if pichu is using attack 1
-        public void getAttack1()
-        {
-            if (attack == false && attack2 == false)
-            {
-                attack = true;
-                counterSprite = 0;
-            }
-        }
-
-        //Check if pichu is using attack 2
-        public void getAttack2()
-        {
-            if (attack == false && attack2 == false)
-            {
-                attack2 = true;
-                counterSprite = 0;
-            }
-        }
     }
 }
