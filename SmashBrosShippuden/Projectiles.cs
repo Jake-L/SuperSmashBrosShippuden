@@ -9,7 +9,6 @@ namespace SmashBrosShippuden
 {
     class Projectiles : Sprite
     {
-        string direction;
         string character;
         public int player;
         int startpointY;
@@ -20,8 +19,7 @@ namespace SmashBrosShippuden
         int damage;
         int knockback;
 
-        Texture2D[] ProjectileLeft;
-        Texture2D[] ProjectileRight;
+        Texture2D[] Projectile;
         int spriteLength = 1;
 
         Texture2D[] PichuLightning = new Texture2D[3];
@@ -70,20 +68,20 @@ namespace SmashBrosShippuden
         {
             if (character != "Pichu")
             {
+                texture = Projectile[(gameTime.TotalGameTime.Milliseconds / 100) % spriteLength];
+
                 if (direction == "Left")
                 {
-                    texture = ProjectileLeft[(gameTime.TotalGameTime.Milliseconds / 100) % spriteLength];
                     rectangle.X -= dx;
                 }
 
                 if (direction == "Right")
                 {
-                    texture = ProjectileRight[(gameTime.TotalGameTime.Milliseconds / 100) % spriteLength];
                     rectangle.X += dx;
                 }
 
-                rectangle.Width = ProjectileLeft[0].Width * 4;
-                rectangle.Height = ProjectileLeft[0].Height * 4;
+                rectangle.Width = Projectile[0].Width * 4;
+                rectangle.Height = Projectile[0].Height * 4;
             }
 
             if (new[] { "Mario", "Luigi", "Mewtwo" }.Contains(character))
@@ -135,15 +133,12 @@ namespace SmashBrosShippuden
 
         public override void LoadContent(ContentManager content)
         {
-            ProjectileLeft = new Texture2D[spriteLength];
-            ProjectileRight = new Texture2D[spriteLength];
+            Projectile = new Texture2D[spriteLength];
 
             if (character == "Mewtwo")
             {
-                ProjectileLeft[0] = content.Load<Texture2D>("Mewtwo/mewtwoBallLeft1");
-                ProjectileLeft[1] = content.Load<Texture2D>("Mewtwo/mewtwoBallLeft2");
-                ProjectileRight[0] = content.Load<Texture2D>("Mewtwo/mewtwoBallRight1");
-                ProjectileRight[1] = content.Load<Texture2D>("Mewtwo/mewtwoBallRight2");
+                Projectile[0] = content.Load<Texture2D>("Mewtwo/mewtwoBall1");
+                Projectile[1] = content.Load<Texture2D>("Mewtwo/mewtwoBall2");
             }
 
             else if (character == "Pichu")
@@ -167,23 +162,19 @@ namespace SmashBrosShippuden
                 {
                     if (character == "Mario")
                     {
-                        ProjectileLeft[i] = content.Load<Texture2D>("Mario/marioFire" + (i + 1));
-                        ProjectileRight[i] = content.Load<Texture2D>("Mario/marioFire" + (i + 1));
+                        Projectile[i] = content.Load<Texture2D>("Mario/marioFire" + (i + 1));
                     }
                     if (character == "Luigi")
                     {
-                        ProjectileLeft[i] = content.Load<Texture2D>("Luigi/luigiFire" + (i + 1));
-                        ProjectileRight[i] = content.Load<Texture2D>("Mario/marioFire" + (i + 1));
+                        Projectile[i] = content.Load<Texture2D>("Luigi/luigiFire" + (i + 1));
                     }
                     if (character == "Blastoise")
                     {
-                        ProjectileLeft[i] = content.Load<Texture2D>("Blastoise/blastoiseWaterLeft" + (i + 1));
-                        ProjectileRight[i] = content.Load<Texture2D>("Blastoise/blastoiseWaterRight" + (i + 1));
+                        Projectile[i] = content.Load<Texture2D>("Blastoise/blastoiseWater" + (i + 1));
                     }
                     if (character == "Charizard")
                     {
-                        ProjectileLeft[i] = content.Load<Texture2D>(character + "/fireLeft" + (i + 1));
-                        ProjectileRight[i] = content.Load<Texture2D>(character + "/fireRight" + (i + 1));
+                        Projectile[i] = content.Load<Texture2D>(character + "/fire" + (i + 1));
                     }
                 }
             }

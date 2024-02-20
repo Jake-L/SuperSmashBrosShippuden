@@ -8,6 +8,7 @@ namespace SmashBrosShippuden
     {
         protected Rectangle rectangle;
         protected Texture2D texture;
+        public string direction = "Right";
         public int dx = 0;
         public int dy = 0;
 
@@ -26,7 +27,27 @@ namespace SmashBrosShippuden
         {
             if (texture != null)
             {
-                spriteBatch.Draw(texture, rectangle, Color.White);
+                SpriteEffects spriteEffects;
+
+                if (this.direction == "Right")
+                {
+                    spriteEffects = SpriteEffects.None;
+                }
+                else
+                {
+                    spriteEffects = SpriteEffects.FlipHorizontally;
+                }
+
+                spriteBatch.Draw(
+                    texture, 
+                    rectangle, 
+                    null,
+                    Color.White,
+                    0f,
+                    new Vector2(0, 0),
+                    spriteEffects,
+                    0f
+                );
             }
         }
 

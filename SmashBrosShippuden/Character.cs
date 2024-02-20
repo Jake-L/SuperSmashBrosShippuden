@@ -12,7 +12,6 @@ namespace SmashBrosShippuden
     class Character : Sprite
     {
         //a ton of variables that make the game work
-        public string direction;
         public string character;
         public int player;
         protected int knockback;
@@ -46,19 +45,14 @@ namespace SmashBrosShippuden
         protected Random NumberGenerator = new Random();
 
         //all the sprites
-        Texture2D[] spriteRunLeft;
-        Texture2D[] spriteRunRight;
-        Texture2D[] spriteAttackLeft;
-        Texture2D[] spriteAttackRight;
-        Texture2D[] spriteSmashLeft;
-        Texture2D[] spriteSmashRight;
-        Texture2D[] spriteJump = new Texture2D[2];
-        Texture2D[] spriteHurt = new Texture2D[2];
+        Texture2D[] spriteRun;
+        Texture2D[] spriteAttack;
+        Texture2D[] spriteSmash;
+        Texture2D[] spriteJump = new Texture2D[1];
+        Texture2D[] spriteHurt = new Texture2D[1];
         Texture2D[] luigiTaunt = new Texture2D[12];
         public Texture2D LivesIcon;
         public Texture2D seriesSymbol;
-        Texture2D BlastoiseWaterLeft;
-        Texture2D pichuCloud;
 
         //sound effects
         SoundEffect[] spriteSounds = new SoundEffect[4];
@@ -281,39 +275,31 @@ namespace SmashBrosShippuden
 
         public override void LoadContent(ContentManager content)
         { 
-            spriteRunLeft = new Texture2D[spriteRunLength];
-            spriteRunRight = new Texture2D[spriteRunLength];
-            spriteSmashLeft = new Texture2D[spriteAttack1Length];
-            spriteSmashRight = new Texture2D[spriteAttack1Length];
-            spriteAttackLeft = new Texture2D[spriteAttack2Length];
-            spriteAttackRight = new Texture2D[spriteAttack2Length];
+            spriteRun = new Texture2D[spriteRunLength];
+            spriteSmash = new Texture2D[spriteAttack1Length];
+            spriteAttack = new Texture2D[spriteAttack2Length];
 
             //load the characters running and attact sprites
             for (int i = 0; i < spriteRunLength; i++)
             {
-                spriteRunLeft[i] = content.Load<Texture2D>(character + "/" + character.ToLower() + "RunLeft" + (i + 1));
-                spriteRunRight[i] = content.Load<Texture2D>(character + "/" + character.ToLower() + "RunRight" + (i + 1));
+                spriteRun[i] = content.Load<Texture2D>(character + "/" + character.ToLower() + "Run" + (i + 1));
             }
 
             for (int i = 0; i < spriteAttack1Length; i++)
             {
-                spriteSmashLeft[i] = content.Load<Texture2D>(character + "/" + character.ToLower() + "SmashLeft" + (i + 1));
-                spriteSmashRight[i] = content.Load<Texture2D>(character + "/" + character.ToLower() + "SmashRight" + (i + 1));
+                spriteSmash[i] = content.Load<Texture2D>(character + "/" + character.ToLower() + "Smash" + (i + 1));
             }
 
             for (int i = 0; i < spriteAttack2Length; i++)
             {
-                spriteAttackLeft[i] = content.Load<Texture2D>(character + "/" + character.ToLower() + "AttackLeft" + (i + 1));
-                spriteAttackRight[i] = content.Load<Texture2D>(character + "/" + character.ToLower() + "AttackRight" + (i + 1));
+                spriteAttack[i] = content.Load<Texture2D>(character + "/" + character.ToLower() + "Attack" + (i + 1));
             }
 
             //jumping sprites
-            spriteJump[0] = content.Load<Texture2D>(character + "/" + character.ToLower() + "JumpLeft");
-            spriteJump[1] = content.Load<Texture2D>(character + "/" + character.ToLower() + "JumpRight");
+            spriteJump[0] = content.Load<Texture2D>(character + "/" + character.ToLower() + "Jump");
 
             //hurt sprites
-            spriteHurt[0] = content.Load<Texture2D>(character + "/" + character.ToLower() + "HurtLeft");
-            spriteHurt[1] = content.Load<Texture2D>(character + "/" + character.ToLower() + "HurtRight");
+            spriteHurt[0] = content.Load<Texture2D>(character + "/" + character.ToLower() + "Hurt");
 
             //character icons and symbol 
             if (character != "waddle")
@@ -338,10 +324,6 @@ namespace SmashBrosShippuden
                 //}
             }
 
-            BlastoiseWaterLeft = content.Load<Texture2D>("Blastoise/blastoiseWaterLeft1");
-            pichuCloud = content.Load<Texture2D>("Pichu/cloud1");
-
-
             for (int i = 0; i < luigiTaunt.Length; i++)
             {
                 luigiTaunt[i] = content.Load<Texture2D>("Luigi/luigiTaunt" + (i + 1));
@@ -349,7 +331,7 @@ namespace SmashBrosShippuden
 
             goWeegee = content.Load<SoundEffect>("Luigi/luigi021");
 
-            aspectRatio = (float)spriteRunLeft[0].Height / spriteRunLeft[0].Width;
+            aspectRatio = (float)spriteRun[0].Height / spriteRun[0].Width;
 
             //small hitbox corrections for characters with space below their feet
             if (character == "Shadow")
@@ -393,14 +375,7 @@ namespace SmashBrosShippuden
             }
 
             //display the damaged animation when they take tons of damage
-            if (knockback > 4)
-            {
-                texture = spriteHurt[1];
-                this.attack = AttackType.None;
-                jump = false;
-            }
-
-            else if (knockback < -4)
+            if (Math.Abs(knockback) > 4)
             {
                 texture = spriteHurt[0];
                 this.attack = AttackType.None;
@@ -418,14 +393,7 @@ namespace SmashBrosShippuden
 
                 if (counterSprite < spriteAttack2Length)
                 {
-                    if (direction == "Left")
-                    {
-                        texture = spriteAttackLeft[counterSprite];
-                    }
-                    if (direction == "Right")
-                    {
-                        texture = spriteAttackRight[counterSprite];
-                    }
+                    texture = spriteAttack[counterSprite];
 
                     if (counterSprite == 1 && counter % counterSpriteModifier == 1 && (character == "Link" || character == "Pichu"))
                     {
@@ -444,14 +412,8 @@ namespace SmashBrosShippuden
             {
                 if (counterSprite < spriteAttack1Length)
                 {
-                    if (direction == "Left")
-                    {
-                        texture = spriteSmashLeft[counterSprite];
-                    }
-                    if (direction == "Right")
-                    {
-                        texture = spriteSmashRight[counterSprite];
-                    }
+                    texture = spriteSmash[counterSprite];
+
                     if (counterSprite == counterSpriteAttack && counter % counterSpriteModifier == 0)
                     {
                         attackFrame = true;
@@ -468,13 +430,9 @@ namespace SmashBrosShippuden
             }
 
             //display jumping sprite
-            else if (jump == true && direction == "Left")
+            else if (jump == true)
             {
                 texture = spriteJump[0];
-            }
-            else if (jump == true && direction == "Right")
-            {
-                texture = spriteJump[1];
             }
 
             else if (taunt == true)
@@ -490,14 +448,7 @@ namespace SmashBrosShippuden
             //If the player isnt doing anything, display running animation
             else
             {
-                if (direction == "Left")
-                {
-                    texture = spriteRunLeft[counterSprite2 % spriteRunLength];
-                }
-                if (direction == "Right")
-                {
-                    texture = spriteRunRight[counterSprite2 % spriteRunLength];
-                }
+                texture = spriteRun[counterSprite2 % spriteRunLength];
             }
         }
 
