@@ -10,7 +10,7 @@ namespace SmashBrosShippuden
     {
         public static string[] characterList = new string[] {
             "Mario", "Luigi", "Charizard", "Mewtwo", "Blastoise", "Pichu", "Kirby", "Metaknight", "King", 
-            "Sonic", "Knuckles", "Shadow", "Link", "Shrek"
+            "Sonic", "Knuckles", "Shadow", "Link", "Sasuke", "Shrek"
         };
     }
 }

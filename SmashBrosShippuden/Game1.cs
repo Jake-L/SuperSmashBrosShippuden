@@ -48,8 +48,8 @@ namespace SmashBrosShippuden
         protected override void Initialize()
         {
             //Set the size of the window
-            this._graphics.PreferredBackBufferHeight = 720; // (int)((GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width / (double)background.Width) * (double)background.Height);
-            this._graphics.PreferredBackBufferWidth = 1280; //GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+            this._graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+            this._graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
             this._graphics.ApplyChanges();
 
             //Display settings

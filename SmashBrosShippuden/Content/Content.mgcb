@@ -895,6 +895,18 @@
 /processorParam:TextureFormat=Color
 /build:Icon/player4Icon.png
 
+#begin Icon/sasukeIcon.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Icon/sasukeIcon.png
+
 #begin Icon/shadowIcon.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -5238,6 +5250,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Splash/pichuArt.png
+
+#begin Splash/sasukeArt.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Splash/sasukeArt.png
 
 #begin Splash/shadowArt.png
 /importer:TextureImporter
