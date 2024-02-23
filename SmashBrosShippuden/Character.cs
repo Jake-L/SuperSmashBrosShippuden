@@ -1,11 +1,10 @@
 ﻿//Jake Loftus
-using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
+using System;
 
 namespace SmashBrosShippuden
 {
@@ -21,17 +20,12 @@ namespace SmashBrosShippuden
         protected int counterSprite2;
         protected int counterSpriteModifier;
         protected int counterSpriteModRun;
-        protected int counterSpriteAttack;
         protected int counterTaunt;
-        protected int dx;
-        protected int dy;
         protected int spriteRunLength;
-        protected int spriteAttack1Length;
-        protected int spriteAttack2Length;
         protected int jumpHeight;
         public int damageTaken;
         protected int picboxHeightModifier;
-        protected AttackType attack;
+        public Attack attack;
         protected bool jump;
         protected bool taunt;
         protected bool attackFrame;
@@ -57,13 +51,10 @@ namespace SmashBrosShippuden
         //sound effects
         SoundEffect[] spriteSounds = new SoundEffect[4];
         SoundEffect[] spriteSounds2 = new SoundEffect[3];
-        SoundEffect goWeegee;
 
         public Rectangle seriesSymbolRec;
         public Rectangle LivesIconRec;
         protected Rectangle finalDestinationRec = new Rectangle();
-
-        GamePadState pad1;
 
         public Character(Rectangle newRectangle, Texture2D newTexture, string newDirection, int newPlayer, string newCharacter, int disWidth, int disHeight, Rectangle stage, int stageHeight, bool bot)
             : base(newTexture, newRectangle)
@@ -112,155 +103,113 @@ namespace SmashBrosShippuden
         {
             if (character == "Mario")
             {
-                spriteAttack1Length = 8;
-                spriteAttack2Length = 5;
                 spriteRunLength = 8;
                 counterSpriteModifier = 5;
                 counterSpriteModRun = 8;
-                counterSpriteAttack = 5;
                 widthScaling = 2;
             }
 
             else if (character == "Luigi")
             {
-                spriteAttack1Length = 7;
-                spriteAttack2Length = 5;
                 spriteRunLength = 8;
                 counterSpriteModifier = 5;
                 counterSpriteModRun = 8;
-                counterSpriteAttack = 5;
                 widthScaling = 2.2f;
             }
 
             else if (character == "Pichu")
             {
-                spriteAttack1Length = 5;
-                spriteAttack2Length = 5;
                 spriteRunLength = 4;
                 counterSpriteModifier = 8;
                 counterSpriteModRun = 8;
-                counterSpriteAttack = 2;
                 widthScaling = 1.5f;
             }
 
             else if (character == "Mewtwo")
             {
-                spriteAttack1Length = 4;
-                spriteAttack2Length = 4;
                 spriteRunLength = 2;
                 counterSpriteModifier = 10;
                 counterSpriteModRun = 8;
-                counterSpriteAttack = 3;
                 widthScaling = 1.7f;
             }
 
             else if (character == "Charizard")
             {
-                spriteAttack1Length = 4;
-                spriteAttack2Length = 4;
                 spriteRunLength = 4;
                 counterSpriteModifier = 8;
                 counterSpriteModRun = 10;
-                counterSpriteAttack = 3;
                 widthScaling = 2;
             }
 
             else if (character == "Shadow")
             {
-                spriteAttack1Length = 9;
-                spriteAttack2Length = 17;
                 spriteRunLength = 9;
                 counterSpriteModifier = 5;
                 counterSpriteModRun = 6;
-                counterSpriteAttack = 3;
                 widthScaling = 2.2f;
             }
 
             else if (character == "Knuckles")
             {
-                spriteAttack1Length = 6;
-                spriteAttack2Length = 5;
                 spriteRunLength = 8;
                 counterSpriteModifier = 6;
                 counterSpriteModRun = 5;
-                counterSpriteAttack = 3;
                 widthScaling = 1.5f;
             }
 
             else if (character == "Sonic")
             {
-                spriteAttack1Length = 5;
-                spriteAttack2Length = 9;
                 spriteRunLength = 8;
                 counterSpriteModifier = 5;
                 counterSpriteModRun = 6;
-                counterSpriteAttack = 3;
                 widthScaling = 1.7f;
             }
 
             else if (character == "Link")
             {
-                spriteAttack1Length = 7;
-                spriteAttack2Length = 8;
                 spriteRunLength = 6;
                 counterSpriteModifier = 4;
                 counterSpriteModRun = 6;
-                counterSpriteAttack = 4;
                 widthScaling = 2.3f;
             }
 
             else if (character == "Shrek")
             {
-                spriteAttack1Length = 6;
-                spriteAttack2Length = 8;
                 spriteRunLength = 8;
                 counterSpriteModifier = 6;
                 counterSpriteModRun = 6;
-                counterSpriteAttack = 3;
                 widthScaling = 2;
             }
 
             else if (character == "Blastoise")
             {
-                spriteAttack1Length = 4;
-                spriteAttack2Length = 3;
                 spriteRunLength = 4;
                 counterSpriteModifier = 6;
                 counterSpriteModRun = 8;
-                counterSpriteAttack = 1;
                 widthScaling = 1.4f;
             }
 
             else if (character == "Metaknight")
             {
-                spriteAttack1Length = 9;
-                spriteAttack2Length = 8;
                 spriteRunLength = 8;
                 counterSpriteModifier = 4;
                 counterSpriteModRun = 4;
-                counterSpriteAttack = 3;
                 widthScaling = 4f;
             }
 
             else if (character == "Kirby")
             {
-                spriteAttack1Length = 4;
-                spriteAttack2Length = 5;
                 spriteRunLength = 10;
                 counterSpriteModifier = 6;
                 counterSpriteModRun = 5;
-                counterSpriteAttack = 3;
                 widthScaling = 2.2f;
             }
 
             else if (character == "King")
             {
-                spriteAttack1Length = 6;
-                spriteAttack2Length = 5;
                 spriteRunLength = 4;
                 counterSpriteModifier = 7;
                 counterSpriteModRun = 8;
-                counterSpriteAttack = 5;
                 widthScaling = 3;
             }
 
@@ -276,8 +225,10 @@ namespace SmashBrosShippuden
         public override void LoadContent(ContentManager content)
         { 
             spriteRun = new Texture2D[spriteRunLength];
-            spriteSmash = new Texture2D[spriteAttack1Length];
-            spriteAttack = new Texture2D[spriteAttack2Length];
+            Attack tempAttack = new Attack(this.character, AttackType.Jab);
+            spriteSmash = new Texture2D[tempAttack.spriteLength];
+            tempAttack = new Attack(this.character, AttackType.Special);
+            spriteAttack = new Texture2D[tempAttack.spriteLength];
 
             //load the characters running and attact sprites
             for (int i = 0; i < spriteRunLength; i++)
@@ -285,12 +236,12 @@ namespace SmashBrosShippuden
                 spriteRun[i] = content.Load<Texture2D>(character + "/" + character.ToLower() + "Run" + (i + 1));
             }
 
-            for (int i = 0; i < spriteAttack1Length; i++)
+            for (int i = 0; i < spriteSmash.Length; i++)
             {
                 spriteSmash[i] = content.Load<Texture2D>(character + "/" + character.ToLower() + "Smash" + (i + 1));
             }
 
-            for (int i = 0; i < spriteAttack2Length; i++)
+            for (int i = 0; i < spriteAttack.Length; i++)
             {
                 spriteAttack[i] = content.Load<Texture2D>(character + "/" + character.ToLower() + "Attack" + (i + 1));
             }
@@ -329,8 +280,6 @@ namespace SmashBrosShippuden
                 luigiTaunt[i] = content.Load<Texture2D>("Luigi/luigiTaunt" + (i + 1));
             }
 
-            goWeegee = content.Load<SoundEffect>("Luigi/luigi021");
-
             aspectRatio = (float)spriteRun[0].Height / spriteRun[0].Width;
 
             //small hitbox corrections for characters with space below their feet
@@ -363,6 +312,8 @@ namespace SmashBrosShippuden
         //display the sprite for each characters animations
         private void displaySprite()
         {
+            this.attackFrame = false;
+
             //scroll through animations
             if (counter % counterSpriteModifier == 0)
             {
@@ -378,21 +329,25 @@ namespace SmashBrosShippuden
             if (Math.Abs(knockback) > 4)
             {
                 texture = spriteHurt[0];
-                this.attack = AttackType.None;
+                this.attack = null;
                 jump = false;
             }
 
             //make the character do their special attack
-            else if (this.attack == AttackType.Special)
+            else if (this.attack != null && this.attack.attackType == AttackType.Special)
             {
-                specialAttack();
                 if (character != "Knuckles" && character != "Pichu")
                 {
                     dx = 0;
                 }
 
-                if (counterSprite < spriteAttack2Length)
+                if (counterSprite < spriteAttack.Length)
                 {
+                    if (Array.IndexOf(this.attack.attackFrame, counterSprite) > -1 && counter % counterSpriteModifier == 0)
+                    {
+                        this.attackFrame = true;
+                    }
+
                     texture = spriteAttack[counterSprite];
 
                     if (counterSprite == 1 && counter % counterSpriteModifier == 1 && (character == "Link" || character == "Pichu"))
@@ -403,20 +358,20 @@ namespace SmashBrosShippuden
 
                 else
                 {
-                    this.attack = AttackType.None;
+                    this.attack = null;
                 }
             }
 
             //Display the attack animation when a player attacks
-            else if (this.attack == AttackType.Jab)
+            else if (this.attack != null && this.attack.attackType == AttackType.Jab)
             {
-                if (counterSprite < spriteAttack1Length)
+                if (counterSprite < spriteSmash.Length)
                 {
                     texture = spriteSmash[counterSprite];
 
-                    if (counterSprite == counterSpriteAttack && counter % counterSpriteModifier == 0)
+                    if (Array.IndexOf(this.attack.attackFrame, counterSprite) > -1 && counter % counterSpriteModifier == 0)
                     {
-                        attackFrame = true;
+                        this.attackFrame = true;
                     }
                     //if (counterSprite == 2 && counter % counterSpriteModifier == 1 && (character != "Shrek" && character != "King") || (counterSprite == 5 && counter % counterSpriteModifier == 1 && character == "King"))
                     //{
@@ -425,7 +380,7 @@ namespace SmashBrosShippuden
                 }
                 else
                 {
-                    this.attack = AttackType.None;
+                    this.attack = null;
                 }
             }
 
@@ -452,12 +407,23 @@ namespace SmashBrosShippuden
             }
         }
 
+        // return whether a projectile should be created at the current frame
+        public bool createProjectile()
+        {
+            return this.attack != null && this.attackFrame && this.attack.createProjectile;
+        }
+
+        public bool isAttackFrame()
+        {
+            return this.attack != null && this.attackFrame;
+        }
+
         //getting input
         public void getInput(GamePadState pad1)
         {
             if (pad1.ThumbSticks.Left.X < -0.1)
             {
-                if (this.attack != AttackType.None && direction == "Right")
+                if (this.attack != null && direction == "Right")
                 {
 
                 }
@@ -470,7 +436,7 @@ namespace SmashBrosShippuden
             }
             if (pad1.ThumbSticks.Left.X > 0.1)
             {
-                if (this.attack != AttackType.None && direction == "Left")
+                if (this.attack != null && direction == "Left")
                 {
 
                 }
@@ -482,7 +448,7 @@ namespace SmashBrosShippuden
                 }
             }
 
-            if ((pad1.Buttons.B == ButtonState.Pressed || pad1.Buttons.Y == ButtonState.Pressed) && jump == false && this.attack == AttackType.None)
+            if ((pad1.Buttons.B == ButtonState.Pressed || pad1.Buttons.Y == ButtonState.Pressed) && jump == false && this.attack == null)
             {
                 jump = true;
                 jumpHeight = 9;
@@ -490,16 +456,16 @@ namespace SmashBrosShippuden
                 taunt = false;
             }
 
-            if (pad1.Buttons.X == ButtonState.Pressed && this.attack == AttackType.None)
+            if (pad1.Buttons.X == ButtonState.Pressed && this.attack == null)
             {
-                this.attack = AttackType.Special;
+                this.attack = new Attack(this.character, AttackType.Special);
                 counterSprite = 0;
                 taunt = false;
             }
 
-            if (pad1.Buttons.A == ButtonState.Pressed && this.attack == AttackType.None)
+            if (pad1.Buttons.A == ButtonState.Pressed && this.attack == null)
             {
-                this.attack = AttackType.Jab;
+                this.attack = new Attack(this.character, AttackType.Jab);
                 counterSprite = 0;
                 taunt = false;
             }
@@ -530,9 +496,9 @@ namespace SmashBrosShippuden
 
             direction = newDirection;
 
-            if (this.attack == AttackType.None && attacking == true)
+            if (this.attack == null && attacking == true)
             {
-                this.attack = AttackType.Jab;
+                this.attack = new Attack(this.character, AttackType.Jab);
                 counterSprite = 0;
                 taunt = false;
             }
@@ -563,108 +529,28 @@ namespace SmashBrosShippuden
             }
         }
 
-        //the special attack
-        private void specialAttack()
-        {
-            //Shrek does a special punch
-            if ((character == "Shrek" || character == "Metaknight" || character == "Sonic") && counterSprite == 4 && counter % counterSpriteModifier == 0)
-            {
-                attackFrame = true;
-            }
-
-            //knuckles does a fire punch
-            if (character == "Knuckles" && counterSprite == 2 && counter % counterSpriteModifier == 0)
-            {
-                attackFrame = true;
-            }
-
-            //kirby does a fire punch
-            if ((character == "Kirby" || character == "King") && counterSprite == 3 && counter % counterSpriteModifier == 0)
-            {
-                attackFrame = true;
-            }
-
-            //shadow creates a shield
-            if (character == "Shadow" && counterSprite >= 3 && counterSprite <= 10 && counter % counterSpriteModifier == 0)
-            {
-                attackFrame = true;
-            }
-
-            if (character == "Blastoise" && counter % 10 == 0)
-            {
-                attackFrame = true;
-            }
-
-            if (character == "Link" && (counterSprite == 3 || counterSprite == 7) && counter % counterSpriteModifier == 0)
-            {
-                attackFrame = true;
-            }
-        }
-
-        public bool createProjectile()
-        {
-            if (counter % counterSpriteModifier != 0 || this.attack != AttackType.Special)
-            {
-                return false;
-            }
-
-            //Mewtwo fires a projectile
-            else if (character == "Mewtwo" && counterSprite == 3)
-            {
-                return true;
-            }
-
-            //Charizard fires a projectile
-            else if ((character == "Charizard") && counterSprite == 2)
-            {
-                return true;
-            }
-
-            //Mario and Luigi fire projectiles
-            else if ((character == "Mario" || character == "Luigi") && counterSprite == 4)
-            {
-                return true;
-            }
-
-            else if (character == "Pichu" && counterSprite == 1)
-            {
-                return true;
-            }
-
-            //blastoise fires a projectile
-            else if (character == "Blastoise" && counterSprite >= 2)
-            {
-                return true;
-            }
-
-            else
-            {
-                return false;
-            }
-        }
-
         //send the damage being dealt
         public int attackType()
         {
-            if (this.attack == AttackType.Jab && attackFrame == true)
+            if (this.attack.attackType == AttackType.Jab && attackFrame == true)
             {
                 attackFrame = false;
                 return 1;
             }
 
-            else if (this.attack == AttackType.Special && attackFrame == true && character == "Link" && counterSprite == 7)
+            else if (this.attack.attackType == AttackType.Special && attackFrame == true && character == "Link" && counterSprite == 7)
             {
                 attackFrame = false;
                 return 4;
             }
 
-            else if (this.attack == AttackType.Special && attackFrame == true)
+            else if (this.attack.attackType == AttackType.Special && attackFrame == true)
             {
                 attackFrame = false;
                 return 2;
             }
 
-            else if (this.attack == AttackType.Special && character == "Shadow")
+            else if (this.attack.attackType == AttackType.Special && character == "Shadow")
             {
                 return 3;
             }
@@ -723,18 +609,16 @@ namespace SmashBrosShippuden
         {
             //add the damage taken to the players health
             damageTaken += damage;
-            knockup = (int)(damageTaken * Math.Abs(newKnockback) / 50);
-
-            //knock players back further the more damage they've taken
-            if (newKnockback > 0 && Math.Abs(knockback) < (newKnockback * (damageTaken / 30)))
+            knockup = 3 + (Math.Abs(newKnockback) * damageTaken / 50);
+            if (newKnockback > 0)
             {
-                knockback = (newKnockback * (damageTaken / 25));
+                knockback = 3 + newKnockback * (5 + damageTaken / 25);
             }
-
-            if (newKnockback < 0 && Math.Abs(knockback) < Math.Abs(newKnockback * (damageTaken / 30)))
+            else
             {
-                knockback = (newKnockback * (damageTaken / 25));
+                knockback = -3 + newKnockback * (5 + damageTaken / 25);
             }
+            
         }
 
         //tell Game1 when the player dies

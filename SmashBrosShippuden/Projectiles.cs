@@ -15,7 +15,6 @@ namespace SmashBrosShippuden
         int startpointX;
         int startpointbot;
         int counter;
-        int dx = 0;
         int damage;
         int knockback;
 
