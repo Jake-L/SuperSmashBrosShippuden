@@ -213,6 +213,14 @@ namespace SmashBrosShippuden
                 widthScaling = 3;
             }
 
+            else if (character == "Sasuke")
+            {
+                spriteRunLength = 2;
+                counterSpriteModifier = 6;
+                counterSpriteModRun = 6;
+                widthScaling = 3;
+            }
+
             else if (character == "waddle")
             {
                 widthScaling = 0.9f;
@@ -306,7 +314,7 @@ namespace SmashBrosShippuden
                 picboxHeightModifier = 0;
             }
 
-            this.rectangle = new Rectangle(displayWidth * (player) / 5, (finalDestinationRec.Top + stageHeightAdjustment - (int)(aspectRatio * widthScaling * (displayWidth / 15)) + picboxHeightModifier), (int)(displayWidth * widthScaling / 15), (int)(aspectRatio * widthScaling * (displayWidth / 15)));
+            this.rectangle = new Rectangle(displayWidth * (player) / 5, (finalDestinationRec.Top + stageHeightAdjustment - (int)(aspectRatio * widthScaling * (displayWidth / 15)) + picboxHeightModifier), spriteRun[0].Width * 4, spriteRun[0].Height * 4);
         }
 
         //display the sprite for each characters animations
