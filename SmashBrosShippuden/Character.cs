@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.Transactions;
 
 namespace SmashBrosShippuden
 {
@@ -17,10 +18,9 @@ namespace SmashBrosShippuden
         protected int knockup;
         protected int counter;
         protected int counterSprite;
-        protected int counterSprite2;
         protected int counterSpriteModifier;
-        protected int counterSpriteModRun;
         protected int counterTaunt;
+        protected int spriteIdleLength = 1;
         protected int spriteRunLength;
         protected int jumpHeight;
         public int damageTaken;
@@ -28,6 +28,7 @@ namespace SmashBrosShippuden
         public Attack attack;
         protected bool jump;
         protected bool taunt;
+        protected bool isShielding;
         protected bool attackFrame;
         protected bool isBot;
         protected bool isDead;
@@ -42,8 +43,10 @@ namespace SmashBrosShippuden
         Texture2D[] spriteRun;
         Texture2D[] spriteAttack;
         Texture2D[] spriteSmash;
+        Texture2D[] spriteIdle;
         Texture2D[] spriteJump = new Texture2D[1];
         Texture2D[] spriteHurt = new Texture2D[1];
+        Texture2D[] shieldEffect = new Texture2D[10];
         Texture2D[] luigiTaunt = new Texture2D[12];
         public Texture2D LivesIcon;
         public Texture2D seriesSymbol;
@@ -105,7 +108,6 @@ namespace SmashBrosShippuden
             {
                 spriteRunLength = 8;
                 counterSpriteModifier = 5;
-                counterSpriteModRun = 8;
                 widthScaling = 2;
             }
 
@@ -113,7 +115,6 @@ namespace SmashBrosShippuden
             {
                 spriteRunLength = 8;
                 counterSpriteModifier = 5;
-                counterSpriteModRun = 8;
                 widthScaling = 2.2f;
             }
 
@@ -121,7 +122,6 @@ namespace SmashBrosShippuden
             {
                 spriteRunLength = 4;
                 counterSpriteModifier = 8;
-                counterSpriteModRun = 8;
                 widthScaling = 1.5f;
             }
 
@@ -129,7 +129,6 @@ namespace SmashBrosShippuden
             {
                 spriteRunLength = 2;
                 counterSpriteModifier = 10;
-                counterSpriteModRun = 8;
                 widthScaling = 1.7f;
             }
 
@@ -137,15 +136,14 @@ namespace SmashBrosShippuden
             {
                 spriteRunLength = 4;
                 counterSpriteModifier = 8;
-                counterSpriteModRun = 10;
                 widthScaling = 2;
             }
 
             else if (character == "Shadow")
             {
+                spriteIdleLength = 6;
                 spriteRunLength = 9;
                 counterSpriteModifier = 5;
-                counterSpriteModRun = 6;
                 widthScaling = 2.2f;
             }
 
@@ -153,15 +151,14 @@ namespace SmashBrosShippuden
             {
                 spriteRunLength = 8;
                 counterSpriteModifier = 6;
-                counterSpriteModRun = 5;
                 widthScaling = 1.5f;
             }
 
             else if (character == "Sonic")
             {
+                spriteIdleLength = 6;
                 spriteRunLength = 8;
                 counterSpriteModifier = 5;
-                counterSpriteModRun = 6;
                 widthScaling = 1.7f;
             }
 
@@ -169,7 +166,6 @@ namespace SmashBrosShippuden
             {
                 spriteRunLength = 6;
                 counterSpriteModifier = 4;
-                counterSpriteModRun = 6;
                 widthScaling = 2.3f;
             }
 
@@ -177,7 +173,6 @@ namespace SmashBrosShippuden
             {
                 spriteRunLength = 8;
                 counterSpriteModifier = 6;
-                counterSpriteModRun = 6;
                 widthScaling = 2;
             }
 
@@ -185,7 +180,6 @@ namespace SmashBrosShippuden
             {
                 spriteRunLength = 4;
                 counterSpriteModifier = 6;
-                counterSpriteModRun = 8;
                 widthScaling = 1.4f;
             }
 
@@ -193,7 +187,6 @@ namespace SmashBrosShippuden
             {
                 spriteRunLength = 8;
                 counterSpriteModifier = 4;
-                counterSpriteModRun = 4;
                 widthScaling = 4f;
             }
 
@@ -201,7 +194,6 @@ namespace SmashBrosShippuden
             {
                 spriteRunLength = 10;
                 counterSpriteModifier = 6;
-                counterSpriteModRun = 5;
                 widthScaling = 2.2f;
             }
 
@@ -209,15 +201,14 @@ namespace SmashBrosShippuden
             {
                 spriteRunLength = 4;
                 counterSpriteModifier = 7;
-                counterSpriteModRun = 8;
                 widthScaling = 3;
             }
 
             else if (character == "Sasuke")
             {
+                spriteIdleLength = 4;
                 spriteRunLength = 2;
-                counterSpriteModifier = 6;
-                counterSpriteModRun = 6;
+                counterSpriteModifier = 8;
                 widthScaling = 3;
             }
 
@@ -226,13 +217,13 @@ namespace SmashBrosShippuden
                 widthScaling = 0.9f;
                 spriteRunLength = 8;
                 counterSpriteModifier = 6;
-                counterSpriteModRun = 6;
             }
         }
 
         public override void LoadContent(ContentManager content)
         { 
             spriteRun = new Texture2D[spriteRunLength];
+            spriteIdle = new Texture2D[spriteIdleLength];
             Attack tempAttack = new Attack(this.character, AttackType.Jab);
             spriteSmash = new Texture2D[tempAttack.spriteLength];
             tempAttack = new Attack(this.character, AttackType.Special);
@@ -242,6 +233,11 @@ namespace SmashBrosShippuden
             for (int i = 0; i < spriteRunLength; i++)
             {
                 spriteRun[i] = content.Load<Texture2D>(character + "/" + character.ToLower() + "Run" + (i + 1));
+            }
+
+            for (int i = 0; i < spriteIdleLength; i++)
+            {
+                spriteIdle[i] = content.Load<Texture2D>(character + "/" + character.ToLower() + (i + 1));
             }
 
             for (int i = 0; i < spriteSmash.Length; i++)
@@ -259,6 +255,12 @@ namespace SmashBrosShippuden
 
             //hurt sprites
             spriteHurt[0] = content.Load<Texture2D>(character + "/" + character.ToLower() + "Hurt");
+
+            // shield sprites
+            for (int i = 0; i < this.shieldEffect.Length; i++)
+            {
+                this.shieldEffect[i] = content.Load<Texture2D>("Effects/guard" + i);
+            }
 
             //character icons and symbol 
             if (character != "waddle")
@@ -326,11 +328,6 @@ namespace SmashBrosShippuden
             if (counter % counterSpriteModifier == 0)
             {
                 counterSprite++;
-            }
-
-            if (counter % counterSpriteModRun == 0)
-            {
-                counterSprite2++;
             }
 
             //display the damaged animation when they take tons of damage
@@ -408,10 +405,15 @@ namespace SmashBrosShippuden
                 //}
             }
 
-            //If the player isnt doing anything, display running animation
+            else if (this.dx != 0)
+            {
+                texture = spriteRun[counterSprite % spriteRunLength];
+            }
+
+            //If the player isnt doing anything, display idle animation
             else
             {
-                texture = spriteRun[counterSprite2 % spriteRunLength];
+                texture = spriteIdle[counterSprite % spriteIdleLength];
             }
         }
 
@@ -429,56 +431,55 @@ namespace SmashBrosShippuden
         //getting input
         public void getInput(GamePadState pad1)
         {
-            if (pad1.ThumbSticks.Left.X < -0.1)
-            {
-                if (this.attack != null && direction == "Right")
-                {
+            taunt = false;
 
-                }
-                else
-                {
-                    direction = "Left";
-                    dx = -3;
-                    taunt = false;
-                }
-            }
-            if (pad1.ThumbSticks.Left.X > 0.1)
+            // clear released input
+            if (pad1.Triggers.Right < 0.5 && this.isShielding)
             {
-                if (this.attack != null && direction == "Left")
-                {
-
-                }
-                else
-                {
-                    direction = "Right";
-                    dx = 3;
-                    taunt = false;
-                }
+                this.isShielding = false;
             }
 
-            if ((pad1.Buttons.B == ButtonState.Pressed || pad1.Buttons.Y == ButtonState.Pressed) && jump == false && this.attack == null)
+            // no input processed when attacking or during knockback
+            if (this.attack != null || Math.Abs(knockback) > 2)
+            {
+                this.isShielding = false;
+                return;
+            }
+
+            else if (pad1.Triggers.Right > 0.5 && !this.jump)
+            {
+                if (!this.isShielding)
+                {
+                    this.isShielding = true;
+                }
+            }
+            else if (pad1.Buttons.X == ButtonState.Pressed)
+            {
+                this.attack = new Attack(this.character, AttackType.Special);
+                counterSprite = 0;
+            }
+            else if (pad1.Buttons.A == ButtonState.Pressed)
+            {
+                this.attack = new Attack(this.character, AttackType.Jab);
+                counterSprite = 0;
+            }
+            else if ((pad1.Buttons.B == ButtonState.Pressed || pad1.Buttons.Y == ButtonState.Pressed) && jump == false)
             {
                 jump = true;
                 jumpHeight = 9;
                 counterSprite = 0;
-                taunt = false;
             }
-
-            if (pad1.Buttons.X == ButtonState.Pressed && this.attack == null)
+            else if (pad1.ThumbSticks.Left.X < -0.1)
             {
-                this.attack = new Attack(this.character, AttackType.Special);
-                counterSprite = 0;
-                taunt = false;
+                direction = "Left";
+                dx = -3;
             }
-
-            if (pad1.Buttons.A == ButtonState.Pressed && this.attack == null)
+            else if (pad1.ThumbSticks.Left.X > 0.1)
             {
-                this.attack = new Attack(this.character, AttackType.Jab);
-                counterSprite = 0;
-                taunt = false;
+                direction = "Right";
+                dx = 3;
             }
-
-            if (pad1.DPad.Up == ButtonState.Pressed && character == "Luigi")
+            else if (pad1.DPad.Up == ButtonState.Pressed && character == "Luigi")
             {
                 taunt = true;
             }
@@ -633,6 +634,27 @@ namespace SmashBrosShippuden
         public bool setDeath()
         {
             return isDead;
+        }
+
+        public bool shieldBlock()
+        {
+            return this.isShielding;
+        }
+
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            base.Draw(spriteBatch);
+
+            if (this.isShielding)
+            {
+                Rectangle shieldEffectRec = new Rectangle(
+                    this.rectangle.X + this.rectangle.Width / 2 - this.shieldEffect[0].Width * 2,
+                    this.rectangle.Y + this.rectangle.Height / 2 - this.shieldEffect[0].Height * 2,
+                    this.shieldEffect[0].Width * 4,
+                    this.shieldEffect[0].Height * 4
+                );
+                spriteBatch.Draw(this.shieldEffect[counterSprite % this.shieldEffect.Length], shieldEffectRec, Color.White);
+            }
         }
     }
 }

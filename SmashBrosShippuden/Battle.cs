@@ -143,7 +143,7 @@ namespace SmashBrosShippuden
             if (character[0] != null && character[1] == null && character[2] == null && character[3] == null)
             {
                 player2Bot = true;
-                character[1] = "Kirby";
+                character[1] = "Shadow";
                 PlayerClass[1] = new Character(PlayerPicBox[1], null, direction[1], 1, character[1], displayWidth, displayHeight, finalDestinationRec, stageHeightAdjustment, true);
                 PlayerClass[1].LoadContent(this.content);
             }
@@ -306,7 +306,7 @@ namespace SmashBrosShippuden
                     //check if the players attacks hit anyone
                     for (int j = 0; j < 4; j++)
                     {
-                        if (j != i && PlayerPicBox[j].IsEmpty == false)
+                        if (j != i && PlayerPicBox[j].IsEmpty == false && !PlayerClass[j].shieldBlock())
                         {
                             if (PlayerPicBox[i].Intersects(PlayerPicBox[j]))
                             {
