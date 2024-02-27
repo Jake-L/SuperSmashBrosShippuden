@@ -80,8 +80,7 @@ namespace SmashBrosShippuden
 
                 if (rectangle.Top > finalDestinationRec.Top - stageHeightAdjustment)
                 {
-                    jump = true;
-                    jumpHeight = 9;
+                    dy = -5;
                 }
             }
         }

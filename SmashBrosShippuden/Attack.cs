@@ -72,7 +72,7 @@
                 if (this.attackType == AttackType.Jab)
                 {
                     this.damage = 9;
-                    this.knockback = 2;
+                    this.knockback = 1;
                     this.spriteLength = 5;
                     this.attackFrame = new int[] { 3 };
                 }

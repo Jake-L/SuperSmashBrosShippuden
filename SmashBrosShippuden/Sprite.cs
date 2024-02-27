@@ -10,7 +10,7 @@ namespace SmashBrosShippuden
         protected Texture2D texture;
         public string direction = "Right";
         public int dx = 0;
-        public int dy = 0;
+        public int? dy = 0;
 
         public Sprite(Texture2D newTexture, Rectangle newRectangle)
         {

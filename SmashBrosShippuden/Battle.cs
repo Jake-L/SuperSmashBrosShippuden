@@ -144,8 +144,14 @@ namespace SmashBrosShippuden
             {
                 player2Bot = true;
                 character[1] = "Shadow";
-                PlayerClass[1] = new Character(PlayerPicBox[1], null, direction[1], 1, character[1], displayWidth, displayHeight, finalDestinationRec, stageHeightAdjustment, true);
-                PlayerClass[1].LoadContent(this.content);
+                character[2] = "Kirby";
+                character[3] = "Sasuke";
+
+                for (int i = 1; i < 4; i++)
+                {
+                    PlayerClass[i] = new Character(PlayerPicBox[i], null, direction[i], i, character[i], displayWidth, displayHeight, finalDestinationRec, stageHeightAdjustment, true);
+                    PlayerClass[i].LoadContent(this.content);
+                }
             }
 
             for (int i = 0; i < 4; i++)
@@ -176,9 +182,9 @@ namespace SmashBrosShippuden
             {
                 if (character[i] != null)
                 {
-                    if (i == 1 && this.player2Bot)
+                    if (i >= 1 && this.player2Bot)
                     {
-                        this.controlBot();
+                        // this.controlBot();
                     }
                     else
                     {

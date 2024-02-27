@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.Diagnostics;
 using System.Transactions;
 
 namespace SmashBrosShippuden
@@ -19,14 +20,14 @@ namespace SmashBrosShippuden
         protected int counter;
         protected int counterSprite;
         protected int counterSpriteModifier;
-        protected int counterTaunt;
         protected int spriteIdleLength = 1;
         protected int spriteRunLength;
         protected int jumpHeight;
+        protected int jumpCounter;
+        protected int moveSpeed;
         public int damageTaken;
         protected int picboxHeightModifier;
         public Attack attack;
-        protected bool jump;
         protected bool taunt;
         protected bool isShielding;
         protected bool attackFrame;
@@ -84,14 +85,12 @@ namespace SmashBrosShippuden
             gravity();
             knockbackMethod();
             rectangle.X += dx;
-            rectangle.Y += dy;
-            dx = 0;
-            dy = 0;
-
-            if (counter % 3 == 0)
+            if (dy != null)
             {
-                counterTaunt++;
+                rectangle.Y += (int)dy;
             }
+            
+            dx = 0;
         }
 
         public void UnloadContent()
@@ -106,6 +105,8 @@ namespace SmashBrosShippuden
         {
             if (character == "Mario")
             {
+                this.moveSpeed = 3;
+                spriteIdleLength = 4;
                 spriteRunLength = 8;
                 counterSpriteModifier = 5;
                 widthScaling = 2;
@@ -113,6 +114,8 @@ namespace SmashBrosShippuden
 
             else if (character == "Luigi")
             {
+                this.moveSpeed = 3;
+                spriteIdleLength = 4;
                 spriteRunLength = 8;
                 counterSpriteModifier = 5;
                 widthScaling = 2.2f;
@@ -120,6 +123,8 @@ namespace SmashBrosShippuden
 
             else if (character == "Pichu")
             {
+                this.moveSpeed = 4;
+                spriteIdleLength = 2;
                 spriteRunLength = 4;
                 counterSpriteModifier = 8;
                 widthScaling = 1.5f;
@@ -127,6 +132,8 @@ namespace SmashBrosShippuden
 
             else if (character == "Mewtwo")
             {
+                this.moveSpeed = 3;
+                spriteIdleLength = 2;
                 spriteRunLength = 2;
                 counterSpriteModifier = 10;
                 widthScaling = 1.7f;
@@ -134,6 +141,8 @@ namespace SmashBrosShippuden
 
             else if (character == "Charizard")
             {
+                this.moveSpeed = 2;
+                spriteIdleLength = 1;
                 spriteRunLength = 4;
                 counterSpriteModifier = 8;
                 widthScaling = 2;
@@ -141,14 +150,16 @@ namespace SmashBrosShippuden
 
             else if (character == "Shadow")
             {
+                this.moveSpeed = 6;
                 spriteIdleLength = 6;
-                spriteRunLength = 9;
-                counterSpriteModifier = 5;
+                spriteRunLength = 28;
+                counterSpriteModifier = 6;
                 widthScaling = 2.2f;
             }
 
             else if (character == "Knuckles")
             {
+                this.moveSpeed = 4;
                 spriteRunLength = 8;
                 counterSpriteModifier = 6;
                 widthScaling = 1.5f;
@@ -156,14 +167,17 @@ namespace SmashBrosShippuden
 
             else if (character == "Sonic")
             {
+                this.moveSpeed = 6;
                 spriteIdleLength = 6;
                 spriteRunLength = 8;
-                counterSpriteModifier = 5;
+                counterSpriteModifier = 6;
                 widthScaling = 1.7f;
             }
 
             else if (character == "Link")
             {
+                this.moveSpeed = 3;
+                spriteIdleLength = 1;
                 spriteRunLength = 6;
                 counterSpriteModifier = 4;
                 widthScaling = 2.3f;
@@ -171,6 +185,7 @@ namespace SmashBrosShippuden
 
             else if (character == "Shrek")
             {
+                this.moveSpeed = 2;
                 spriteRunLength = 8;
                 counterSpriteModifier = 6;
                 widthScaling = 2;
@@ -178,6 +193,7 @@ namespace SmashBrosShippuden
 
             else if (character == "Blastoise")
             {
+                this.moveSpeed = 3;
                 spriteRunLength = 4;
                 counterSpriteModifier = 6;
                 widthScaling = 1.4f;
@@ -185,6 +201,7 @@ namespace SmashBrosShippuden
 
             else if (character == "Metaknight")
             {
+                this.moveSpeed = 4;
                 spriteRunLength = 8;
                 counterSpriteModifier = 4;
                 widthScaling = 4f;
@@ -192,6 +209,8 @@ namespace SmashBrosShippuden
 
             else if (character == "Kirby")
             {
+                this.moveSpeed = 4;
+                spriteIdleLength = 8;
                 spriteRunLength = 10;
                 counterSpriteModifier = 6;
                 widthScaling = 2.2f;
@@ -199,6 +218,8 @@ namespace SmashBrosShippuden
 
             else if (character == "King")
             {
+                this.moveSpeed = 2;
+                spriteIdleLength = 1;
                 spriteRunLength = 4;
                 counterSpriteModifier = 7;
                 widthScaling = 3;
@@ -206,6 +227,7 @@ namespace SmashBrosShippuden
 
             else if (character == "Sasuke")
             {
+                this.moveSpeed = 5;
                 spriteIdleLength = 4;
                 spriteRunLength = 2;
                 counterSpriteModifier = 8;
@@ -214,10 +236,13 @@ namespace SmashBrosShippuden
 
             else if (character == "waddle")
             {
+                this.moveSpeed = 2;
                 widthScaling = 0.9f;
                 spriteRunLength = 8;
                 counterSpriteModifier = 6;
             }
+
+            this.jumpCounter = 1;
         }
 
         public override void LoadContent(ContentManager content)
@@ -325,17 +350,13 @@ namespace SmashBrosShippuden
             this.attackFrame = false;
 
             //scroll through animations
-            if (counter % counterSpriteModifier == 0)
-            {
-                counterSprite++;
-            }
+            counterSprite = counter / counterSpriteModifier;
 
             //display the damaged animation when they take tons of damage
             if (Math.Abs(knockback) > 4)
             {
                 texture = spriteHurt[0];
                 this.attack = null;
-                jump = false;
             }
 
             //make the character do their special attack
@@ -390,14 +411,14 @@ namespace SmashBrosShippuden
             }
 
             //display jumping sprite
-            else if (jump == true)
+            else if (this.dy != null)
             {
                 texture = spriteJump[0];
             }
 
             else if (taunt == true)
             {
-                texture = luigiTaunt[counterTaunt % luigiTaunt.Length];
+                texture = luigiTaunt[counterSprite % luigiTaunt.Length];
 
                 //if (counter % 50 == 0)
                 //{
@@ -425,7 +446,7 @@ namespace SmashBrosShippuden
 
         public bool isAttackFrame()
         {
-            return this.attack != null && this.attackFrame;
+            return this.attack != null && this.attackFrame && !this.attack.createProjectile;
         }
 
         //getting input
@@ -433,10 +454,16 @@ namespace SmashBrosShippuden
         {
             taunt = false;
 
-            // clear released input
-            if (pad1.Triggers.Right < 0.5 && this.isShielding)
+            // shield is released based on a counter
+            if (this.isShielding && this.counter >= 99)
             {
                 this.isShielding = false;
+            }
+
+            // add endlag for releasing the shield
+            if (pad1.Triggers.Right < 0.5 && this.isShielding && this.counter < 80)
+            {
+                this.counter = 80;
             }
 
             // no input processed when attacking or during knockback
@@ -446,38 +473,42 @@ namespace SmashBrosShippuden
                 return;
             }
 
-            else if (pad1.Triggers.Right > 0.5 && !this.jump)
+            else if (pad1.Triggers.Right > 0.5 && this.dy == null)
             {
                 if (!this.isShielding)
                 {
                     this.isShielding = true;
+                    this.counter = 0;
                 }
             }
             else if (pad1.Buttons.X == ButtonState.Pressed)
             {
                 this.attack = new Attack(this.character, AttackType.Special);
-                counterSprite = 0;
+                counter = 0;
             }
             else if (pad1.Buttons.A == ButtonState.Pressed)
             {
                 this.attack = new Attack(this.character, AttackType.Jab);
-                counterSprite = 0;
+                counter = 0;
             }
-            else if ((pad1.Buttons.B == ButtonState.Pressed || pad1.Buttons.Y == ButtonState.Pressed) && jump == false)
+            else if ((pad1.Buttons.B == ButtonState.Pressed || pad1.Buttons.Y == ButtonState.Pressed) 
+                && this.jumpCounter > 0
+                // add a counter delay if they multiple jumps so they aren't all used instantly
+                && (this.dy == null || (counter > 30)))
             {
-                jump = true;
-                jumpHeight = 9;
-                counterSprite = 0;
+                this.jumpCounter--;
+                this.dy = -8;
+                counter = 0;
             }
             else if (pad1.ThumbSticks.Left.X < -0.1)
             {
                 direction = "Left";
-                dx = -3;
+                dx = -1 * this.moveSpeed;
             }
             else if (pad1.ThumbSticks.Left.X > 0.1)
             {
                 direction = "Right";
-                dx = 3;
+                dx = this.moveSpeed;
             }
             else if (pad1.DPad.Up == ButtonState.Pressed && character == "Luigi")
             {
@@ -488,6 +519,10 @@ namespace SmashBrosShippuden
         //control bots
         public void getInputBots(int newDX, bool jumping, string newDirection, bool attacking)
         {
+            if (knockback != 0)
+            {
+                return;
+            }
             if (dx == 0 && newDX != 0)
             {
                 taunt = false;
@@ -495,12 +530,12 @@ namespace SmashBrosShippuden
 
             dx = newDX;
 
-            if (jump == false && jumping == true)
+            if (this.dy == null && this.jumpCounter > 0 && jumping == true)
             {
-                jump = true;
-                jumpHeight = 9;
-                counterSprite = 0;
+                this.dy = -8;
+                counter = 0;
                 taunt = false;
+                this.jumpCounter--;
             }
 
             direction = newDirection;
@@ -508,7 +543,7 @@ namespace SmashBrosShippuden
             if (this.attack == null && attacking == true)
             {
                 this.attack = new Attack(this.character, AttackType.Jab);
-                counterSprite = 0;
+                counter = 0;
                 taunt = false;
             }
         }
@@ -516,54 +551,62 @@ namespace SmashBrosShippuden
         //the physics engine 
         private void gravity()
         {
-            //make characters fall if they are not on a platform
-            if ((rectangle.Bottom - picboxHeightModifier >= finalDestinationRec.Top + stageHeightAdjustment && rectangle.Bottom - picboxHeightModifier <= finalDestinationRec.Top + stageHeightAdjustment + 15 && rectangle.Left + (rectangle.Width / 2) >= finalDestinationRec.Left && rectangle.Right - (rectangle.Width / 2) <= finalDestinationRec.Right) == false)
+            // no action needed when player is jumping upwards
+            if (this.dy < 0)
             {
-                rectangle.Y += 4; //was 2
-            }
-            if (jump == true)
-            {
-                rectangle.Y -= jumpHeight;
+
             }
 
-            //make the height of the jump decay over time
-            if (jump == true && counter % 10 == 0)
+            // dy set to null when they land
+            else if (rectangle.Bottom - picboxHeightModifier >= finalDestinationRec.Top + stageHeightAdjustment && rectangle.Bottom - picboxHeightModifier <= finalDestinationRec.Top + stageHeightAdjustment + 15 && rectangle.Left + (rectangle.Width / 2) >= finalDestinationRec.Left && rectangle.Right - (rectangle.Width / 2) <= finalDestinationRec.Right)
             {
-                jumpHeight -= 1;
+                this.jumpCounter = 1;
+                this.dy = null;
+                if (this.knockup <= 4)
+                {
+                    this.knockup = 0;
+                }
             }
-            if (rectangle.Bottom - picboxHeightModifier >= finalDestinationRec.Top + stageHeightAdjustment && rectangle.Bottom - picboxHeightModifier <= finalDestinationRec.Top + stageHeightAdjustment + 15 && rectangle.Left + (rectangle.Width / 2) >= finalDestinationRec.Left && rectangle.Right - (rectangle.Width / 2) <= finalDestinationRec.Right)
+            //make characters fall if they are not on a platform
+            else if (this.dy == null)
             {
-                jumpHeight = 0;
-                jump = false;
+                this.dy = 4;
+            }
+
+
+            if (this.dy != null && this.dy < 8)
+            {
+                //make the height of the jump decay over time
+                if (counter % 5 == 0)
+                {
+                    this.dy += 1;
+                }
             }
         }
 
         //send the damage being dealt
         public int attackType()
         {
-            if (this.attack.attackType == AttackType.Jab && attackFrame == true)
+            if (this.attack == null)
             {
-                attackFrame = false;
+                return 0;
+            }
+            else if (this.attack.attackType == AttackType.Jab && attackFrame == true)
+            {
                 return 1;
             }
-
             else if (this.attack.attackType == AttackType.Special && attackFrame == true && character == "Link" && counterSprite == 7)
             {
-                attackFrame = false;
                 return 4;
             }
-
             else if (this.attack.attackType == AttackType.Special && attackFrame == true)
             {
-                attackFrame = false;
                 return 2;
             }
-
             else if (this.attack.attackType == AttackType.Special && character == "Shadow")
             {
                 return 3;
             }
-
             else
             {
                 return 0;
@@ -618,14 +661,16 @@ namespace SmashBrosShippuden
         {
             //add the damage taken to the players health
             damageTaken += damage;
-            knockup = 3 + (Math.Abs(newKnockback) * damageTaken / 50);
+            knockup = 2 + Math.Abs(newKnockback) * (2 + damageTaken / 50);
             if (newKnockback > 0)
             {
-                knockback = 3 + newKnockback * (5 + damageTaken / 25);
+                knockback = 2 + newKnockback * (2 + damageTaken / 25);
+                this.direction = "Left";
             }
             else
             {
-                knockback = -3 + newKnockback * (5 + damageTaken / 25);
+                knockback = -2 + newKnockback * (2 + damageTaken / 25);
+                this.direction = "Right";
             }
             
         }
@@ -638,7 +683,8 @@ namespace SmashBrosShippuden
 
         public bool shieldBlock()
         {
-            return this.isShielding;
+            // only the first 8 frames of the shield animation block attacks
+            return this.isShielding && this.counter < 80;
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -653,7 +699,7 @@ namespace SmashBrosShippuden
                     this.shieldEffect[0].Width * 4,
                     this.shieldEffect[0].Height * 4
                 );
-                spriteBatch.Draw(this.shieldEffect[counterSprite % this.shieldEffect.Length], shieldEffectRec, Color.White);
+                spriteBatch.Draw(this.shieldEffect[(counter / 10) % 10], shieldEffectRec, Color.White);
             }
         }
     }
