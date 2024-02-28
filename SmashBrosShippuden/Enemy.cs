@@ -13,8 +13,8 @@ namespace SmashBrosShippuden
         int closestPlayer;
         Rectangle[] playerPicBox = new Rectangle[4];
 
-        public Enemy(Rectangle newRectangle, Texture2D newTexture, string newDirection, int newPlayer, string newCharacter, int disWidth, int disHeight, Rectangle stage, int stageHeight, bool bot)
-            : base(newRectangle, newTexture, newDirection, newPlayer, newCharacter, disWidth, disHeight, stage, stageHeight, bot)
+        public Enemy(int x, int y, string newDirection, int newPlayer, string newCharacter, int disWidth, int disHeight, Rectangle stage, int stageHeight, bool bot)
+            : base(x, y, newDirection, newPlayer, newCharacter, disWidth, disHeight, stage, stageHeight, bot)
         {
             // all logic handled in base class
         }

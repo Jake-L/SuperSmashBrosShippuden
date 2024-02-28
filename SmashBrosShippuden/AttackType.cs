@@ -10,8 +10,9 @@ namespace SmashBrosShippuden
     {
         None,
         Jab,
-        Smash,
+        SideSmash,
         Special,
+        SideSpecial,
         Aerial
     }
 }

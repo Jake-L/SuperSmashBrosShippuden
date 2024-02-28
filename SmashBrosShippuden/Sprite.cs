@@ -11,11 +11,15 @@ namespace SmashBrosShippuden
         public string direction = "Right";
         public int dx = 0;
         public int? dy = 0;
+        public int x;
+        public int y;
+        protected int hitboxYOffset = 0;
+        protected int graphicsScaling = 4;
 
-        public Sprite(Texture2D newTexture, Rectangle newRectangle)
+        public Sprite(int x, int y)
         {
-            rectangle = newRectangle;
-            texture = newTexture;
+            this.x = x;
+            this.y = y;
         }
 
         public virtual void LoadContent(ContentManager content)
@@ -27,6 +31,13 @@ namespace SmashBrosShippuden
         {
             if (texture != null)
             {
+                this.rectangle = new Rectangle(
+                    this.x - this.texture.Width * 2,
+                    this.y + (this.hitboxYOffset - this.texture.Height) * 4,
+                    this.texture.Width * 4,
+                    this.texture.Height * 4
+                );
+
                 SpriteEffects spriteEffects;
 
                 if (this.direction == "Right")
@@ -52,7 +63,7 @@ namespace SmashBrosShippuden
         }
 
         //send the players rectangle
-        public Rectangle getRectangle()
+        public virtual Rectangle getRectangle()
         {
             return rectangle;
         }

@@ -13,7 +13,6 @@ namespace SmashBrosShippuden
         public int player;
         int startpointY;
         int startpointX;
-        int startpointbot;
         int counter;
         int damage;
         int knockback;
@@ -30,14 +29,13 @@ namespace SmashBrosShippuden
 
         //Game1 game = new Game1();
 
-        public Projectiles(Rectangle newRectangle, Texture2D newTexture, string newDirection, int newPlayer, string newCharacter) : base(newTexture, newRectangle)
+        public Projectiles(int x, int y, string newDirection, int newPlayer, string newCharacter) : base(x, y)
         {
             direction = newDirection;
             player = newPlayer;
             character = newCharacter;
-            startpointY = newRectangle.Top;
-            startpointX = newRectangle.Left + (newRectangle.Width / 2);
-            startpointbot = newRectangle.Bottom;
+            startpointY = y;
+            startpointX = x;
 
             if (character == "Blastoise")
             {
@@ -71,21 +69,18 @@ namespace SmashBrosShippuden
 
                 if (direction == "Left")
                 {
-                    rectangle.X -= dx;
+                    this.x -= dx;
                 }
 
                 if (direction == "Right")
                 {
-                    rectangle.X += dx;
+                    this.x += dx;
                 }
-
-                rectangle.Width = Projectile[0].Width * 4;
-                rectangle.Height = Projectile[0].Height * 4;
             }
 
             if (new[] { "Mario", "Luigi", "Mewtwo" }.Contains(character))
             {
-                rectangle.Y = startpointY + (int)(Math.Sin((gameTime.TotalGameTime.Milliseconds / 100)) * 20);
+                this.y = startpointY + (int)(Math.Sin((gameTime.TotalGameTime.Milliseconds / 100)) * 20);
             }
 
             else if (character == "Pichu")
@@ -191,22 +186,10 @@ namespace SmashBrosShippuden
                 rectangle.X = startpointX - (rectangle.Width / 2);
                 rectangle.Y = 50;
                 rectangle.Width = PichuLightning[0].Width * 2;
-                rectangle.Height = startpointbot - 50;
+                rectangle.Height = startpointY;
                 texture = PichuLightning[counter - PichuCloud.Length];
                 PichuCloudDraw = PichuCloud[3];
             }
-            else
-            {
-                destroyRec();
-            }
-        }
-
-        //make the projectile disappear
-        public void destroyRec()
-        {
-            rectangle.Y = 9999;
-            rectangle.X = 9999;
-            startpointY = 9999;
         }
 
         public override void Draw(SpriteBatch spriteBatch)

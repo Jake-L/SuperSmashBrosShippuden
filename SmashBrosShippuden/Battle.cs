@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace SmashBrosShippuden
 {
@@ -128,12 +129,12 @@ namespace SmashBrosShippuden
             {
                 if (character[k] != null)
                 {
-                    PlayerClass[k] = new Character(PlayerPicBox[k], null, direction[k], k, character[k], displayWidth, displayHeight, finalDestinationRec, stageHeightAdjustment, false);
+                    PlayerClass[k] = new Character(200 * (k + 1), finalDestinationRec.Top, direction[k], k, character[k], displayWidth, displayHeight, finalDestinationRec, stageHeightAdjustment, false);
                     PlayerClass[k].LoadContent(content);
 
                     if (character[k] == "Pichu")
                     {
-                        Enemy companion = new Enemy(new Rectangle(PlayerPicBox[k].X - 50, PlayerPicBox[k].Y, PlayerPicBox[k].Width, PlayerPicBox[k].Height), null, "Left", k, character[k], displayWidth, displayHeight, finalDestinationRec, stageHeightAdjustment, true);
+                        Enemy companion = new Enemy(PlayerPicBox[k].X - 50, PlayerPicBox[k].Y, "Left", k, character[k], displayWidth, displayHeight, finalDestinationRec, stageHeightAdjustment, true);
                         companion.LoadContent(this.content);
                         this.companions.Add(companion);
                     }
@@ -144,12 +145,12 @@ namespace SmashBrosShippuden
             {
                 player2Bot = true;
                 character[1] = "Shadow";
-                character[2] = "Kirby";
-                character[3] = "Sasuke";
+                // character[2] = "Kirby";
+                // character[3] = "Sasuke";
 
-                for (int i = 1; i < 4; i++)
+                for (int i = 1; i < 2; i++)
                 {
-                    PlayerClass[i] = new Character(PlayerPicBox[i], null, direction[i], i, character[i], displayWidth, displayHeight, finalDestinationRec, stageHeightAdjustment, true);
+                    PlayerClass[i] = new Character(200 * (i + 1), finalDestinationRec.Top, direction[i], i, character[i], displayWidth, displayHeight, finalDestinationRec, stageHeightAdjustment, true);
                     PlayerClass[i].LoadContent(this.content);
                 }
             }
@@ -238,8 +239,7 @@ namespace SmashBrosShippuden
             {
                 if (this.PlayerClass[i] != null && this.isOffscreen(this.PlayerClass[i]))
                 {
-                    Rectangle rectangle = new Rectangle(0, 0, 0, 0);
-                    this.PlayerClass[i] = new Character(rectangle, null, "Right", i, character[i], displayWidth, displayHeight, finalDestinationRec, stageHeightAdjustment, false);
+                    this.PlayerClass[i] = new Character(200 * (i + 1), finalDestinationRec.Top, "Right", i, character[i], displayWidth, displayHeight, finalDestinationRec, stageHeightAdjustment, false);
                     this.PlayerClass[i].LoadContent(this.content);
                 }
             }
@@ -297,6 +297,11 @@ namespace SmashBrosShippuden
             {
                 p.Draw(_spriteBatch);
             }
+
+            //foreach (Rectangle r in this.PlayerPicBox)
+            //{
+            //    _spriteBatch.Draw(finalDestination, r, Color.Red);
+            //}
         }
 
         public void damage(Character playerClass)
@@ -309,24 +314,25 @@ namespace SmashBrosShippuden
                 //deal different amounts of damage based on who the character is
                 if (playerClass.isAttackFrame())
                 {
+                    Rectangle attackHitbox = playerClass.getAttackHitboxRectangle();
+
                     //check if the players attacks hit anyone
                     for (int j = 0; j < 4; j++)
                     {
                         if (j != i && PlayerPicBox[j].IsEmpty == false && !PlayerClass[j].shieldBlock())
                         {
-                            if (PlayerPicBox[i].Intersects(PlayerPicBox[j]))
+                            if (attackHitbox.Intersects(PlayerPicBox[j]))
                             {
-                                if (intersection(PlayerPicBox[i], PlayerPicBox[j], picBoxWidthScaling[j], "Left"))
+                                if (attack.direction == "Left")
                                 {
                                     PlayerClass[j].getDamage(attack.damage + NumberGenerator.Next(-3, 4), -(attack.knockback));
-                                    playerLastHit[j] = i;
                                 }
-
-                                else if (intersection(PlayerPicBox[i], PlayerPicBox[j], picBoxWidthScaling[j], "Right"))
+                                else
                                 {
                                     PlayerClass[j].getDamage(attack.damage + NumberGenerator.Next(-3, 4), attack.knockback);
-                                    playerLastHit[j] = i;
                                 }
+
+                                playerLastHit[j] = i;
                             }
                         }
                     }
@@ -334,34 +340,9 @@ namespace SmashBrosShippuden
                     //apply damage from special attacks
                     if (playerClass.attackType() == 2 && character[i] == "King")
                     {
-                        Enemy companion = new Enemy(new Rectangle(PlayerPicBox[i].X + (PlayerPicBox[i].Width / 2), PlayerPicBox[i].Y + (PlayerPicBox[i].Height / 2), 56, 52), null, "Left", i, "waddle", displayWidth, displayHeight, finalDestinationRec, stageHeightAdjustment, true);
+                        Enemy companion = new Enemy(PlayerPicBox[i].X + (PlayerPicBox[i].Width / 2), PlayerPicBox[i].Y + (PlayerPicBox[i].Height / 2), "Left", i, "waddle", displayWidth, displayHeight, finalDestinationRec, stageHeightAdjustment, true);
                         companion.LoadContent(this.content);
                         this.companions.Add(companion);
-                    }
-
-                    //check if Link's special attack hit anyone behind him
-                    else if (playerClass.attackType() == 4)
-                    {
-                        for (int j = 0; j < 4; j++)
-                        {
-                            if (j != i && PlayerPicBox[j].IsEmpty == false)
-                            {
-                                if (PlayerPicBox[i].Intersects(PlayerPicBox[j]))
-                                {
-                                    if ((direction[i] == "Left" && intersection(PlayerPicBox[i], PlayerPicBox[j], picBoxWidthScaling[j], "Right")))
-                                    {
-                                        PlayerClass[j].getDamage(9 + NumberGenerator.Next(-3, 4), 2);
-                                        playerLastHit[j] = i;
-                                    }
-
-                                    else if ((direction[i] == "Right" && intersection(PlayerPicBox[i], PlayerPicBox[j], picBoxWidthScaling[j], "Left")))
-                                    {
-                                        PlayerClass[j].getDamage(9 + NumberGenerator.Next(-3, 4), -2);
-                                        playerLastHit[j] = i;
-                                    }
-                                }
-                            }
-                        }
                     }
                 }
 
@@ -502,7 +483,7 @@ namespace SmashBrosShippuden
 
                                 if (character[i] == "Pichu")
                                 {
-                                    Enemy companion = new Enemy(new Rectangle(PlayerPicBox[i].X - 50, PlayerPicBox[i].Y, PlayerPicBox[i].Width, PlayerPicBox[i].Height), null, "Left", i, character[i], displayWidth, displayHeight, finalDestinationRec, stageHeightAdjustment, true);
+                                    Enemy companion = new Enemy(PlayerPicBox[i].X - 50, PlayerPicBox[i].Y, "Left", i, character[i], displayWidth, displayHeight, finalDestinationRec, stageHeightAdjustment, true);
                                     companion.LoadContent(this.content);
                                     this.companions.Insert(0, companion);
                                 }
@@ -581,7 +562,7 @@ namespace SmashBrosShippuden
                 return;
             }
 
-            Projectiles p = new Projectiles(projectileRec, null, character.direction, player, character.character);
+            Projectiles p = new Projectiles(projectileRec.X, projectileRec.Y, character.direction, player, character.character);
             p.LoadContent(this.content);
             this.projectiles.Add(p);
         }
