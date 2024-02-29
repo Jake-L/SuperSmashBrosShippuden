@@ -43,8 +43,7 @@ namespace SmashBrosShippuden
 
         //all the sprites
         Texture2D[] spriteRun;
-        Texture2D[] spriteAttack;
-        Texture2D[] spriteSmash;
+        Texture2D[][] spriteAttack = new Texture2D[4][];
         Texture2D[] spriteIdle;
         Texture2D[] spriteJump = new Texture2D[1];
         Texture2D[] spriteHurt = new Texture2D[1];
@@ -105,7 +104,7 @@ namespace SmashBrosShippuden
         {
             if (character == "Mario")
             {
-                this.moveSpeed = 3;
+                this.moveSpeed = 4;
                 spriteIdleLength = 4;
                 spriteRunLength = 8;
                 counterSpriteModifier = 5;
@@ -116,7 +115,7 @@ namespace SmashBrosShippuden
 
             else if (character == "Luigi")
             {
-                this.moveSpeed = 3;
+                this.moveSpeed = 4;
                 spriteIdleLength = 4;
                 spriteRunLength = 8;
                 counterSpriteModifier = 5;
@@ -126,7 +125,7 @@ namespace SmashBrosShippuden
 
             else if (character == "Pichu")
             {
-                this.moveSpeed = 4;
+                this.moveSpeed = 5;
                 spriteIdleLength = 2;
                 spriteRunLength = 4;
                 counterSpriteModifier = 8;
@@ -134,7 +133,7 @@ namespace SmashBrosShippuden
 
             else if (character == "Mewtwo")
             {
-                this.moveSpeed = 3;
+                this.moveSpeed = 4;
                 spriteIdleLength = 2;
                 spriteRunLength = 2;
                 counterSpriteModifier = 10;
@@ -142,7 +141,7 @@ namespace SmashBrosShippuden
 
             else if (character == "Charizard")
             {
-                this.moveSpeed = 2;
+                this.moveSpeed = 3;
                 spriteIdleLength = 1;
                 spriteRunLength = 4;
                 counterSpriteModifier = 8;
@@ -152,7 +151,7 @@ namespace SmashBrosShippuden
 
             else if (character == "Shadow")
             {
-                this.moveSpeed = 9;
+                this.moveSpeed = 8;
                 spriteIdleLength = 6;
                 spriteRunLength = 28;
                 counterSpriteModifier = 5;
@@ -163,14 +162,14 @@ namespace SmashBrosShippuden
 
             else if (character == "Knuckles")
             {
-                this.moveSpeed = 4;
+                this.moveSpeed = 5;
                 spriteRunLength = 8;
                 counterSpriteModifier = 6;
             }
 
             else if (character == "Sonic")
             {
-                this.moveSpeed = 9;
+                this.moveSpeed = 8;
                 spriteIdleLength = 6;
                 spriteRunLength = 8;
                 counterSpriteModifier = 5;
@@ -180,7 +179,7 @@ namespace SmashBrosShippuden
 
             else if (character == "Link")
             {
-                this.moveSpeed = 3;
+                this.moveSpeed = 4;
                 spriteIdleLength = 1;
                 spriteRunLength = 6;
                 counterSpriteModifier = 4;
@@ -205,7 +204,7 @@ namespace SmashBrosShippuden
 
             else if (character == "Metaknight")
             {
-                this.moveSpeed = 4;
+                this.moveSpeed = 5;
                 spriteRunLength = 8;
                 counterSpriteModifier = 4;
                 this.hitboxWidth = 26;
@@ -258,12 +257,25 @@ namespace SmashBrosShippuden
         { 
             spriteRun = new Texture2D[spriteRunLength];
             spriteIdle = new Texture2D[spriteIdleLength];
-            Attack tempAttack = new Attack(this.character, AttackType.Jab, this.direction);
-            spriteSmash = new Texture2D[tempAttack.spriteLength];
-            tempAttack = new Attack(this.character, AttackType.Special, this.direction);
-            spriteAttack = new Texture2D[tempAttack.spriteLength];
+            AttackType[] attackTypes = new AttackType[4] { AttackType.Jab, AttackType.SideSmash, AttackType.Special,  AttackType.SideSpecial };
+            string[] attackLabels = new string[4] { "Smash", "SideSmash", "Attack", "SideSpecial" };
 
-            //load the characters running and attact sprites
+            // load the characters attack sprites
+            foreach (AttackType a in attackTypes)
+            {
+                Attack tempAttack = new Attack(this.character, a, this.direction);
+                if (tempAttack.spriteLength > 0)
+                {
+                    spriteAttack[(int)a] = new Texture2D[tempAttack.spriteLength];
+
+                    for (int i = 0; i < tempAttack.spriteLength; i++)
+                    {
+                        spriteAttack[(int)a][i] = content.Load<Texture2D>(character + "/" + character.ToLower() + attackLabels[(int)a] + (i + 1));
+                    }
+                }
+            }
+
+            //load the characters running sprites
             for (int i = 0; i < spriteRunLength; i++)
             {
                 spriteRun[i] = content.Load<Texture2D>(character + "/" + character.ToLower() + "Run" + (i + 1));
@@ -272,16 +284,6 @@ namespace SmashBrosShippuden
             for (int i = 0; i < spriteIdleLength; i++)
             {
                 spriteIdle[i] = content.Load<Texture2D>(character + "/" + character.ToLower() + (i + 1));
-            }
-
-            for (int i = 0; i < spriteSmash.Length; i++)
-            {
-                spriteSmash[i] = content.Load<Texture2D>(character + "/" + character.ToLower() + "Smash" + (i + 1));
-            }
-
-            for (int i = 0; i < spriteAttack.Length; i++)
-            {
-                spriteAttack[i] = content.Load<Texture2D>(character + "/" + character.ToLower() + "Attack" + (i + 1));
             }
 
             //jumping sprites
@@ -340,41 +342,12 @@ namespace SmashBrosShippuden
                 this.attack = null;
             }
 
-            //make the character do their special attack
-            else if (this.attack != null && this.attack.attackType == AttackType.Special)
-            {
-                if (character != "Knuckles" && character != "Pichu")
-                {
-                    dx = 0;
-                }
-
-                if (counterSprite < spriteAttack.Length)
-                {
-                    if (Array.IndexOf(this.attack.attackFrame, counterSprite) > -1 && counter % counterSpriteModifier == 0)
-                    {
-                        this.attackFrame = true;
-                    }
-
-                    texture = spriteAttack[counterSprite];
-
-                    if (counterSprite == 1 && counter % counterSpriteModifier == 1 && (character == "Link" || character == "Pichu"))
-                    {
-                        spriteSounds2[NumberGenerator.Next(0, 3)].Play();
-                    }
-                }
-
-                else
-                {
-                    this.attack = null;
-                }
-            }
-
             //Display the attack animation when a player attacks
-            else if (this.attack != null && this.attack.attackType == AttackType.Jab)
+            else if (this.attack != null)
             {
-                if (counterSprite < spriteSmash.Length)
+                if (counterSprite < spriteAttack[(int)this.attack.attackType].Length)
                 {
-                    texture = spriteSmash[counterSprite];
+                    texture = spriteAttack[(int)this.attack.attackType][counterSprite];
 
                     if (Array.IndexOf(this.attack.attackFrame, counterSprite) > -1 && counter % counterSpriteModifier == 0)
                     {
@@ -465,6 +438,11 @@ namespace SmashBrosShippuden
             else if (pad1.Buttons.X == ButtonState.Pressed)
             {
                 this.attack = new Attack(this.character, AttackType.Special, this.direction);
+                counter = 0;
+            }
+            else if (pad1.Buttons.A == ButtonState.Pressed && Math.Abs(pad1.ThumbSticks.Left.X) > 0.1 && this.spriteAttack[(int)AttackType.SideSmash] != null)
+            {
+                this.attack = new Attack(this.character, AttackType.SideSmash, this.direction);
                 counter = 0;
             }
             else if (pad1.Buttons.A == ButtonState.Pressed)
@@ -562,35 +540,6 @@ namespace SmashBrosShippuden
                 {
                     this.dy += 1;
                 }
-            }
-        }
-
-        //send the damage being dealt
-        public int attackType()
-        {
-            if (this.attack == null)
-            {
-                return 0;
-            }
-            else if (this.attack.attackType == AttackType.Jab && attackFrame == true)
-            {
-                return 1;
-            }
-            else if (this.attack.attackType == AttackType.Special && attackFrame == true && character == "Link" && counterSprite == 7)
-            {
-                return 4;
-            }
-            else if (this.attack.attackType == AttackType.Special && attackFrame == true)
-            {
-                return 2;
-            }
-            else if (this.attack.attackType == AttackType.Special && character == "Shadow")
-            {
-                return 3;
-            }
-            else
-            {
-                return 0;
             }
         }
 

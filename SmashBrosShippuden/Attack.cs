@@ -10,7 +10,7 @@ namespace SmashBrosShippuden
         private readonly string character;
         public readonly AttackType attackType;
         public readonly string direction;
-        public int spriteLength;
+        public int spriteLength = 0;
         public int[] attackFrame;
         public int hitboxWidth;
         public int hitboxHeight;

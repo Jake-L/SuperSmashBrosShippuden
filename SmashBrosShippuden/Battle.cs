@@ -338,7 +338,7 @@ namespace SmashBrosShippuden
                     }
 
                     //apply damage from special attacks
-                    if (playerClass.attackType() == 2 && character[i] == "King")
+                    if (attack.attackType == AttackType.Special && character[i] == "King")
                     {
                         Enemy companion = new Enemy(PlayerPicBox[i].X + (PlayerPicBox[i].Width / 2), PlayerPicBox[i].Y + (PlayerPicBox[i].Height / 2), "Left", i, "waddle", displayWidth, displayHeight, finalDestinationRec, stageHeightAdjustment, true);
                         companion.LoadContent(this.content);
@@ -355,14 +355,14 @@ namespace SmashBrosShippuden
                         if (intersection(this.projectiles[j].getRectangle(), PlayerPicBox[i], picBoxWidthScaling[i], "Left") || intersection(this.projectiles[j].getRectangle(), PlayerPicBox[i], picBoxWidthScaling[i], "Right"))
                         {
                             //projectile gets destroyed if it hits shadow's shield
-                            if (character[i] == "Shadow" && (playerClass.attackType() == 2 || playerClass.attackType() == 3))
+                            if (character[i] == "Shadow" && PlayerClass[i].attack != null && PlayerClass[i].attack.attackType == AttackType.Special)
                             {
                                 this.projectiles.RemoveAt(j);
                             }
                             else
                             {
                                 //player takes damage from projectile
-                                if (character[this.projectiles[j].player] == "Blastoise" && PlayerClass[j].attackType() == 2)
+                                if (character[this.projectiles[j].player] == "Blastoise")
                                 {
                                     playerClass.getDamage(6, 0);
                                 }
