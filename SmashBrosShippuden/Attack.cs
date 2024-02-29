@@ -308,7 +308,7 @@ namespace SmashBrosShippuden
                     this.hitboxYOffset = new int[] { 23 };
                     this.hitboxXOffset = new int[] { 13 };
                 }
-                else if (this.attackType == AttackType.Special)
+                else if (this.attackType == AttackType.SideSmash)
                 {
                     this.damage = 10;
                     this.knockback = 2;
@@ -318,6 +318,12 @@ namespace SmashBrosShippuden
                     this.hitboxWidth = 12;
                     this.hitboxYOffset = new int[] { 23 };
                     this.hitboxXOffset = new int[] { 12 };
+                }
+                else if (this.attackType == AttackType.Special)
+                {
+                    this.spriteLength = 9;
+                    this.attackFrame = new int[] { 4 };
+                    this.createProjectile = true;
                 }
             }
         }

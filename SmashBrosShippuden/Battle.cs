@@ -385,7 +385,7 @@ namespace SmashBrosShippuden
                             }
 
                             //projectile gets destoryed after making contact
-                            if (character[this.projectiles[j].player] != "Blastoise")
+                            if (character[this.projectiles[j].player] != "Blastoise" && character[this.projectiles[j].player] != "Sasuke")
                             {
                                 this.projectiles.RemoveAt(j);
                             }
@@ -557,6 +557,19 @@ namespace SmashBrosShippuden
                 }
             }
 
+            //blastoise fires a projectile
+            else if (character.character == "Sasuke")
+            {
+                if (character.direction == "Left")
+                {
+                    projectileRec = new Rectangle(characterRec.Left - 3 * characterRec.Width, characterRec.Y + (characterRec.Height * 5) / 4, characterRec.Width, characterRec.Height);
+                }
+                else
+                {
+                    projectileRec = new Rectangle(characterRec.Right + 3 * characterRec.Width, characterRec.Y + (characterRec.Height * 5) / 4, characterRec.Width, characterRec.Height);
+                }
+            }
+
             else
             {
                 return;
@@ -570,7 +583,7 @@ namespace SmashBrosShippuden
         private bool isOffscreen(Sprite sprite)
         {
             Rectangle rectangle = sprite.getRectangle();
-            if (rectangle.Right < 0 || rectangle.Left > displayWidth || rectangle.Bottom < -100 || rectangle.Top > displayHeight || (rectangle.X == 0 && rectangle.Y == 0))
+            if (rectangle.Right < 0 || rectangle.Left > displayWidth || rectangle.Bottom < -100 || rectangle.Top > displayHeight)
             {
                 return true;
             }

@@ -1,5 +1,6 @@
 ﻿//Jake Loftus
 using System;
+using System.Diagnostics;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -57,13 +58,20 @@ namespace SmashBrosShippuden
                 damage = 2;
                 knockback = 1;
             }
+            else if (character == "Sasuke")
+            {
+                damage = 4;
+                knockback = 1;
+            }
 
             Initialize();
         }
 
         public void Update(GameTime gameTime)
         {
-            if (character != "Pichu")
+            counter++; 
+
+            if (character != "Pichu" && character != "Sasuke")
             {
                 texture = Projectile[(gameTime.TotalGameTime.Milliseconds / 100) % spriteLength];
 
@@ -85,11 +93,19 @@ namespace SmashBrosShippuden
 
             else if (character == "Pichu")
             {
-                if (gameTime.TotalGameTime.Milliseconds % 100 == 0)
-                {
-                    counter++;
-                }
                 Pichu();
+            }
+
+            else if (character == "Sasuke")
+            {
+                if (counter >= 40)
+                {
+                    this.x = -999;
+                }
+                else
+                {
+                    this.texture = Projectile[counter / 8];
+                }
             }
         }
 
@@ -114,6 +130,13 @@ namespace SmashBrosShippuden
                 spriteLength = 4;
                 damage = 4;
                 knockback = 0;
+            }
+
+            else if (character == "Sasuke")
+            {
+                spriteLength = 5;
+                damage = 4;
+                knockback = 1;
             }
 
             else // Mario, Luigi, Charizard
@@ -169,6 +192,10 @@ namespace SmashBrosShippuden
                     if (character == "Charizard")
                     {
                         Projectile[i] = content.Load<Texture2D>(character + "/fire" + (i + 1));
+                    }
+                    if (character == "Sasuke")
+                    {
+                        Projectile[i] = content.Load<Texture2D>(character + "/sasukeFire" + (i + 1));
                     }
                 }
             }
