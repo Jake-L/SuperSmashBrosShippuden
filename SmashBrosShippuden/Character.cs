@@ -22,6 +22,7 @@ namespace SmashBrosShippuden
         protected int counterSpriteModifier;
         protected int spriteIdleLength = 1;
         protected int spriteRunLength;
+        protected int spriteJumpLength;
         protected int jumpHeight;
         protected int jumpCounter;
         protected int moveSpeed;
@@ -45,7 +46,8 @@ namespace SmashBrosShippuden
         Texture2D[] spriteRun;
         Texture2D[][] spriteAttack = new Texture2D[4][];
         Texture2D[] spriteIdle;
-        Texture2D[] spriteJump = new Texture2D[1];
+        Texture2D[] spriteJump;
+        Texture2D[] spriteJumpUp;
         Texture2D[] spriteHurt = new Texture2D[1];
         Texture2D[] shieldEffect = new Texture2D[10];
         Texture2D[] luigiTaunt = new Texture2D[12];
@@ -102,6 +104,8 @@ namespace SmashBrosShippuden
 
         private void Initialize()
         {
+            this.spriteJumpLength = 1;
+
             if (character == "Mario")
             {
                 this.moveSpeed = 4;
@@ -154,8 +158,9 @@ namespace SmashBrosShippuden
                 this.moveSpeed = 8;
                 spriteIdleLength = 6;
                 spriteRunLength = 28;
-                counterSpriteModifier = 5;
-                this.hitboxWidth = 18;
+                this.spriteJumpLength = 2;
+                counterSpriteModifier = 6;
+                this.hitboxWidth = 26;
                 this.hitboxHeight = 35;
                 this.hitboxYOffset = 6;
             }
@@ -172,9 +177,10 @@ namespace SmashBrosShippuden
                 this.moveSpeed = 8;
                 spriteIdleLength = 6;
                 spriteRunLength = 8;
-                counterSpriteModifier = 5;
-                this.hitboxWidth = 18;
-                this.hitboxHeight = 32;
+                counterSpriteModifier = 6;
+                this.hitboxWidth = 22;
+                this.hitboxHeight = 34;
+                this.hitboxYOffset = 1;
             }
 
             else if (character == "Link")
@@ -220,7 +226,7 @@ namespace SmashBrosShippuden
                 counterSpriteModifier = 6;
                 this.hitboxWidth = 24;
                 this.hitboxHeight = 22;
-                this.hitboxYOffset = 11;
+                this.hitboxYOffset = 13;
             }
 
             else if (character == "King")
@@ -257,6 +263,8 @@ namespace SmashBrosShippuden
         { 
             spriteRun = new Texture2D[spriteRunLength];
             spriteIdle = new Texture2D[spriteIdleLength];
+            this.spriteJump = new Texture2D[spriteJumpLength];
+            this.spriteJumpUp = new Texture2D[spriteJumpLength];
             AttackType[] attackTypes = new AttackType[4] { AttackType.Jab, AttackType.SideSmash, AttackType.Special,  AttackType.SideSpecial };
             string[] attackLabels = new string[4] { "Smash", "SideSmash", "Attack", "SideSpecial" };
 
@@ -287,7 +295,11 @@ namespace SmashBrosShippuden
             }
 
             //jumping sprites
-            spriteJump[0] = content.Load<Texture2D>(character + "/" + character.ToLower() + "Jump");
+            for (int i = 0; i < this.spriteJump.Length; i++)
+            {
+                spriteJump[i] = content.Load<Texture2D>(character + "/" + character.ToLower() + "Jump" + (i+1));
+                spriteJumpUp[i] = content.Load<Texture2D>(character + "/" + character.ToLower() + "JumpUp" + (i + 1));
+            }
 
             //hurt sprites
             spriteHurt[0] = content.Load<Texture2D>(character + "/" + character.ToLower() + "Hurt");
@@ -367,7 +379,15 @@ namespace SmashBrosShippuden
             //display jumping sprite
             else if (this.dy != null)
             {
-                texture = spriteJump[0];
+                if (this.dy >= 0)
+                {
+                    texture = spriteJump[this.counterSprite % this.spriteJumpLength];
+                }
+                else
+                {
+                    texture = spriteJumpUp[this.counterSprite % this.spriteJumpLength];
+                }
+                
             }
 
             else if (taunt == true)
@@ -435,12 +455,17 @@ namespace SmashBrosShippuden
                     this.counter = 0;
                 }
             }
+            else if (pad1.Buttons.X == ButtonState.Pressed && Math.Abs(pad1.ThumbSticks.Left.X) > 0.4 && this.spriteAttack[(int)AttackType.SideSpecial] != null)
+            {
+                this.attack = new Attack(this.character, AttackType.SideSpecial, this.direction);
+                counter = 0;
+            }
             else if (pad1.Buttons.X == ButtonState.Pressed)
             {
                 this.attack = new Attack(this.character, AttackType.Special, this.direction);
                 counter = 0;
             }
-            else if (pad1.Buttons.A == ButtonState.Pressed && Math.Abs(pad1.ThumbSticks.Left.X) > 0.1 && this.spriteAttack[(int)AttackType.SideSmash] != null)
+            else if (pad1.Buttons.A == ButtonState.Pressed && Math.Abs(pad1.ThumbSticks.Left.X) > 0.4 && this.spriteAttack[(int)AttackType.SideSmash] != null)
             {
                 this.attack = new Attack(this.character, AttackType.SideSmash, this.direction);
                 counter = 0;
@@ -456,7 +481,7 @@ namespace SmashBrosShippuden
                 && (this.dy == null || (counter > 30)))
             {
                 this.jumpCounter--;
-                this.dy = -8;
+                this.dy = -10;
                 counter = 0;
             }
             else if (pad1.ThumbSticks.Left.X < -0.1)
@@ -472,6 +497,12 @@ namespace SmashBrosShippuden
             else if (pad1.DPad.Up == ButtonState.Pressed && character == "Luigi")
             {
                 taunt = true;
+            }
+
+            // move half as fast when jumping
+            if (dy != null)
+            {
+                this.dx -= this.dx / 3;
             }
         }
 
@@ -536,7 +567,7 @@ namespace SmashBrosShippuden
             if (this.dy != null && this.dy < 8)
             {
                 //make the height of the jump decay over time
-                if (counter % 5 == 0)
+                if (counter % 3 == 0)
                 {
                     this.dy += 1;
                 }
