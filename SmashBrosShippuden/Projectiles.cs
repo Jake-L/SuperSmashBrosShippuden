@@ -17,6 +17,7 @@ namespace SmashBrosShippuden
         int counter;
         int damage;
         int knockback;
+        public AttackType attackType;
 
         Texture2D[] Projectile;
         int spriteLength = 1;
@@ -30,13 +31,14 @@ namespace SmashBrosShippuden
 
         //Game1 game = new Game1();
 
-        public Projectiles(int x, int y, string newDirection, int newPlayer, string newCharacter) : base(x, y)
+        public Projectiles(int x, int y, string newDirection, int newPlayer, string newCharacter, AttackType attackType) : base(x, y)
         {
             direction = newDirection;
             player = newPlayer;
             character = newCharacter;
             startpointY = y;
             startpointX = x;
+            this.attackType = attackType;
 
             if (character == "Blastoise")
             {
@@ -58,9 +60,14 @@ namespace SmashBrosShippuden
                 damage = 2;
                 knockback = 1;
             }
-            else if (character == "Sasuke")
+            else if (character == "Sasuke" && this.attackType == AttackType.Special)
             {
                 damage = 4;
+                knockback = 1;
+            }
+            else if (character == "Sasuke" && this.attackType == AttackType.SideSpecial)
+            {
+                damage = 3;
                 knockback = 1;
             }
 
@@ -69,34 +76,14 @@ namespace SmashBrosShippuden
 
         public void Update(GameTime gameTime)
         {
-            counter++; 
+            counter++;
 
-            if (character != "Pichu" && character != "Sasuke")
-            {
-                texture = Projectile[(gameTime.TotalGameTime.Milliseconds / 100) % spriteLength];
-
-                if (direction == "Left")
-                {
-                    this.x -= dx;
-                }
-
-                if (direction == "Right")
-                {
-                    this.x += dx;
-                }
-            }
-
-            if (new[] { "Mario", "Luigi", "Mewtwo" }.Contains(character))
-            {
-                this.y = startpointY + (int)(Math.Sin((gameTime.TotalGameTime.Milliseconds / 100)) * 20);
-            }
-
-            else if (character == "Pichu")
+            if (character == "Pichu")
             {
                 Pichu();
             }
 
-            else if (character == "Sasuke")
+            else if (character == "Sasuke" && this.attackType == AttackType.Special)
             {
                 if (counter >= 40)
                 {
@@ -105,6 +92,24 @@ namespace SmashBrosShippuden
                 else
                 {
                     this.texture = Projectile[counter / 8];
+                }
+            }
+            else
+            {
+                texture = Projectile[(gameTime.TotalGameTime.Milliseconds / 100) % spriteLength];
+
+                if (direction == "Left")
+                {
+                    this.x -= dx;
+                }
+                else if (direction == "Right")
+                {
+                    this.x += dx;
+                }
+
+                if (new[] { "Mario", "Luigi", "Mewtwo" }.Contains(character))
+                {
+                    this.y = startpointY + (int)(Math.Sin((gameTime.TotalGameTime.Milliseconds / 100)) * 20);
                 }
             }
         }
@@ -132,11 +137,27 @@ namespace SmashBrosShippuden
                 knockback = 0;
             }
 
-            else if (character == "Sasuke")
+            else if (character == "Sasuke" && this.attackType == AttackType.Special)
             {
                 spriteLength = 5;
                 damage = 4;
                 knockback = 1;
+            }
+
+            else if (character == "Sasuke" && this.attackType == AttackType.SideSpecial)
+            {
+                spriteLength = 1;
+                damage = 4;
+                knockback = 1;
+                dx = 10;
+            }
+
+            else if (character == "Knuckles")
+            {
+                spriteLength = 1;
+                damage = 12;
+                knockback = 2;
+                dx = 10;
             }
 
             else // Mario, Luigi, Charizard
@@ -193,9 +214,17 @@ namespace SmashBrosShippuden
                     {
                         Projectile[i] = content.Load<Texture2D>(character + "/fire" + (i + 1));
                     }
-                    if (character == "Sasuke")
+                    if (character == "Sasuke" && this.attackType == AttackType.Special)
                     {
                         Projectile[i] = content.Load<Texture2D>(character + "/sasukeFire" + (i + 1));
+                    }
+                    if (character == "Sasuke" && this.attackType == AttackType.SideSpecial)
+                    {
+                        Projectile[i] = content.Load<Texture2D>(character + "/kunai");
+                    }
+                    if (character == "Knuckles")
+                    {
+                        Projectile[i] = content.Load<Texture2D>(character + "/knucklesRock");
                     }
                 }
             }

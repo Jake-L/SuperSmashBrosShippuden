@@ -85,8 +85,21 @@ namespace SmashBrosShippuden
             displaySprite();
             gravity();
             knockbackMethod();
-            this.x += dx;
-            if (dy != null)
+
+            if (this.attack != null)
+            {
+                this.x += this.attack.getDx(this.counterSprite);
+            }
+            else 
+            {
+                this.x += dx;
+            }
+            
+            if (this.attack != null)
+            {
+                this.y += this.attack.getDy(this.counterSprite);
+            }
+            else if (dy != null)
             {
                 this.y += (int)dy;
             }
@@ -168,8 +181,13 @@ namespace SmashBrosShippuden
             else if (character == "Knuckles")
             {
                 this.moveSpeed = 5;
+                spriteIdleLength = 8;
                 spriteRunLength = 8;
+                this.spriteJumpLength = 2;
                 counterSpriteModifier = 6;
+                this.hitboxWidth = 24;
+                this.hitboxHeight = 34;
+                this.hitboxYOffset = 6;
             }
 
             else if (character == "Sonic")
@@ -251,9 +269,12 @@ namespace SmashBrosShippuden
 
             else if (character == "waddle")
             {
-                this.moveSpeed = 2;
+                this.moveSpeed = 3;
+                spriteIdleLength = 1;
                 spriteRunLength = 8;
                 counterSpriteModifier = 6;
+                this.hitboxWidth = 26;
+                this.hitboxHeight = 30;
             }
 
             this.jumpCounter = 1;
@@ -418,9 +439,14 @@ namespace SmashBrosShippuden
             return this.attack != null && this.attackFrame && this.attack.createProjectile;
         }
 
+        public bool createCompanion()
+        {
+            return this.attack != null && this.attackFrame && this.attack.createCompanion;
+        }
+
         public bool isAttackFrame()
         {
-            return this.attack != null && this.attackFrame && !this.attack.createProjectile;
+            return this.attack != null && this.attackFrame && !this.attack.createProjectile && !this.attack.createCompanion;
         }
 
         //getting input

@@ -19,6 +19,9 @@ namespace SmashBrosShippuden
         public int damage;
         public int knockback;
         public bool createProjectile = false;
+        public bool createCompanion = false;
+        public int[] dx;
+        public int[] dy;
         protected int graphicsScaling = 4;
 
         public Attack(string character, AttackType attackType, string direction)
@@ -154,12 +157,13 @@ namespace SmashBrosShippuden
                 {
                     this.damage = 10;
                     this.knockback = 2;
-                    this.spriteLength = 9;
+                    this.spriteLength = 11;
                     this.attackFrame = new int[] { 6 };
                     this.hitboxHeight = 30;
                     this.hitboxWidth = 54;
                     this.hitboxYOffset = new int[] { 18 };
                     this.hitboxXOffset = new int[] { 0 };
+                    this.dy = new int[] { 0, 0, -3, -3, -2, -1, 0, 1, 2, 3, 3 };
                 }
                 else if (this.attackType == AttackType.SideSpecial)
                 {
@@ -177,17 +181,44 @@ namespace SmashBrosShippuden
             {
                 if (this.attackType == AttackType.Jab)
                 {
-                    this.damage = 9;
+                    this.damage = 8;
+                    this.knockback = 1;
+                    this.spriteLength = 6;
+                    this.attackFrame = new int[] { 2 };
+                    this.hitboxHeight = 8;
+                    this.hitboxWidth = 18;
+                    this.hitboxYOffset = new int[] { 17 };
+                    this.hitboxXOffset = new int[] { 18 };
+                }
+                else if (this.attackType == AttackType.SideSmash)
+                {
+                    this.damage = 12;
                     this.knockback = 2;
                     this.spriteLength = 6;
                     this.attackFrame = new int[] { 3 };
+                    this.hitboxHeight = 36;
+                    this.hitboxWidth = 18;
+                    this.hitboxYOffset = new int[] { 22 };
+                    this.hitboxXOffset = new int[] { 18 };
                 }
                 else if (this.attackType == AttackType.Special)
                 {
-                    this.damage = 13;
-                    this.knockback = 1;
-                    this.spriteLength = 5;
-                    this.attackFrame = new int[] { 2 };
+                    this.damage = 10;
+                    this.knockback = 2;
+                    this.spriteLength = 13;
+                    this.attackFrame = new int[] { 3, 5, 7 };
+                    this.hitboxHeight = 20;
+                    this.hitboxWidth = 22;
+                    this.hitboxYOffset = new int[] { 17, 17, 17 };
+                    this.hitboxXOffset = new int[] { 20, -20, 20 };
+                }
+                else if (this.attackType == AttackType.SideSpecial)
+                {
+                    this.damage = 10;
+                    this.knockback = 2;
+                    this.spriteLength = 20;
+                    this.attackFrame = new int[] { 11 };
+                    this.createProjectile = true;
                 }
             }
             if (character == "Blastoise")
@@ -312,6 +343,7 @@ namespace SmashBrosShippuden
                 {
                     this.spriteLength = 5;
                     this.attackFrame = new int[] { 3 };
+                    this.createCompanion = true;
                 }
             }
             if (character == "Link")
@@ -380,6 +412,12 @@ namespace SmashBrosShippuden
                     this.attackFrame = new int[] { 4 };
                     this.createProjectile = true;
                 }
+                else if (this.attackType == AttackType.SideSpecial)
+                {
+                    this.spriteLength = 4;
+                    this.createProjectile = true;
+                    this.attackFrame = new int[] { 3 };
+                }
             }
         }
 
@@ -414,6 +452,30 @@ namespace SmashBrosShippuden
         public void update()
         {
 
+        }
+
+        public int getDy(int currentFrame)
+        {
+            if (this.dy != null && currentFrame < this.dy.Length)
+            {
+                return this.dy[currentFrame];
+            }
+            else 
+            {
+                return 0;
+            }
+        }
+
+        public int getDx(int currentFrame)
+        {
+            if (this.dx != null && currentFrame < this.dx.Length)
+            {
+                return this.dx[currentFrame];
+            }
+            else 
+            {
+                return 0;
+            }
         }
     }
 }

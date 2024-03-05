@@ -203,6 +203,12 @@ namespace SmashBrosShippuden
                     {
                         this.createProjectile(PlayerClass[i], i);
                     }
+                    else if (PlayerClass[i].createCompanion())
+                    {
+                        Enemy companion = new Enemy(PlayerPicBox[i].X + (PlayerPicBox[i].Width / 2), PlayerPicBox[i].Y + (PlayerPicBox[i].Height / 2), "Left", i, "waddle", displayWidth, displayHeight, finalDestinationRec, stageHeightAdjustment, true);
+                        companion.LoadContent(this.content);
+                        this.companions.Add(companion);
+                    }
                 }
             }
 
@@ -336,14 +342,6 @@ namespace SmashBrosShippuden
                             }
                         }
                     }
-
-                    //apply damage from special attacks
-                    if (attack.attackType == AttackType.Special && character[i] == "King")
-                    {
-                        Enemy companion = new Enemy(PlayerPicBox[i].X + (PlayerPicBox[i].Width / 2), PlayerPicBox[i].Y + (PlayerPicBox[i].Height / 2), "Left", i, "waddle", displayWidth, displayHeight, finalDestinationRec, stageHeightAdjustment, true);
-                        companion.LoadContent(this.content);
-                        this.companions.Add(companion);
-                    }
                 }
 
                 // check if any players were hit by projectiles
@@ -379,13 +377,25 @@ namespace SmashBrosShippuden
                                 }
                                 else if (character[this.projectiles[j].player] != "Blastoise")
                                 {
-                                    playerClass.getDamage(4, 0);
+                                    if (this.projectiles[j].direction == "Left")
+                                    {
+                                        playerClass.getDamage(4, -1);
+                                    }
+                                    else
+                                    {
+                                        playerClass.getDamage(4, 1);
+                                    }
+                                    
                                 }
                                 playerLastHit[i] = this.projectiles[j].player;
                             }
 
                             //projectile gets destoryed after making contact
-                            if (character[this.projectiles[j].player] != "Blastoise" && character[this.projectiles[j].player] != "Sasuke")
+                            if (character[this.projectiles[j].player] == "Blastoise" || (character[this.projectiles[j].player] == "Sasuke" && this.projectiles[j].attackType == AttackType.Special))
+                            {
+                                // persistent projectiles are not destoryed
+                            }
+                            else
                             {
                                 this.projectiles.RemoveAt(j);
                             }
@@ -557,8 +567,7 @@ namespace SmashBrosShippuden
                 }
             }
 
-            //blastoise fires a projectile
-            else if (character.character == "Sasuke")
+            else if (character.character == "Sasuke" && character.attack.attackType == AttackType.Special)
             {
                 if (character.direction == "Left")
                 {
@@ -570,12 +579,36 @@ namespace SmashBrosShippuden
                 }
             }
 
+            else if (character.character == "Sasuke" && character.attack.attackType == AttackType.SideSpecial)
+            {
+                if (character.direction == "Left")
+                {
+                    projectileRec = new Rectangle(characterRec.Left - characterRec.Width, characterRec.Y + characterRec.Height / 2, characterRec.Width, characterRec.Height);
+                }
+                else
+                {
+                    projectileRec = new Rectangle(characterRec.Right + characterRec.Width, characterRec.Y + characterRec.Height / 2, characterRec.Width, characterRec.Height);
+                }
+            }
+
+            else if (character.character == "Knuckles")
+            {
+                if (character.direction == "Left")
+                {
+                    projectileRec = new Rectangle(characterRec.Left - characterRec.Width, characterRec.Y + characterRec.Height / 2, characterRec.Width, characterRec.Height);
+                }
+                else
+                {
+                    projectileRec = new Rectangle(characterRec.Right + characterRec.Width, characterRec.Y + characterRec.Height / 2, characterRec.Width, characterRec.Height);
+                }
+            }
+
             else
             {
                 return;
             }
 
-            Projectiles p = new Projectiles(projectileRec.X, projectileRec.Y, character.direction, player, character.character);
+            Projectiles p = new Projectiles(projectileRec.X, projectileRec.Y, character.direction, player, character.character, character.attack.attackType);
             p.LoadContent(this.content);
             this.projectiles.Add(p);
         }
