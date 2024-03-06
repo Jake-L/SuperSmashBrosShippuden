@@ -15,8 +15,8 @@ namespace SmashBrosShippuden
         int startpointY;
         int startpointX;
         int counter;
-        int damage;
-        int knockback;
+        public int damage;
+        public int knockback;
         public AttackType attackType;
 
         Texture2D[] Projectile;
@@ -140,7 +140,7 @@ namespace SmashBrosShippuden
             else if (character == "Sasuke" && this.attackType == AttackType.Special)
             {
                 spriteLength = 5;
-                damage = 4;
+                damage = 1;
                 knockback = 1;
             }
 
@@ -155,9 +155,17 @@ namespace SmashBrosShippuden
             else if (character == "Knuckles")
             {
                 spriteLength = 1;
-                damage = 12;
+                damage = 8;
                 knockback = 2;
                 dx = 10;
+            }
+
+            else if (character == "Metaknight")
+            {
+                spriteLength = 2;
+                damage = 5;
+                knockback = 1;
+                dx = 8;
             }
 
             else // Mario, Luigi, Charizard
@@ -225,6 +233,10 @@ namespace SmashBrosShippuden
                     if (character == "Knuckles")
                     {
                         Projectile[i] = content.Load<Texture2D>(character + "/knucklesRock");
+                    }
+                    if (character == "Metaknight")
+                    {
+                        Projectile[i] = content.Load<Texture2D>(character + "/wave" + (i + 1));
                     }
                 }
             }

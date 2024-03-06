@@ -5,7 +5,7 @@ using System.Diagnostics;
 
 namespace SmashBrosShippuden
 {
-    internal class Attack
+    public class Attack
     {
         private readonly string character;
         public readonly AttackType attackType;
@@ -17,7 +17,8 @@ namespace SmashBrosShippuden
         public int[] hitboxXOffset;
         public int[] hitboxYOffset;
         public int damage;
-        public int knockback;
+        public int[] knockback;
+        public int knockup;
         public bool createProjectile = false;
         public bool createCompanion = false;
         public int[] dx;
@@ -39,7 +40,8 @@ namespace SmashBrosShippuden
                 if (this.attackType == AttackType.Jab)
                 {
                     this.damage = 10;
-                    this.knockback = 2;
+                    this.knockback = new int[] { 2 };
+                    this.knockup = 1;
                     this.spriteLength = 8;
                     this.attackFrame = new int[] { 5 };
                 }
@@ -55,7 +57,8 @@ namespace SmashBrosShippuden
                 if (this.attackType == AttackType.Jab)
                 {
                     this.damage = 10;
-                    this.knockback = 2;
+                    this.knockback = new int[] { 2 };
+                    this.knockup = 1;
                     this.spriteLength = 7;
                     this.attackFrame = new int[] { 5 };
                 }
@@ -71,7 +74,8 @@ namespace SmashBrosShippuden
                 if (this.attackType == AttackType.Jab)
                 {
                     this.damage = 13;
-                    this.knockback = 2;
+                    this.knockback = new int[] { 2 };
+                    this.knockup = 2;
                     this.spriteLength = 4;
                     this.attackFrame = new int[] { 3 };
                 }
@@ -87,7 +91,7 @@ namespace SmashBrosShippuden
                 if (this.attackType == AttackType.Jab)
                 {
                     this.damage = 7;
-                    this.knockback = 1;
+                    this.knockback = new int[] { 1 };
                     this.spriteLength = 5;
                     this.attackFrame = new int[] { 3 };
                     this.hitboxHeight = 8;
@@ -98,7 +102,8 @@ namespace SmashBrosShippuden
                 else if (this.attackType == AttackType.SideSmash)
                 {
                     this.damage = 9;
-                    this.knockback = 2;
+                    this.knockback = new int[] { 2 };
+                    this.knockup = 2;
                     this.spriteLength = 8;
                     this.attackFrame = new int[] { 3 };
                     this.hitboxHeight = 30;
@@ -109,7 +114,8 @@ namespace SmashBrosShippuden
                 else if (this.attackType == AttackType.Special)
                 {
                     this.damage = 14;
-                    this.knockback = -2;
+                    this.knockback = new int[] { -1 };
+                    this.knockup = 3;
                     this.spriteLength = 9;
                     this.attackFrame = new int[] { 4 };
                     this.hitboxHeight = 8;
@@ -122,8 +128,8 @@ namespace SmashBrosShippuden
             {
                 if (this.attackType == AttackType.Jab)
                 {
-                    this.damage = 7;
-                    this.knockback = 1;
+                    this.damage = 5;
+                    this.knockback = new int[] { 2 };
                     this.spriteLength = 6;
                     this.attackFrame = new int[] { 3 };
                     this.hitboxHeight = 10;
@@ -133,8 +139,9 @@ namespace SmashBrosShippuden
                 }
                 else if (this.attackType == AttackType.SideSmash)
                 {
-                    this.damage = 13;
-                    this.knockback = 2;
+                    this.damage = 8;
+                    this.knockback = new int[] { 2 };
+                    this.knockup = 2;
                     this.spriteLength = 9;
                     this.attackFrame = new int[] { 3 };
                     this.hitboxHeight = 12;
@@ -156,7 +163,8 @@ namespace SmashBrosShippuden
                 else if (this.attackType == AttackType.Special)
                 {
                     this.damage = 10;
-                    this.knockback = 2;
+                    this.knockback = new int[] { 2 };
+                    this.knockup = 1;
                     this.spriteLength = 11;
                     this.attackFrame = new int[] { 6 };
                     this.hitboxHeight = 30;
@@ -167,8 +175,9 @@ namespace SmashBrosShippuden
                 }
                 else if (this.attackType == AttackType.SideSpecial)
                 {
-                    this.damage = 15;
-                    this.knockback = 3;
+                    this.damage = 12;
+                    this.knockback = new int[] { 3 };
+                    this.knockup = 2;
                     this.spriteLength = 14;
                     this.attackFrame = new int[] { 7 };
                     this.hitboxHeight = 30;
@@ -182,7 +191,7 @@ namespace SmashBrosShippuden
                 if (this.attackType == AttackType.Jab)
                 {
                     this.damage = 8;
-                    this.knockback = 1;
+                    this.knockback = new int[] { 1 };
                     this.spriteLength = 6;
                     this.attackFrame = new int[] { 2 };
                     this.hitboxHeight = 8;
@@ -193,7 +202,8 @@ namespace SmashBrosShippuden
                 else if (this.attackType == AttackType.SideSmash)
                 {
                     this.damage = 12;
-                    this.knockback = 2;
+                    this.knockback = new int[] { 1 };
+                    this.knockup = 2;
                     this.spriteLength = 6;
                     this.attackFrame = new int[] { 3 };
                     this.hitboxHeight = 36;
@@ -204,7 +214,8 @@ namespace SmashBrosShippuden
                 else if (this.attackType == AttackType.Special)
                 {
                     this.damage = 10;
-                    this.knockback = 2;
+                    this.knockback = new int[] { 2, -2, 2 };
+                    this.knockup = 1;
                     this.spriteLength = 13;
                     this.attackFrame = new int[] { 3, 5, 7 };
                     this.hitboxHeight = 20;
@@ -214,8 +225,6 @@ namespace SmashBrosShippuden
                 }
                 else if (this.attackType == AttackType.SideSpecial)
                 {
-                    this.damage = 10;
-                    this.knockback = 2;
                     this.spriteLength = 20;
                     this.attackFrame = new int[] { 11 };
                     this.createProjectile = true;
@@ -226,7 +235,8 @@ namespace SmashBrosShippuden
                 if (this.attackType == AttackType.Jab)
                 {
                     this.damage = 8;
-                    this.knockback = 2;
+                    this.knockback = new int[] { 2 };
+                    this.knockup = 1;
                     this.spriteLength = 4;
                     this.attackFrame = new int[] { 1 };
                 }
@@ -242,7 +252,8 @@ namespace SmashBrosShippuden
                 if (this.attackType == AttackType.Jab)
                 {
                     this.damage = 8;
-                    this.knockback = 1;
+                    this.knockback = new int[] { 2 };
+                    this.knockup = 1;
                     this.spriteLength = 5;
                     this.attackFrame = new int[] { 2 };
                 }
@@ -258,7 +269,8 @@ namespace SmashBrosShippuden
                 if (this.attackType == AttackType.Jab)
                 {
                     this.damage = 10;
-                    this.knockback = 2;
+                    this.knockback = new int[] { 2 };
+                    this.knockup = 1;
                     this.spriteLength = 4;
                     this.attackFrame = new int[] { 3 };
                     this.hitboxHeight = 16;
@@ -277,8 +289,8 @@ namespace SmashBrosShippuden
             {
                 if (this.attackType == AttackType.Jab)
                 {
-                    this.damage = 7;
-                    this.knockback = 1;
+                    this.damage = 4;
+                    this.knockback = new int[] { 1 };
                     this.spriteLength = 4;
                     this.attackFrame = new int[] { 3 };
                     this.hitboxHeight = 8;
@@ -288,8 +300,9 @@ namespace SmashBrosShippuden
                 }
                 else if (this.attackType == AttackType.SideSmash)
                 {
-                    this.damage = 9;
-                    this.knockback = 2;
+                    this.damage = 8;
+                    this.knockback = new int[] { 1 };
+                    this.knockup = 2;
                     this.spriteLength = 5;
                     this.attackFrame = new int[] { 3 };
                     this.hitboxHeight = 40;
@@ -300,7 +313,8 @@ namespace SmashBrosShippuden
                 else if (this.attackType == AttackType.Special)
                 {
                     this.damage = 12;
-                    this.knockback = 3;
+                    this.knockback = new int[] { 2 };
+                    this.knockup = 1;
                     this.spriteLength = 8;
                     this.attackFrame = new int[] { 4 };
                     this.hitboxHeight = 32;
@@ -313,17 +327,45 @@ namespace SmashBrosShippuden
             {
                 if (this.attackType == AttackType.Jab)
                 {
-                    this.damage = 9;
-                    this.knockback = 1;
+                    this.damage = 6;
+                    this.knockback = new int[] { 1 };
                     this.spriteLength = 9;
-                    this.attackFrame = new int[] { 3 };
+                    this.attackFrame = new int[] { 4 };
+                    this.hitboxHeight = 50;
+                    this.hitboxWidth = 32;
+                    this.hitboxYOffset = new int[] { 12 };
+                    this.hitboxXOffset = new int[] { 45 };
+                }
+                else if (this.attackType == AttackType.SideSmash)
+                {
+                    this.damage = 13;
+                    this.knockback = new int[] { 1 };
+                    this.knockup = 2;
+                    this.spriteLength = 8;
+                    this.attackFrame = new int[] { 4 };
+                    this.hitboxHeight = 24;
+                    this.hitboxWidth = 50;
+                    this.hitboxYOffset = new int[] { 40 };
+                    this.hitboxXOffset = new int[] { 5 };
                 }
                 else if (this.attackType == AttackType.Special)
                 {
-                    this.damage = 13;
-                    this.knockback = 2;
-                    this.spriteLength = 8;
-                    this.attackFrame = new int[] { 4 };
+                    this.damage = 6;
+                    this.knockback = new int[] { 2, 2, 2, 2, 2 };
+                    this.knockup = 1;
+                    this.spriteLength = 25;
+                    this.attackFrame = new int[] { 15, 17, 19, 21, 23 };
+                    this.hitboxHeight = 45;
+                    this.hitboxWidth = 30;
+                    this.hitboxYOffset = new int[] { 20, 20, 20, 20, 20 };
+                    this.hitboxXOffset = new int[] { 0, 0, 0, 0, 0 };
+                    this.dx = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8 };
+                }
+                else if (this.attackType == AttackType.SideSpecial)
+                {
+                    this.spriteLength = 9;
+                    this.createProjectile = true;
+                    this.attackFrame = new int[] { 6 };
                 }
             }
             if (character == "King")
@@ -331,7 +373,8 @@ namespace SmashBrosShippuden
                 if (this.attackType == AttackType.Jab)
                 {
                     this.damage = 15;
-                    this.knockback = 3;
+                    this.knockback = new int[] { 3 };
+                    this.knockup = 1;
                     this.spriteLength = 6;
                     this.attackFrame = new int[] { 5 };
                     this.hitboxHeight = 50;
@@ -351,34 +394,17 @@ namespace SmashBrosShippuden
                 if (this.attackType == AttackType.Jab)
                 {
                     this.damage = 8;
-                    this.knockback = 1;
+                    this.knockback = new int[] { 1 };
                     this.spriteLength = 7;
                     this.attackFrame = new int[] { 4 };
                 }
                 else if (this.attackType == AttackType.Special)
                 {
                     this.damage = 9;
-                    this.knockback = 2;
+                    this.knockback = new int[] { 2, -2 };
+                    this.knockup = 1;
                     this.spriteLength = 8;
                     this.attackFrame = new int[] { 3, 7 };
-                }
-            }
-
-            if (character == "Shrek")
-            {
-                if (this.attackType == AttackType.Jab)
-                {
-                    this.damage = 10;
-                    this.knockback = 1;
-                    this.spriteLength = 6;
-                    this.attackFrame = new int[] { 3 };
-                }
-                else if (this.attackType == AttackType.Special)
-                {
-                    this.damage = 15;
-                    this.knockback = 2;
-                    this.spriteLength = 8;
-                    this.attackFrame = new int[] { 4 };
                 }
             }
 
@@ -387,7 +413,7 @@ namespace SmashBrosShippuden
                 if (this.attackType == AttackType.Jab)
                 {
                     this.damage = 6;
-                    this.knockback = 1;
+                    this.knockback = new int[] { 1 };
                     this.spriteLength = 4;
                     this.attackFrame = new int[] { 2 };
                     this.hitboxHeight = 6;
@@ -398,7 +424,8 @@ namespace SmashBrosShippuden
                 else if (this.attackType == AttackType.SideSmash)
                 {
                     this.damage = 10;
-                    this.knockback = 2;
+                    this.knockback = new int[] { 2 };
+                    this.knockup = 2;
                     this.spriteLength = 4;
                     this.attackFrame = new int[] { 2 };
                     this.hitboxHeight = 8;
@@ -470,11 +497,36 @@ namespace SmashBrosShippuden
         {
             if (this.dx != null && currentFrame < this.dx.Length)
             {
-                return this.dx[currentFrame];
+                if (this.direction == "Right")
+                {
+                    return this.dx[currentFrame];
+                }
+                else
+                {
+                    return -1 * this.dx[currentFrame];
+                }
+                
             }
             else 
             {
                 return 0;
+            }
+        }
+
+        public int getKnockback(int currentFrame)
+        {
+            int frameIndex = Array.IndexOf(this.attackFrame, currentFrame);
+            if (frameIndex == -1)
+            {
+                throw new Exception("getKnockback called outside of attack frame!");
+            }
+            else if (direction == "Right")
+            {
+                return this.knockback[frameIndex];
+            }
+            else
+            {
+                return -1 * this.knockback[frameIndex];
             }
         }
     }

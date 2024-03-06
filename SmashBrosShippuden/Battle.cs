@@ -32,6 +32,7 @@ namespace SmashBrosShippuden
         string[] direction = new string[4] { "Right", "Right", "Left", "Left" };
 
         Song[] backgroundMusic = new Song[3];
+        int song = 0;
         int displayWidth;
         int displayHeight;
         Random NumberGenerator = new Random();
@@ -104,8 +105,8 @@ namespace SmashBrosShippuden
                 finalDestination = Content.Load<Texture2D>("stageSonic");
                 background = Content.Load<Texture2D>("backgroundsonic");
                 backgroundMusic[0] = Content.Load<Song>("musicsonic1");
-                backgroundMusic[1] = Content.Load<Song>("musicsonic1");
-                backgroundMusic[2] = Content.Load<Song>("musicsonic1");
+                backgroundMusic[1] = Content.Load<Song>("musicsonic2");
+                backgroundMusic[2] = Content.Load<Song>("musicsonic3");
             }
             //loading mario stage
             if (this.stageIndex == 5)
@@ -173,6 +174,8 @@ namespace SmashBrosShippuden
                     }
                 }
             }
+
+            this.song = NumberGenerator.Next(0, backgroundMusic.Length);
         }
 
         public override void Update(GamePadState[] gamePad, GameTime gameTime)
@@ -250,8 +253,18 @@ namespace SmashBrosShippuden
                 }
             }
 
+            if (MediaPlayer.State != MediaState.Playing && backgroundMusic.Length > 0)
+            {
+                song += 1;
 
-            //correcting hitboxes, only character not adjusted here is blastoise
+                if (song >= backgroundMusic.Length)
+                {
+                    song = 0;
+                }
+
+                MediaPlayer.Play(backgroundMusic[song]);
+            }
+
             if (counter == 7200)
             {
                 this.complete = true;
@@ -329,15 +342,7 @@ namespace SmashBrosShippuden
                         {
                             if (attackHitbox.Intersects(PlayerPicBox[j]))
                             {
-                                if (attack.direction == "Left")
-                                {
-                                    PlayerClass[j].getDamage(attack.damage + NumberGenerator.Next(-3, 4), -(attack.knockback));
-                                }
-                                else
-                                {
-                                    PlayerClass[j].getDamage(attack.damage + NumberGenerator.Next(-3, 4), attack.knockback);
-                                }
-
+                                PlayerClass[j].getDamage(attack.damage + NumberGenerator.Next(-1, 2), playerClass.getKnockback(), attack.knockup);
                                 playerLastHit[j] = i;
                             }
                         }
@@ -353,51 +358,33 @@ namespace SmashBrosShippuden
                         if (intersection(this.projectiles[j].getRectangle(), PlayerPicBox[i], picBoxWidthScaling[i], "Left") || intersection(this.projectiles[j].getRectangle(), PlayerPicBox[i], picBoxWidthScaling[i], "Right"))
                         {
                             //projectile gets destroyed if it hits shadow's shield
-                            if (character[i] == "Shadow" && PlayerClass[i].attack != null && PlayerClass[i].attack.attackType == AttackType.Special)
+                            if (PlayerClass[i].shieldBlock())
                             {
                                 this.projectiles.RemoveAt(j);
                             }
                             else
                             {
                                 //player takes damage from projectile
-                                if (character[this.projectiles[j].player] == "Blastoise")
+                                if (this.projectiles[j].direction == "Left")
                                 {
-                                    playerClass.getDamage(6, 0);
+                                    playerClass.getDamage(this.projectiles[j].damage, -1 * this.projectiles[j].knockback, 1);
                                 }
-                                else if (character[this.projectiles[j].player] == "Pichu")
+                                else
                                 {
-                                    if (direction[i] == "Left")
-                                    {
-                                        playerClass.getDamage(2, 1);
-                                    }
-                                    else if (direction[i] == "Right")
-                                    {
-                                        playerClass.getDamage(2, -1);
-                                    }
+                                    playerClass.getDamage(this.projectiles[j].damage, this.projectiles[j].knockback, 1);
                                 }
-                                else if (character[this.projectiles[j].player] != "Blastoise")
-                                {
-                                    if (this.projectiles[j].direction == "Left")
-                                    {
-                                        playerClass.getDamage(4, -1);
-                                    }
-                                    else
-                                    {
-                                        playerClass.getDamage(4, 1);
-                                    }
-                                    
-                                }
-                                playerLastHit[i] = this.projectiles[j].player;
-                            }
 
-                            //projectile gets destoryed after making contact
-                            if (character[this.projectiles[j].player] == "Blastoise" || (character[this.projectiles[j].player] == "Sasuke" && this.projectiles[j].attackType == AttackType.Special))
-                            {
-                                // persistent projectiles are not destoryed
-                            }
-                            else
-                            {
-                                this.projectiles.RemoveAt(j);
+                                playerLastHit[i] = this.projectiles[j].player;
+
+                                //projectile gets destoryed after making contact
+                                if (character[this.projectiles[j].player] == "Blastoise" || (character[this.projectiles[j].player] == "Sasuke" && this.projectiles[j].attackType == AttackType.Special))
+                                {
+                                    // persistent projectiles are not destroyed
+                                }
+                                else
+                                {
+                                    this.projectiles.RemoveAt(j);
+                                }
                             }
                         }
                     }
@@ -600,6 +587,18 @@ namespace SmashBrosShippuden
                 else
                 {
                     projectileRec = new Rectangle(characterRec.Right + characterRec.Width, characterRec.Y + characterRec.Height / 2, characterRec.Width, characterRec.Height);
+                }
+            }
+
+            else if (character.character == "Metaknight")
+            {
+                if (character.direction == "Left")
+                {
+                    projectileRec = new Rectangle(characterRec.Left - characterRec.Width, characterRec.Y + characterRec.Height, characterRec.Width, characterRec.Height);
+                }
+                else
+                {
+                    projectileRec = new Rectangle(characterRec.Right + characterRec.Width, characterRec.Y + characterRec.Height, characterRec.Width, characterRec.Height);
                 }
             }
 

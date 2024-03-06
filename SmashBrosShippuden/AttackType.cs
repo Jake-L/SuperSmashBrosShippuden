@@ -1,6 +1,6 @@
 ﻿namespace SmashBrosShippuden
 {
-    internal enum AttackType
+    public enum AttackType
     {
         Jab,
         SideSmash,

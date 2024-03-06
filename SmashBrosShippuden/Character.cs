@@ -644,11 +644,19 @@ namespace SmashBrosShippuden
         }
 
         //taking damage
-        public void getDamage(int damage, int newKnockback)
+        public void getDamage(int damage, int newKnockback, int newKnockup)
         {
             //add the damage taken to the players health
             damageTaken += damage;
-            knockup = 2 + Math.Abs(newKnockback) * (2 + damageTaken / 50);
+            if (newKnockup > 0)
+            {
+                knockup = 2 + newKnockup * (2 + damageTaken / 25);
+            }
+            else if (newKnockup < 0)
+            {
+                knockup = -2 + newKnockup * (2 + damageTaken / 25);
+            }
+            
             if (newKnockback > 0)
             {
                 knockback = 2 + newKnockback * (2 + damageTaken / 25);
@@ -688,6 +696,11 @@ namespace SmashBrosShippuden
         public Rectangle getAttackHitboxRectangle()
         {
             return this.attack.getAttackHitbox(counterSprite, this.x, this.y);
+        }
+
+        public int getKnockback()
+        {
+            return this.attack.getKnockback(counterSprite);
         }
 
         public override void Draw(SpriteBatch spriteBatch)
