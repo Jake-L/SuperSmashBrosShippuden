@@ -703,6 +703,12 @@ namespace SmashBrosShippuden
             return this.attack.getKnockback(counterSprite);
         }
 
+        public bool isNewFrame()
+        {
+            return this.counter % this.counterSpriteModifier == 0;
+        }
+
+
         public override void Draw(SpriteBatch spriteBatch)
         {
             base.Draw(spriteBatch);

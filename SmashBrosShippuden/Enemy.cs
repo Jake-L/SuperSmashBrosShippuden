@@ -87,12 +87,9 @@ namespace SmashBrosShippuden
 
         // get all players rectangles
         // used so the AI can "see" other players
-        public void getRec(Rectangle Rec1, Rectangle Rec2, Rectangle Rec3, Rectangle Rec4)
+        public void getRec(Rectangle[] playerPicBox)
         {
-            playerPicBox[0] = Rec1;
-            playerPicBox[1] = Rec2;
-            playerPicBox[2] = Rec3;
-            playerPicBox[3] = Rec4;
+            this.playerPicBox = playerPicBox;
         }
 
         //send the characters rectangle

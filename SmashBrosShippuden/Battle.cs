@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 
@@ -15,7 +16,6 @@ namespace SmashBrosShippuden
         Rectangle[] PlayerPicBox = new Rectangle[4];
         Character[] PlayerClass = new Character[4];
         string[] character = new string[4];
-        int[] picBoxWidthScaling = new int[4];
         int[] playerLastHit = new int[4];
         int[] score = new int[4];
         Boolean player2Bot;
@@ -156,25 +156,6 @@ namespace SmashBrosShippuden
                 }
             }
 
-            for (int i = 0; i < 4; i++)
-            {
-                if (character[i] != null && picBoxWidthScaling[i] == 0)
-                {
-                    if (character[i] == "Knuckles" || character[i] == "Mewtwo" || character[i] == "King" || character[i] == "Sonic" || character[i] == "Pichu" || character[i] == "Charizard")
-                    {
-                        picBoxWidthScaling[i] = (PlayerPicBox[i].Width / 5);
-                    }
-                    else if (character[i] == "Shrek" || character[i] == "Shadow")
-                    {
-                        picBoxWidthScaling[i] = (PlayerPicBox[i].Width / 4);
-                    }
-                    else if (character[i] == "Metaknight" || character[i] == "Kirby" || character[i] == "Mario" || character[i] == "Luigi" || character[i] == "Link")
-                    {
-                        picBoxWidthScaling[i] = (PlayerPicBox[i].Width / 3);
-                    }
-                }
-            }
-
             this.song = NumberGenerator.Next(0, backgroundMusic.Length);
         }
 
@@ -218,6 +199,7 @@ namespace SmashBrosShippuden
             for (int i = 0; i < this.companions.Count; i++)
             {
                 Enemy companion = this.companions[i];
+                companion.getRec(this.PlayerPicBox);
                 companion.Update(gameTime);
                 damage(companion);
 
@@ -327,23 +309,45 @@ namespace SmashBrosShippuden
         {
             if (playerClass != null)
             {
+                Rectangle hitbox = playerClass.getRectangle();
                 Attack attack = playerClass.attack;
                 int i = playerClass.player;
+                List<Character> characters = new List<Character>();
+                characters.AddRange(this.companions);
+                characters.AddRange(this.PlayerClass);
 
                 //deal different amounts of damage based on who the character is
-                if (playerClass.isAttackFrame())
+                if (playerClass.isAttackFrame() || (playerClass.character == "waddle" && playerClass.isNewFrame()))
                 {
-                    Rectangle attackHitbox = playerClass.getAttackHitboxRectangle();
+                    Rectangle attackHitbox = playerClass.character == "waddle" ? playerClass.getRectangle() : playerClass.getAttackHitboxRectangle();
 
                     //check if the players attacks hit anyone
-                    for (int j = 0; j < 4; j++)
+                    foreach (Character target in characters)
                     {
-                        if (j != i && PlayerPicBox[j].IsEmpty == false && !PlayerClass[j].shieldBlock())
+                        if (target != null && target.player != i && !target.shieldBlock())
                         {
-                            if (attackHitbox.Intersects(PlayerPicBox[j]))
+                            if (attackHitbox.Intersects(target.getRectangle()))
                             {
-                                PlayerClass[j].getDamage(attack.damage + NumberGenerator.Next(-1, 2), playerClass.getKnockback(), attack.knockup);
-                                playerLastHit[j] = i;
+                                int damage = playerClass.character == "waddle" ? 1 : attack.damage + NumberGenerator.Next(0, 2);
+                                int knockup = playerClass.character == "waddle" ? 0 : attack.knockup;
+                                int knockback;
+                                if (playerClass.character == "waddle")
+                                {
+                                    if (playerClass.x > target.x)
+                                    {
+                                        knockback = -1;
+                                    }
+                                    else
+                                    {
+                                        knockback = 1;
+                                    }
+                                }
+                                else
+                                {
+                                    knockback = playerClass.getKnockback();
+                                }
+                                target.getDamage(damage, knockback, knockup);
+                                playerLastHit[target.player] = i;
                             }
                         }
                     }
@@ -352,10 +356,10 @@ namespace SmashBrosShippuden
                 // check if any players were hit by projectiles
                 for (int j = 0; j < this.projectiles.Count; j++)
                 {
-                    if (this.projectiles[j].player != i && this.projectiles[j].getRectangle().Intersects(PlayerPicBox[i]))
+                    if (this.projectiles[j].player != i && this.projectiles[j].getRectangle().Intersects(hitbox))
                     {
                         //check if the projectile has hit a character
-                        if (intersection(this.projectiles[j].getRectangle(), PlayerPicBox[i], picBoxWidthScaling[i], "Left") || intersection(this.projectiles[j].getRectangle(), PlayerPicBox[i], picBoxWidthScaling[i], "Right"))
+                        if (intersection(this.projectiles[j].getRectangle(), hitbox, "Left") || intersection(this.projectiles[j].getRectangle(), hitbox, "Right"))
                         {
                             //projectile gets destroyed if it hits shadow's shield
                             if (PlayerClass[i].shieldBlock())
@@ -393,20 +397,20 @@ namespace SmashBrosShippuden
         }
 
         //check if two rectanges intersect
-        public bool intersection(Rectangle rec1, Rectangle rec2, int hitboxCorrection, string direction)
+        public bool intersection(Rectangle rec1, Rectangle rec2, string direction)
         {
             if (rec1.Intersects(rec2))
             {
                 if (direction == "Left")
                 {
-                    if ((rec1.Left > rec2.Left + hitboxCorrection && rec1.Left < rec2.Right - hitboxCorrection) || (rec1.Left + (rec1.Width / 5) > rec2.Left + hitboxCorrection && rec1.Left + (rec1.Width / 5) < rec2.Right - hitboxCorrection))
+                    if ((rec1.Left > rec2.Left && rec1.Left < rec2.Right) || (rec1.Left + (rec1.Width / 5) > rec2.Left && rec1.Left + (rec1.Width / 5) < rec2.Right))
                     {
                         return true;
                     }
                 }
                 if (direction == "Right")
                 {
-                    if ((rec1.Right > rec2.Left + hitboxCorrection && rec1.Right < rec2.Right - hitboxCorrection) || (rec1.Right - (rec1.Width / 5) > rec2.Left + hitboxCorrection && rec1.Right - (rec1.Width / 5) < rec2.Right - hitboxCorrection))
+                    if ((rec1.Right > rec2.Left && rec1.Right < rec2.Right) || (rec1.Right - (rec1.Width / 5) > rec2.Left && rec1.Right - (rec1.Width / 5) < rec2.Right))
                     {
                         return true;
                     }
