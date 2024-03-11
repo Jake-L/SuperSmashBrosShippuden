@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Transactions;
 
@@ -26,8 +27,6 @@ namespace SmashBrosShippuden
         protected int jumpHeight;
         protected int jumpCounter;
         protected int moveSpeed;
-        protected int hitboxWidth;
-        protected int hitboxHeight;
 
         public int damageTaken;
         public Attack attack;
@@ -85,6 +84,12 @@ namespace SmashBrosShippuden
             displaySprite();
             gravity();
             knockbackMethod();
+
+            // move half as fast when jumping
+            if (dy != null)
+            {
+                this.dx -= this.dx / 3;
+            }
 
             if (this.attack != null)
             {
@@ -233,7 +238,7 @@ namespace SmashBrosShippuden
                 counterSpriteModifier = 4;
                 this.hitboxWidth = 26;
                 this.hitboxHeight = 23;
-                this.hitboxYOffset = 13;
+                this.hitboxYOffset = 12;
             }
 
             else if (character == "Kirby")
@@ -453,27 +458,112 @@ namespace SmashBrosShippuden
         public void getInput(GamePadState pad1)
         {
             taunt = false;
+            int newDx = 0;
+            bool newJump = false;
+            AttackType newAttack = AttackType.None;
+            bool newShield = false;
 
+            if (pad1.Triggers.Right > 0.5 && this.dy == null)
+            {
+                newShield = true;
+            }
+
+            if (pad1.Buttons.X == ButtonState.Pressed && Math.Abs(pad1.ThumbSticks.Left.X) > 0.4 && this.spriteAttack[(int)AttackType.SideSpecial] != null)
+            {
+                newAttack = AttackType.SideSpecial;
+            }
+            else if (pad1.Buttons.X == ButtonState.Pressed)
+            {
+                newAttack = AttackType.Special;
+            }
+            else if (pad1.Buttons.A == ButtonState.Pressed && Math.Abs(pad1.ThumbSticks.Left.X) > 0.4 && this.spriteAttack[(int)AttackType.SideSmash] != null)
+            {
+                newAttack = AttackType.SideSmash;
+            }
+            else if (pad1.Buttons.A == ButtonState.Pressed)
+            {
+                newAttack = AttackType.Jab;
+            }
+
+            if (pad1.Buttons.B == ButtonState.Pressed || pad1.Buttons.Y == ButtonState.Pressed) 
+            {
+                newJump = true;
+            }
+
+            if (pad1.ThumbSticks.Left.X < -0.1)
+            {
+                newDx = -1;
+            }
+            else if (pad1.ThumbSticks.Left.X > 0.1)
+            {
+                newDx = 1;
+            }
+            //else if (pad1.DPad.Up == ButtonState.Pressed && character == "Luigi")
+            //{
+            //    taunt = true;
+            //}
+
+            action(newDx, newJump, newAttack, newShield);
+        }
+
+        //control bots
+        public void getInputBots(List<Character> characters)
+        {
+            int newDx = 0;
+            bool newJump = false;
+            AttackType newAttack = AttackType.None;
+            bool newShield = false;
+            int minimumDistance = 999;
+
+            foreach (Character c in characters)
+            {
+                int newDistance = c.x - this.x;
+                if (c.player != this.player && Math.Abs(newDistance) < Math.Abs(minimumDistance))
+                {
+                    minimumDistance = newDistance;
+                }
+            }
+
+            if (minimumDistance > 20 * graphicsScaling)
+            {
+                newDx = 1;
+            }
+            else if (minimumDistance < -20 * graphicsScaling)
+            {
+                newDx = -1;
+            }
+
+
+            // jump if the character is falling
+            if (this.dy < 0)
+            {
+                newJump = true;
+            }
+
+
+            action(newDx, newJump, newAttack, newShield);
+        }
+
+        // transforms input, either from user or from AI, into actual actions
+        // determines which actions are currently permitted before activating them
+        private void action(int newDx, bool newJump, AttackType newAttack, bool newShield)
+        {
             // shield is released based on a counter
-            if (this.isShielding && this.counter >= this.shieldEffect.Length * this.shieldFrameLength - 1)
+            if (!newShield && this.isShielding && this.counter >= this.shieldEffect.Length * this.shieldFrameLength - 1)
             {
                 this.isShielding = false;
             }
-
             // add endlag for releasing the shield
-            if (pad1.Triggers.Right < 0.5 && this.isShielding && this.counter < (this.shieldEffect.Length - 2) * this.shieldFrameLength)
+            if (!newShield && this.isShielding && this.counter < (this.shieldEffect.Length - 2) * this.shieldFrameLength)
             {
                 this.counter = (this.shieldEffect.Length - 2) * this.shieldFrameLength;
             }
-
             // no input processed when attacking or during knockback
-            if (this.attack != null || Math.Abs(knockback) > 2)
+            else if (this.attack != null || Math.Abs(knockback) > 2)
             {
                 this.isShielding = false;
-                return;
             }
-
-            else if (pad1.Triggers.Right > 0.5 && this.dy == null)
+            else if (newShield && this.dy == null)
             {
                 if (!this.isShielding)
                 {
@@ -481,86 +571,28 @@ namespace SmashBrosShippuden
                     this.counter = 0;
                 }
             }
-            else if (pad1.Buttons.X == ButtonState.Pressed && Math.Abs(pad1.ThumbSticks.Left.X) > 0.4 && this.spriteAttack[(int)AttackType.SideSpecial] != null)
+            else if (newAttack != AttackType.None)
             {
-                this.attack = new Attack(this.character, AttackType.SideSpecial, this.direction);
+                this.attack = new Attack(this.character, newAttack, this.direction);
                 counter = 0;
             }
-            else if (pad1.Buttons.X == ButtonState.Pressed)
-            {
-                this.attack = new Attack(this.character, AttackType.Special, this.direction);
-                counter = 0;
-            }
-            else if (pad1.Buttons.A == ButtonState.Pressed && Math.Abs(pad1.ThumbSticks.Left.X) > 0.4 && this.spriteAttack[(int)AttackType.SideSmash] != null)
-            {
-                this.attack = new Attack(this.character, AttackType.SideSmash, this.direction);
-                counter = 0;
-            }
-            else if (pad1.Buttons.A == ButtonState.Pressed)
-            {
-                this.attack = new Attack(this.character, AttackType.Jab, this.direction);
-                counter = 0;
-            }
-            else if ((pad1.Buttons.B == ButtonState.Pressed || pad1.Buttons.Y == ButtonState.Pressed) 
-                && this.jumpCounter > 0
+            else if (newJump && this.jumpCounter > 0
                 // add a counter delay if they multiple jumps so they aren't all used instantly
-                && (this.dy == null || (counter > 30)))
+                && (this.dy == null || counter > 30))
             {
                 this.jumpCounter--;
                 this.dy = -10;
                 counter = 0;
             }
-            else if (pad1.ThumbSticks.Left.X < -0.1)
+            else if (newDx < 0)
             {
                 direction = "Left";
                 dx = -1 * this.moveSpeed;
             }
-            else if (pad1.ThumbSticks.Left.X > 0.1)
+            else if (newDx > 0)
             {
                 direction = "Right";
                 dx = this.moveSpeed;
-            }
-            else if (pad1.DPad.Up == ButtonState.Pressed && character == "Luigi")
-            {
-                taunt = true;
-            }
-
-            // move half as fast when jumping
-            if (dy != null)
-            {
-                this.dx -= this.dx / 3;
-            }
-        }
-
-        //control bots
-        public void getInputBots(int newDX, bool jumping, string newDirection, bool attacking)
-        {
-            if (knockback != 0)
-            {
-                return;
-            }
-            if (dx == 0 && newDX != 0)
-            {
-                taunt = false;
-            }
-
-            dx = newDX;
-
-            if (this.dy == null && this.jumpCounter > 0 && jumping == true)
-            {
-                this.dy = -8;
-                counter = 0;
-                taunt = false;
-                this.jumpCounter--;
-            }
-
-            direction = newDirection;
-
-            if (this.attack == null && attacking == true)
-            {
-                this.attack = new Attack(this.character, AttackType.Jab, this.direction);
-                counter = 0;
-                taunt = false;
             }
         }
 
@@ -613,6 +645,27 @@ namespace SmashBrosShippuden
             {
                 //apply the knockback
                 this.x += knockback;
+
+                if (Math.Abs(knockback) >= 10 || this.rotation != 0.0f)
+                {
+                    Debug.WriteLine(this.rotation);
+                    this.rotation += knockback / 50.0f;
+                    if (this.rotation > 2.0f * Math.PI)
+                    {
+                        this.rotation -= 2.0f * (float)Math.PI;
+                    }
+                    else if (this.rotation < -2.0f * Math.PI)
+                    {
+                        this.rotation += 2.0f * (float)Math.PI;
+                    }
+
+                    if (knockback <= 7 && Math.Abs(this.rotation) < 0.1f)
+                    {
+                        Debug.WriteLine("set knockback to 0");
+                        this.rotation = 0.0f;
+                    }
+                }
+                
 
                 //make the knockback decay over time
                 if (counter % 10 == 0 && knockback > 0)

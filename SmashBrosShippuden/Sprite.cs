@@ -15,7 +15,11 @@ namespace SmashBrosShippuden
         public int x;
         public int y;
         protected int hitboxYOffset = 0;
+        protected int hitboxWidth;
+        protected int hitboxHeight;
         protected int graphicsScaling = 4;
+        protected float rotation = 0f;
+
 
         public Sprite(int x, int y)
         {
@@ -52,12 +56,13 @@ namespace SmashBrosShippuden
 
                 spriteBatch.Draw(
                     texture, 
-                    rectangle, 
-                    null,
-                    Color.White,
-                    0f,
-                    new Vector2(0, 0),
-                    spriteEffects,
+                    new Vector2(x, y - (hitboxHeight * graphicsScaling / 2)), 
+                    null, 
+                    Color.White, 
+                    rotation, 
+                    new Vector2(texture.Width / 2, texture.Height - hitboxHeight / 2 - hitboxYOffset), 
+                    graphicsScaling,
+                    spriteEffects, 
                     0f
                 );
             }

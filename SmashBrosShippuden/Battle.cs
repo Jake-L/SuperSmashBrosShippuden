@@ -145,11 +145,11 @@ namespace SmashBrosShippuden
             if (character[0] != null && character[1] == null && character[2] == null && character[3] == null)
             {
                 player2Bot = true;
-                character[1] = "Shadow";
-                // character[2] = "Kirby";
-                // character[3] = "Sasuke";
+                character[1] = "Metaknight";
+                character[2] = "Kirby";
+                character[3] = "Shadow";
 
-                for (int i = 1; i < 2; i++)
+                for (int i = 1; i < 4; i++)
                 {
                     PlayerClass[i] = new Character(200 * (i + 1), finalDestinationRec.Top, direction[i], i, character[i], displayWidth, displayHeight, finalDestinationRec, stageHeightAdjustment, true);
                     PlayerClass[i].LoadContent(this.content);
@@ -163,13 +163,26 @@ namespace SmashBrosShippuden
         {
             base.Update(gamePad, gameTime);
 
+            List<Character> characters = new List<Character>();
+            for (int i = 0; i < this.companions.Count; i++)
+            {
+                characters.Add(this.companions[i]);
+            }
+            for (int i = 0; i < this.PlayerClass.Length; i++)
+            {
+                if (this.PlayerClass[i] != null)
+                {
+                    characters.Add(this.PlayerClass[i]);
+                }
+            }
+
             for (int i = 0; i < 4; i++)
             {
                 if (character[i] != null)
                 {
                     if (i >= 1 && this.player2Bot)
                     {
-                        // this.controlBot();
+                        PlayerClass[i].getInputBots(characters);
                     }
                     else
                     {
@@ -420,48 +433,6 @@ namespace SmashBrosShippuden
 
         }
 
-        //control the bots
-        private void controlBot()
-        {
-            int dx = 0;
-            bool jump = false;
-            bool attack = false;
-            string direction = "Left";
-
-            //make the bot run towards you
-            if (((PlayerPicBox[1].Left + (PlayerPicBox[1].Width / 2)) >= PlayerPicBox[0].Right) || (PlayerPicBox[1].Left + (PlayerPicBox[1].Width / 2) >= finalDestinationRec.Right))
-            {
-                dx = -3;
-                direction = "Left";
-            }
-            else if (((PlayerPicBox[1].Right - (PlayerPicBox[1].Width / 2)) <= PlayerPicBox[0].Left) || (PlayerPicBox[1].Right - (PlayerPicBox[1].Width / 2) <= finalDestinationRec.Left))
-            {
-                dx = 3;
-                direction = "Right";
-            }
-
-            //make the bot attack
-            if (PlayerPicBox[1].Left > PlayerPicBox[0].Left && PlayerPicBox[1].Left < PlayerPicBox[0].Right)
-            {
-                direction = "Left";
-                attack = true;
-            }
-            else if (PlayerPicBox[1].Right > PlayerPicBox[0].Left && PlayerPicBox[1].Right < PlayerPicBox[0].Right)
-            {
-                direction = "Right";
-                attack = true;
-            }
-
-            //make the bot jump
-            if ((PlayerPicBox[1].Top > finalDestinationRec.Top) || (PlayerPicBox[1].Top - 50 > PlayerPicBox[0].Bottom))
-            {
-                jump = true;
-            }
-
-            //send the bots input to the player class
-            PlayerClass[1].getInputBots(dx, jump, direction, attack);
-        }
-
         //keep scores
         private void lives()
         {
@@ -498,119 +469,7 @@ namespace SmashBrosShippuden
 
         private void createProjectile(Character character, int player)
         {
-            Rectangle characterRec = character.getRectangle();
-            Rectangle projectileRec;
-
-            //Mewtwo fires a projectile
-            if (character.character == "Mewtwo")
-            {
-                if (character.direction == "Left")
-                {
-                    projectileRec = new Rectangle(characterRec.X - (characterRec.Width / 4), characterRec.Y + (characterRec.Height / 4), 10, 10);
-                }
-                else
-                {
-                    projectileRec = new Rectangle(characterRec.X + (characterRec.Width / 4), characterRec.Y + (characterRec.Height / 4), 10, 10);
-                }
-            }
-
-            //Charizard fires a projectile
-            else if (character.character == "Charizard")
-            {
-                if (character.direction == "Left")
-                {
-                    projectileRec = new Rectangle(characterRec.X - (characterRec.Width / 4), characterRec.Y + (characterRec.Height / 4), 10, 10);
-                }
-                else
-                {
-                    projectileRec = new Rectangle(characterRec.X + (characterRec.Width / 4), characterRec.Y + (characterRec.Height / 4), 10, 10);
-                }
-            }
-
-            //Mario and Luigi fire projectiles
-            else if (character.character == "Mario" || character.character == "Luigi")
-            {
-                if (character.direction == "Left")
-                {
-                    projectileRec = new Rectangle(characterRec.X + (characterRec.Width / 4), characterRec.Y + (characterRec.Height / 2), 10, 10);
-                }
-                else
-                {
-                    projectileRec = new Rectangle(characterRec.Right - (characterRec.Width / 4), characterRec.Y + (characterRec.Height / 2), 10, 10);
-                }
-            }
-
-            else if (character.character == "Pichu")
-            {
-                projectileRec = new Rectangle(characterRec.X + (characterRec.Width / 4), characterRec.Y + (characterRec.Height / 4), 10, 10);
-            }
-
-            //blastoise fires a projectile
-            else if (character.character == "Blastoise")
-            {
-                if (character.direction == "Left")
-                {
-                    projectileRec = new Rectangle(characterRec.Left + (characterRec.Width / 4) - (characterRec.Width), characterRec.Y, characterRec.Width, characterRec.Height);
-                }
-                else
-                {
-                    projectileRec = new Rectangle(characterRec.Right - (characterRec.Width / 4), characterRec.Y, characterRec.Width, characterRec.Height);
-                }
-            }
-
-            else if (character.character == "Sasuke" && character.attack.attackType == AttackType.Special)
-            {
-                if (character.direction == "Left")
-                {
-                    projectileRec = new Rectangle(characterRec.Left - 3 * characterRec.Width, characterRec.Y + (characterRec.Height * 5) / 4, characterRec.Width, characterRec.Height);
-                }
-                else
-                {
-                    projectileRec = new Rectangle(characterRec.Right + 3 * characterRec.Width, characterRec.Y + (characterRec.Height * 5) / 4, characterRec.Width, characterRec.Height);
-                }
-            }
-
-            else if (character.character == "Sasuke" && character.attack.attackType == AttackType.SideSpecial)
-            {
-                if (character.direction == "Left")
-                {
-                    projectileRec = new Rectangle(characterRec.Left - characterRec.Width, characterRec.Y + characterRec.Height / 2, characterRec.Width, characterRec.Height);
-                }
-                else
-                {
-                    projectileRec = new Rectangle(characterRec.Right + characterRec.Width, characterRec.Y + characterRec.Height / 2, characterRec.Width, characterRec.Height);
-                }
-            }
-
-            else if (character.character == "Knuckles")
-            {
-                if (character.direction == "Left")
-                {
-                    projectileRec = new Rectangle(characterRec.Left - characterRec.Width, characterRec.Y + characterRec.Height / 2, characterRec.Width, characterRec.Height);
-                }
-                else
-                {
-                    projectileRec = new Rectangle(characterRec.Right + characterRec.Width, characterRec.Y + characterRec.Height / 2, characterRec.Width, characterRec.Height);
-                }
-            }
-
-            else if (character.character == "Metaknight")
-            {
-                if (character.direction == "Left")
-                {
-                    projectileRec = new Rectangle(characterRec.Left - characterRec.Width, characterRec.Y + characterRec.Height, characterRec.Width, characterRec.Height);
-                }
-                else
-                {
-                    projectileRec = new Rectangle(characterRec.Right + characterRec.Width, characterRec.Y + characterRec.Height, characterRec.Width, characterRec.Height);
-                }
-            }
-
-            else
-            {
-                return;
-            }
-
+            Rectangle projectileRec = character.getAttackHitboxRectangle();
             Projectiles p = new Projectiles(projectileRec.X, projectileRec.Y, character.direction, player, character.character, character.attack.attackType);
             p.LoadContent(this.content);
             this.projectiles.Add(p);

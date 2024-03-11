@@ -50,6 +50,8 @@ namespace SmashBrosShippuden
                     this.spriteLength = 5;
                     this.createProjectile = true; 
                     this.attackFrame = new int[] { 4 };
+                    this.hitboxYOffset = new int[] { 14 };
+                    this.hitboxXOffset = new int[] { 16 };
                 }
             }
             if (character == "Luigi")
@@ -67,6 +69,8 @@ namespace SmashBrosShippuden
                     this.spriteLength = 5;
                     this.createProjectile = true;
                     this.attackFrame = new int[] { 4 };
+                    this.hitboxYOffset = new int[] { 14 };
+                    this.hitboxXOffset = new int[] { 15 };
                 }
             }
             if (character == "Mewtwo")
@@ -84,6 +88,8 @@ namespace SmashBrosShippuden
                     this.spriteLength = 4;
                     this.createProjectile = true;
                     this.attackFrame = new int[] { 3 };
+                    this.hitboxYOffset = new int[] { 5 };
+                    this.hitboxXOffset = new int[] { 12 };
                 }
             }
             if (character == "Sonic")
@@ -228,6 +234,8 @@ namespace SmashBrosShippuden
                     this.spriteLength = 20;
                     this.attackFrame = new int[] { 11 };
                     this.createProjectile = true;
+                    this.hitboxYOffset = new int[] { 27 };
+                    this.hitboxXOffset = new int[] { 18 };
                 }
             }
             if (character == "Blastoise")
@@ -283,6 +291,8 @@ namespace SmashBrosShippuden
                     this.spriteLength = 4;
                     this.createProjectile = true;
                     this.attackFrame = new int[] { 2 };
+                    this.hitboxYOffset = new int[] { -2 };
+                    this.hitboxXOffset = new int[] { 35 };
                 }
             }
             if (character == "Kirby")
@@ -366,6 +376,8 @@ namespace SmashBrosShippuden
                     this.spriteLength = 9;
                     this.createProjectile = true;
                     this.attackFrame = new int[] { 6 };
+                    this.hitboxYOffset = new int[] { -5 };
+                    this.hitboxXOffset = new int[] { 31 };
                 }
             }
             if (character == "King")
@@ -374,7 +386,7 @@ namespace SmashBrosShippuden
                 {
                     this.damage = 15;
                     this.knockback = new int[] { 3 };
-                    this.knockup = 1;
+                    this.knockup = 2;
                     this.spriteLength = 6;
                     this.attackFrame = new int[] { 5 };
                     this.hitboxHeight = 50;
@@ -438,12 +450,16 @@ namespace SmashBrosShippuden
                     this.spriteLength = 9;
                     this.attackFrame = new int[] { 4 };
                     this.createProjectile = true;
+                    this.hitboxYOffset = new int[] { -10 };
+                    this.hitboxXOffset = new int[] { 52 };
                 }
                 else if (this.attackType == AttackType.SideSpecial)
                 {
                     this.spriteLength = 4;
                     this.createProjectile = true;
                     this.attackFrame = new int[] { 3 };
+                    this.hitboxYOffset = new int[] { 13 };
+                    this.hitboxXOffset = new int[] { 22 };
                 }
             }
         }
