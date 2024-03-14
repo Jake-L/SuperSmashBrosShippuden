@@ -23,7 +23,7 @@ namespace SmashBrosShippuden
         public bool createCompanion = false;
         public int[] dx;
         public int[] dy;
-        protected int graphicsScaling = 4;
+        protected int graphicsScaling = 3;
 
         public Attack(string character, AttackType attackType, string direction)
         {

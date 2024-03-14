@@ -13,8 +13,8 @@ namespace SmashBrosShippuden
         int closestPlayer;
         Rectangle[] playerPicBox = new Rectangle[4];
 
-        public Enemy(int x, int y, string newDirection, int newPlayer, string newCharacter, int disWidth, int disHeight, Rectangle stage, int stageHeight, bool bot)
-            : base(x, y, newDirection, newPlayer, newCharacter, disWidth, disHeight, stage, stageHeight, bot)
+        public Enemy(int x, int y, string newDirection, int newPlayer, string newCharacter, int disWidth, int disHeight, StageObject[] stageObjects, bool bot)
+            : base(x, y, newDirection, newPlayer, newCharacter, disWidth, disHeight, stageObjects, bot)
         {
             // all logic handled in base class
         }
@@ -78,7 +78,7 @@ namespace SmashBrosShippuden
                     dx = 2;
                 }
 
-                if (rectangle.Top > finalDestinationRec.Top - stageHeightAdjustment)
+                if (rectangle.Top > stageObjects[0].y)
                 {
                     dy = -5;
                 }

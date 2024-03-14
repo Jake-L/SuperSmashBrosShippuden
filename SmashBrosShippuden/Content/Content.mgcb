@@ -187,18 +187,6 @@
 /processorParam:TextureFormat=Color
 /build:backgroundshrek.jpg
 
-#begin backgroundsonic.jpg
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:backgroundsonic.jpg
-
 #begin Blastoise/blastoise001.mp3
 /importer:Mp3Importer
 /processor:SongProcessor
@@ -1329,25 +1317,25 @@
 
 #begin Kirby/kirby001.mp3
 /importer:Mp3Importer
-/processor:SongProcessor
+/processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:Kirby/kirby001.mp3
 
 #begin Kirby/kirby002.mp3
 /importer:Mp3Importer
-/processor:SongProcessor
+/processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:Kirby/kirby002.mp3
 
 #begin Kirby/kirby003.mp3
 /importer:Mp3Importer
-/processor:SongProcessor
+/processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:Kirby/kirby003.mp3
 
 #begin Kirby/kirby004.mp3
 /importer:Mp3Importer
-/processor:SongProcessor
+/processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:Kirby/kirby004.mp3
 
@@ -4197,25 +4185,25 @@
 
 #begin MetaKnight/metaknight001.mp3
 /importer:Mp3Importer
-/processor:SongProcessor
+/processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:MetaKnight/metaknight001.mp3
 
 #begin MetaKnight/metaknight002.mp3
 /importer:Mp3Importer
-/processor:SongProcessor
+/processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:MetaKnight/metaknight002.mp3
 
 #begin MetaKnight/metaknight003.mp3
 /importer:Mp3Importer
-/processor:SongProcessor
+/processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:MetaKnight/metaknight003.mp3
 
 #begin MetaKnight/metaknight004.mp3
 /importer:Mp3Importer
-/processor:SongProcessor
+/processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:MetaKnight/metaknight004.mp3
 
@@ -5305,24 +5293,6 @@
 /processorParam:Quality=Best
 /build:musicshrek1.mp3
 
-#begin musicsonic1.mp3
-/importer:Mp3Importer
-/processor:SongProcessor
-/processorParam:Quality=Best
-/build:musicsonic1.mp3
-
-#begin musicsonic2.mp3
-/importer:Mp3Importer
-/processor:SongProcessor
-/processorParam:Quality=Best
-/build:musicsonic2.mp3
-
-#begin musicsonic3.mp3
-/importer:Mp3Importer
-/processor:SongProcessor
-/processorParam:Quality=Best
-/build:musicsonic3.mp3
-
 #begin Pichu/cloud1.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -5689,6 +5659,42 @@
 /processorParam:TextureFormat=Color
 /build:Sasuke/kunai.png
 
+#begin Sasuke/kunai.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sasuke/kunai.png
+
+#begin Sasuke/sasuke001.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sasuke/sasuke001.wav
+
+#begin Sasuke/sasuke002.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sasuke/sasuke002.wav
+
+#begin Sasuke/sasuke003.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sasuke/sasuke003.wav
+
+#begin Sasuke/sasuke004.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sasuke/sasuke004.wav
+
 #begin Sasuke/sasuke1.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -5700,6 +5706,30 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Sasuke/sasuke1.png
+
+#begin Sasuke/sasuke1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sasuke/sasuke1.png
+
+#begin Sasuke/sasuke2.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sasuke/sasuke2.png
 
 #begin Sasuke/sasuke2.png
 /importer:TextureImporter
@@ -5725,6 +5755,18 @@
 /processorParam:TextureFormat=Color
 /build:Sasuke/sasuke3.png
 
+#begin Sasuke/sasuke3.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sasuke/sasuke3.png
+
 #begin Sasuke/sasuke4.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -5736,6 +5778,30 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Sasuke/sasuke4.png
+
+#begin Sasuke/sasuke4.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sasuke/sasuke4.png
+
+#begin Sasuke/sasukeAttack1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sasuke/sasukeAttack1.png
 
 #begin Sasuke/sasukeAttack1.png
 /importer:TextureImporter
@@ -5761,6 +5827,18 @@
 /processorParam:TextureFormat=Color
 /build:Sasuke/sasukeAttack2.png
 
+#begin Sasuke/sasukeAttack2.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sasuke/sasukeAttack2.png
+
 #begin Sasuke/sasukeAttack3.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -5772,6 +5850,30 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Sasuke/sasukeAttack3.png
+
+#begin Sasuke/sasukeAttack3.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sasuke/sasukeAttack3.png
+
+#begin Sasuke/sasukeAttack4.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sasuke/sasukeAttack4.png
 
 #begin Sasuke/sasukeAttack4.png
 /importer:TextureImporter
@@ -5797,6 +5899,18 @@
 /processorParam:TextureFormat=Color
 /build:Sasuke/sasukeAttack5.png
 
+#begin Sasuke/sasukeAttack5.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sasuke/sasukeAttack5.png
+
 #begin Sasuke/sasukeAttack6.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -5808,6 +5922,30 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Sasuke/sasukeAttack6.png
+
+#begin Sasuke/sasukeAttack6.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sasuke/sasukeAttack6.png
+
+#begin Sasuke/sasukeAttack7.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sasuke/sasukeAttack7.png
 
 #begin Sasuke/sasukeAttack7.png
 /importer:TextureImporter
@@ -5833,6 +5971,18 @@
 /processorParam:TextureFormat=Color
 /build:Sasuke/sasukeAttack8.png
 
+#begin Sasuke/sasukeAttack8.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sasuke/sasukeAttack8.png
+
 #begin Sasuke/sasukeAttack9.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -5844,6 +5994,30 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Sasuke/sasukeAttack9.png
+
+#begin Sasuke/sasukeAttack9.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sasuke/sasukeAttack9.png
+
+#begin Sasuke/sasukeFire1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sasuke/sasukeFire1.png
 
 #begin Sasuke/sasukeFire1.png
 /importer:TextureImporter
@@ -5869,6 +6043,18 @@
 /processorParam:TextureFormat=Color
 /build:Sasuke/sasukeFire2.png
 
+#begin Sasuke/sasukeFire2.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sasuke/sasukeFire2.png
+
 #begin Sasuke/sasukeFire3.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -5880,6 +6066,30 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Sasuke/sasukeFire3.png
+
+#begin Sasuke/sasukeFire3.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sasuke/sasukeFire3.png
+
+#begin Sasuke/sasukeFire4.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sasuke/sasukeFire4.png
 
 #begin Sasuke/sasukeFire4.png
 /importer:TextureImporter
@@ -5905,6 +6115,18 @@
 /processorParam:TextureFormat=Color
 /build:Sasuke/sasukeFire5.png
 
+#begin Sasuke/sasukeFire5.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sasuke/sasukeFire5.png
+
 #begin Sasuke/sasukeHurt.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -5916,6 +6138,30 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Sasuke/sasukeHurt.png
+
+#begin Sasuke/sasukeHurt.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sasuke/sasukeHurt.png
+
+#begin Sasuke/sasukeJump1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sasuke/sasukeJump1.png
 
 #begin Sasuke/sasukeJump1.png
 /importer:TextureImporter
@@ -5941,6 +6187,18 @@
 /processorParam:TextureFormat=Color
 /build:Sasuke/sasukeJumpUp1.png
 
+#begin Sasuke/sasukeJumpUp1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sasuke/sasukeJumpUp1.png
+
 #begin Sasuke/sasukeRun1.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -5952,6 +6210,30 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Sasuke/sasukeRun1.png
+
+#begin Sasuke/sasukeRun1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sasuke/sasukeRun1.png
+
+#begin Sasuke/sasukeRun2.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sasuke/sasukeRun2.png
 
 #begin Sasuke/sasukeRun2.png
 /importer:TextureImporter
@@ -5977,6 +6259,18 @@
 /processorParam:TextureFormat=Color
 /build:Sasuke/sasukeSideSmash1.png
 
+#begin Sasuke/sasukeSideSmash1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sasuke/sasukeSideSmash1.png
+
 #begin Sasuke/sasukeSideSmash2.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -5988,6 +6282,30 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Sasuke/sasukeSideSmash2.png
+
+#begin Sasuke/sasukeSideSmash2.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sasuke/sasukeSideSmash2.png
+
+#begin Sasuke/sasukeSideSmash3.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sasuke/sasukeSideSmash3.png
 
 #begin Sasuke/sasukeSideSmash3.png
 /importer:TextureImporter
@@ -6013,6 +6331,18 @@
 /processorParam:TextureFormat=Color
 /build:Sasuke/sasukeSideSmash4.png
 
+#begin Sasuke/sasukeSideSmash4.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sasuke/sasukeSideSmash4.png
+
 #begin Sasuke/sasukeSideSpecial1.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -6024,6 +6354,30 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Sasuke/sasukeSideSpecial1.png
+
+#begin Sasuke/sasukeSideSpecial1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sasuke/sasukeSideSpecial1.png
+
+#begin Sasuke/sasukeSideSpecial2.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sasuke/sasukeSideSpecial2.png
 
 #begin Sasuke/sasukeSideSpecial2.png
 /importer:TextureImporter
@@ -6049,6 +6403,18 @@
 /processorParam:TextureFormat=Color
 /build:Sasuke/sasukeSideSpecial3.png
 
+#begin Sasuke/sasukeSideSpecial3.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sasuke/sasukeSideSpecial3.png
+
 #begin Sasuke/sasukeSideSpecial4.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -6060,6 +6426,30 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Sasuke/sasukeSideSpecial4.png
+
+#begin Sasuke/sasukeSideSpecial4.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sasuke/sasukeSideSpecial4.png
+
+#begin Sasuke/sasukeSmash1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sasuke/sasukeSmash1.png
 
 #begin Sasuke/sasukeSmash1.png
 /importer:TextureImporter
@@ -6085,6 +6475,18 @@
 /processorParam:TextureFormat=Color
 /build:Sasuke/sasukeSmash2.png
 
+#begin Sasuke/sasukeSmash2.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sasuke/sasukeSmash2.png
+
 #begin Sasuke/sasukeSmash3.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -6096,6 +6498,30 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Sasuke/sasukeSmash3.png
+
+#begin Sasuke/sasukeSmash3.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sasuke/sasukeSmash3.png
+
+#begin Sasuke/sasukeSmash4.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sasuke/sasukeSmash4.png
 
 #begin Sasuke/sasukeSmash4.png
 /importer:TextureImporter
@@ -7407,31 +7833,31 @@
 
 #begin Sonic/sonic001.mp3
 /importer:Mp3Importer
-/processor:SongProcessor
+/processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:Sonic/sonic001.mp3
 
 #begin Sonic/sonic002.mp3
 /importer:Mp3Importer
-/processor:SongProcessor
+/processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:Sonic/sonic002.mp3
 
 #begin Sonic/sonic003.mp3
 /importer:Mp3Importer
-/processor:SongProcessor
+/processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:Sonic/sonic003.mp3
 
 #begin Sonic/sonic004.mp3
 /importer:Mp3Importer
-/processor:SongProcessor
+/processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:Sonic/sonic004.mp3
 
 #begin Sonic/sonic021.mp3
 /importer:Mp3Importer
-/processor:SongProcessor
+/processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:Sonic/sonic021.mp3
 
@@ -8102,6 +8528,48 @@
 /processorParam:TextureFormat=Compressed
 /build:SpriteFont1.spritefont
 
+#begin Stage1/background.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Stage1/background.jpg
+
+#begin Stage1/music1.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Stage1/music1.mp3
+
+#begin Stage1/music2.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Stage1/music2.mp3
+
+#begin Stage1/music3.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Stage1/music3.mp3
+
+#begin Stage1/paltform1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Stage1/paltform1.png
+
 #begin stageicon1.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -8209,18 +8677,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:stageShrek.png
-
-#begin stageSonic.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:stageSonic.png
 
 #begin Symbol/blastoiseSymbol.png
 /importer:TextureImporter

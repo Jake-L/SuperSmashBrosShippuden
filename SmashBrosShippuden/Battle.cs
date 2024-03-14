@@ -21,13 +21,11 @@ namespace SmashBrosShippuden
         Boolean player2Bot;
 
         //background images
-        Texture2D finalDestination;
         Texture2D background;
-        Rectangle finalDestinationRec;
         Rectangle backgroundRec;
+        StageObject[] stageObjects;
 
         int stageIndex;
-        int stageHeightAdjustment = 0;
 
         string[] direction = new string[4] { "Right", "Right", "Left", "Left" };
 
@@ -59,69 +57,21 @@ namespace SmashBrosShippuden
         public override void LoadContent(ContentManager Content)
         {
             base.LoadContent(Content);
-
-            //loading final destination stage
-            if (this.stageIndex == 0)
-            {
-                finalDestination = Content.Load<Texture2D>("background1");
-                background = Content.Load<Texture2D>("background");
-                backgroundMusic[0] = Content.Load<Song>("backgroundMusic1");
-                backgroundMusic[1] = Content.Load<Song>("backgroundMusic2");
-                backgroundMusic[2] = Content.Load<Song>("backgroundMusic3");
-                stageHeightAdjustment = finalDestinationRec.Height / 5;
-            }
-            //loading shrek stage
-            if (this.stageIndex == 1)
-            {
-                finalDestination = Content.Load<Texture2D>("stageShrek");
-                background = Content.Load<Texture2D>("backgroundshrek");
-                backgroundMusic[0] = Content.Load<Song>("musicshrek1");
-                backgroundMusic[1] = Content.Load<Song>("musicshrek1");
-                backgroundMusic[2] = Content.Load<Song>("musicshrek1");
-            }
-            //loading pokemon stadium 1 stage
-            if (this.stageIndex == 2)
-            {
-                finalDestination = Content.Load<Texture2D>("backgroundpokemon2");
-                background = Content.Load<Texture2D>("backgroundpokemon3");
-                backgroundMusic[0] = Content.Load<Song>("musicpokemon1");
-                backgroundMusic[1] = Content.Load<Song>("musicpokemon1");
-                backgroundMusic[2] = Content.Load<Song>("musicpokemon1");
-                stageHeightAdjustment = finalDestinationRec.Height / 5;
-            }
-            //loading pokemon stadium 2 stage
-            if (this.stageIndex == 3)
-            {
-                finalDestination = Content.Load<Texture2D>("backgroundpokemon");
-                background = Content.Load<Texture2D>("backgroundpokemon3");
-                backgroundMusic[0] = Content.Load<Song>("musicpokemon4");
-                backgroundMusic[1] = Content.Load<Song>("musicpokemon5");
-                backgroundMusic[2] = Content.Load<Song>("musicpokemon6");
-                stageHeightAdjustment = finalDestinationRec.Height / 5;
-            }
-            //loading sonic stage
-            if (this.stageIndex == 4)
-            {
-                finalDestination = Content.Load<Texture2D>("stageSonic");
-                background = Content.Load<Texture2D>("backgroundsonic");
-                backgroundMusic[0] = Content.Load<Song>("musicsonic1");
-                backgroundMusic[1] = Content.Load<Song>("musicsonic2");
-                backgroundMusic[2] = Content.Load<Song>("musicsonic3");
-            }
-            //loading mario stage
-            if (this.stageIndex == 5)
-            {
-                finalDestination = Content.Load<Texture2D>("stageMario");
-                background = Content.Load<Texture2D>("backgroundmario");
-                backgroundMusic[0] = Content.Load<Song>("musicmario1");
-                backgroundMusic[1] = Content.Load<Song>("musicmario2");
-                backgroundMusic[2] = Content.Load<Song>("musicmario3");
-                stageHeightAdjustment = (displayHeight / 5) + 10;
-            }
-
-            //create the stage rectangle
-            finalDestinationRec = new Rectangle(displayWidth / 10, (displayHeight * 2) / 5, displayWidth - (displayWidth / 5), (int)((displayWidth - (displayWidth / 5)) * ((float)finalDestination.Height / finalDestination.Width)));
+            this.stageIndex = 1;
+            background = Content.Load<Texture2D>("Stage" + this.stageIndex + "/background");
             backgroundRec = new Rectangle(0, 0, displayWidth, displayHeight);
+
+            backgroundMusic[0] = Content.Load<Song>("Stage" + this.stageIndex + "/music1");
+            backgroundMusic[1] = Content.Load<Song>("Stage" + this.stageIndex + "/music2");
+            backgroundMusic[2] = Content.Load<Song>("Stage" + this.stageIndex + "/music3");
+
+            if (stageIndex == 1)
+            {
+                this.stageObjects = new StageObject[1];
+                this.stageObjects[0] = new StageObject(1000, 900, "Stage" + this.stageIndex + "/paltform1");
+                this.stageObjects[0].LoadContent(Content);
+            }
+            
 
             this.content = Content;
 
@@ -130,12 +80,12 @@ namespace SmashBrosShippuden
             {
                 if (character[k] != null)
                 {
-                    PlayerClass[k] = new Character(200 * (k + 1), finalDestinationRec.Top, direction[k], k, character[k], displayWidth, displayHeight, finalDestinationRec, stageHeightAdjustment, false);
+                    PlayerClass[k] = new Character(200 * (k + 1), 200, direction[k], k, character[k], displayWidth, displayHeight, this.stageObjects, false);
                     PlayerClass[k].LoadContent(content);
 
                     if (character[k] == "Pichu")
                     {
-                        Enemy companion = new Enemy(PlayerPicBox[k].X - 50, PlayerPicBox[k].Y, "Left", k, character[k], displayWidth, displayHeight, finalDestinationRec, stageHeightAdjustment, true);
+                        Enemy companion = new Enemy(PlayerPicBox[k].X - 50, PlayerPicBox[k].Y, "Left", k, character[k], displayWidth, displayHeight, this.stageObjects, true);
                         companion.LoadContent(this.content);
                         this.companions.Add(companion);
                     }
@@ -151,7 +101,7 @@ namespace SmashBrosShippuden
 
                 for (int i = 1; i < 4; i++)
                 {
-                    PlayerClass[i] = new Character(200 * (i + 1), finalDestinationRec.Top, direction[i], i, character[i], displayWidth, displayHeight, finalDestinationRec, stageHeightAdjustment, true);
+                    PlayerClass[i] = new Character(200 * (i + 1), 200, direction[i], i, character[i], displayWidth, displayHeight, this.stageObjects, true);
                     PlayerClass[i].LoadContent(this.content);
                 }
             }
@@ -202,7 +152,7 @@ namespace SmashBrosShippuden
                     }
                     else if (PlayerClass[i].createCompanion())
                     {
-                        Enemy companion = new Enemy(PlayerPicBox[i].X + (PlayerPicBox[i].Width / 2), PlayerPicBox[i].Y + (PlayerPicBox[i].Height / 2), "Left", i, "waddle", displayWidth, displayHeight, finalDestinationRec, stageHeightAdjustment, true);
+                        Enemy companion = new Enemy(PlayerPicBox[i].X + (PlayerPicBox[i].Width / 2), PlayerPicBox[i].Y + (PlayerPicBox[i].Height / 2), "Left", i, "waddle", displayWidth, displayHeight, this.stageObjects, true);
                         companion.LoadContent(this.content);
                         this.companions.Add(companion);
                     }
@@ -243,7 +193,7 @@ namespace SmashBrosShippuden
             {
                 if (this.PlayerClass[i] != null && this.isOffscreen(this.PlayerClass[i]))
                 {
-                    this.PlayerClass[i] = new Character(200 * (i + 1), finalDestinationRec.Top, "Right", i, character[i], displayWidth, displayHeight, finalDestinationRec, stageHeightAdjustment, false);
+                    this.PlayerClass[i] = new Character(200 * (i + 1), 200, "Right", i, character[i], displayWidth, displayHeight, this.stageObjects, false);
                     this.PlayerClass[i].LoadContent(this.content);
                 }
             }
@@ -270,7 +220,11 @@ namespace SmashBrosShippuden
         {
             //backgrounds
             _spriteBatch.Draw(background, backgroundRec, Color.White);
-            _spriteBatch.Draw(finalDestination, finalDestinationRec, Color.White);
+
+            foreach (StageObject obj in stageObjects) 
+            {
+                obj.Draw(_spriteBatch);
+            }
 
             //display a timer at the top of the screen
             if ((((7200 - counter) / 60) % 60) > 9)
@@ -455,7 +409,7 @@ namespace SmashBrosShippuden
 
                                 if (character[i] == "Pichu")
                                 {
-                                    Enemy companion = new Enemy(PlayerPicBox[i].X - 50, PlayerPicBox[i].Y, "Left", i, character[i], displayWidth, displayHeight, finalDestinationRec, stageHeightAdjustment, true);
+                                    Enemy companion = new Enemy(PlayerPicBox[i].X - 50, PlayerPicBox[i].Y, "Left", i, character[i], displayWidth, displayHeight, this.stageObjects, true);
                                     companion.LoadContent(this.content);
                                     this.companions.Insert(0, companion);
                                 }

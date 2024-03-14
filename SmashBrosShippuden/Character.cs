@@ -59,9 +59,9 @@ namespace SmashBrosShippuden
 
         public Rectangle seriesSymbolRec;
         public Rectangle LivesIconRec;
-        protected Rectangle finalDestinationRec = new Rectangle();
+        protected StageObject[] stageObjects;
 
-        public Character(int x, int y, string newDirection, int newPlayer, string newCharacter, int disWidth, int disHeight, Rectangle stage, int stageHeight, bool bot)
+        public Character(int x, int y, string newDirection, int newPlayer, string newCharacter, int disWidth, int disHeight, StageObject[] stageObjects, bool bot)
             : base(x, y)
         {
             direction = newDirection;
@@ -69,8 +69,7 @@ namespace SmashBrosShippuden
             character = newCharacter;
             displayWidth = disWidth;
             displayHeight = disHeight;
-            finalDestinationRec = stage;
-            stageHeightAdjustment = stageHeight;
+            this.stageObjects = stageObjects;
             isBot = bot;
 
             Initialize();
@@ -93,20 +92,21 @@ namespace SmashBrosShippuden
 
             if (this.attack != null)
             {
-                this.x += this.attack.getDx(this.counterSprite);
+                this.dx = this.attack.getDx(this.counterSprite);
+                
             }
-            else 
-            {
-                this.x += dx;
-            }
+
+            // rather than constantly adjust dx and dy formulas by graphics scaling,
+            // instead just handle it when the movement is applied
+            this.x += dx * this.graphicsScaling / 3;
             
             if (this.attack != null)
             {
-                this.y += this.attack.getDy(this.counterSprite);
+                this.y += this.attack.getDy(this.counterSprite) * graphicsScaling / 3;
             }
             else if (dy != null)
             {
-                this.y += (int)dy;
+                this.y += (int)dy * graphicsScaling / 3;
             }
             
             dx = 0;
@@ -345,10 +345,10 @@ namespace SmashBrosShippuden
                 seriesSymbol = content.Load<Texture2D>("Symbol/" + character + "Symbol");
                 seriesSymbolRec = new Rectangle(175 + (player * 200), ((displayHeight * 4) / 5) - 25, (seriesSymbol.Width * 3) / 4, (seriesSymbol.Height * 3) / 4);
 
-                //for (int i = 0; i < spriteSounds.Length; i++)
-                //{
-                //    spriteSounds[i] = content.Load<SoundEffect>(character + "/" + character.ToLower() + "00" + (i + 1));
-                //}
+                for (int i = 0; i < spriteSounds.Length; i++)
+                {
+                    spriteSounds[i] = content.Load<SoundEffect>(character + "/" + character.ToLower() + "00" + (i + 1));
+                }
 
                 //for (int i = 0; i < spriteSounds2.Length; i++)
                 //{
@@ -390,11 +390,8 @@ namespace SmashBrosShippuden
                     if (Array.IndexOf(this.attack.attackFrame, counterSprite) > -1 && counter % counterSpriteModifier == 0)
                     {
                         this.attackFrame = true;
+                        spriteSounds[NumberGenerator.Next(0, spriteSounds.Length - 1)].Play();
                     }
-                    //if (counterSprite == 2 && counter % counterSpriteModifier == 1 && (character != "Shrek" && character != "King") || (counterSprite == 5 && counter % counterSpriteModifier == 1 && character == "King"))
-                    //{
-                    //    spriteSounds[NumberGenerator.Next(0, 4)].Play();
-                    //}
                 }
                 else
                 {
@@ -606,7 +603,7 @@ namespace SmashBrosShippuden
             }
 
             // dy set to null when they land
-            else if (this.y >= finalDestinationRec.Top + stageHeightAdjustment && this.y <= finalDestinationRec.Top + stageHeightAdjustment + 15 && this.x >= finalDestinationRec.Left && this.x <= finalDestinationRec.Right)
+            else if (this.isOnPlatform())
             {
                 this.jumpCounter = 1;
                 this.dy = null;
@@ -618,11 +615,11 @@ namespace SmashBrosShippuden
             //make characters fall if they are not on a platform
             else if (this.dy == null)
             {
-                this.dy = 4;
+                this.dy = 3;
             }
 
 
-            if (this.dy != null && this.dy < 8)
+            if (this.dy != null && this.dy < 8 && this.attack == null)
             {
                 //make the height of the jump decay over time
                 if (counter % 3 == 0)
@@ -630,6 +627,27 @@ namespace SmashBrosShippuden
                     this.dy += 1;
                 }
             }
+        }
+
+        public bool isOnPlatform()
+        {
+            // don't lose momentum when jumping upwards
+            if (this.dy < 0)
+            {
+                return false;
+            }
+
+            foreach (StageObject obj in this.stageObjects)
+            {
+                Rectangle rec = obj.getRectangle();
+                if (this.x < rec.Right && this.x > rec.Left && this.y > rec.Top - this.graphicsScaling && this.y < rec.Top + this.graphicsScaling * 3)
+                {
+                    this.y = rec.Top + this.graphicsScaling;
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         //send the players direction
@@ -649,7 +667,7 @@ namespace SmashBrosShippuden
                 if (Math.Abs(knockback) >= 10 || this.rotation != 0.0f)
                 {
                     Debug.WriteLine(this.rotation);
-                    this.rotation += knockback / 50.0f;
+                    this.rotation += knockback / 40.0f;
                     if (this.rotation > 2.0f * Math.PI)
                     {
                         this.rotation -= 2.0f * (float)Math.PI;
@@ -659,9 +677,8 @@ namespace SmashBrosShippuden
                         this.rotation += 2.0f * (float)Math.PI;
                     }
 
-                    if (knockback <= 7 && Math.Abs(this.rotation) < 0.1f)
+                    if (knockback <= 7 && (Math.Abs(this.rotation) < 0.2f || Math.Abs(this.rotation) > 2.0 * (float)Math.PI - 0.2f))
                     {
-                        Debug.WriteLine("set knockback to 0");
                         this.rotation = 0.0f;
                     }
                 }
@@ -772,7 +789,7 @@ namespace SmashBrosShippuden
                     this.x - this.shieldEffect[0].Width * graphicsScaling / 2,
                     this.y + (-1 * this.hitboxHeight / 2 - this.shieldEffect[0].Height / 2) * graphicsScaling,
                     this.shieldEffect[0].Width * graphicsScaling,
-                    this.shieldEffect[0].Height * 4
+                    this.shieldEffect[0].Height * graphicsScaling
                 );
                 spriteBatch.Draw(this.shieldEffect[(counter / this.shieldFrameLength) % this.shieldEffect.Length], shieldEffectRec, Color.White);
             }
