@@ -26,6 +26,7 @@ namespace SmashBrosShippuden
         Texture2D[] PichuCloud = new Texture2D[4];
 
         Texture2D PichuCloudDraw;
+        Random NumberGenerator = new Random();
 
         Rectangle cloudRec;
 
@@ -64,6 +65,7 @@ namespace SmashBrosShippuden
             {
                 damage = 4;
                 knockback = 1;
+                this.spriteScaling = (this.graphicsScaling * 2) / 3;
             }
             else if (character == "Sasuke" && this.attackType == AttackType.SideSpecial)
             {
@@ -83,17 +85,6 @@ namespace SmashBrosShippuden
                 Pichu();
             }
 
-            else if (character == "Sasuke" && this.attackType == AttackType.Special)
-            {
-                if (counter >= 40)
-                {
-                    this.x = -999;
-                }
-                else
-                {
-                    this.texture = Projectile[counter / 8];
-                }
-            }
             else
             {
                 texture = Projectile[(gameTime.TotalGameTime.Milliseconds / 100) % spriteLength];
@@ -106,6 +97,12 @@ namespace SmashBrosShippuden
                 {
                     this.x += dx;
                 }
+
+                if (this.dy != null)
+                {
+                    this.y += (int)this.dy;
+                }
+                
 
                 if (new[] { "Mario", "Luigi", "Mewtwo" }.Contains(character))
                 {
@@ -140,8 +137,15 @@ namespace SmashBrosShippuden
             else if (character == "Sasuke" && this.attackType == AttackType.Special)
             {
                 spriteLength = 5;
-                damage = 1;
+                damage = 3;
                 knockback = 1;
+                dx = 8;
+                dy = (int?)NumberGenerator.NextInt64(0, 3) - 1;
+                if (dy != 0)
+                {
+                    this.rotation = (float)dy / dx;
+                    Debug.WriteLine(this.rotation);
+                }
             }
 
             else if (character == "Sasuke" && this.attackType == AttackType.SideSpecial)

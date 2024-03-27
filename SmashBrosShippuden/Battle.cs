@@ -80,7 +80,7 @@ namespace SmashBrosShippuden
             {
                 if (character[k] != null)
                 {
-                    PlayerClass[k] = new Character(200 * (k + 1), 200, direction[k], k, character[k], displayWidth, displayHeight, this.stageObjects, false);
+                    PlayerClass[k] = new Character(400 * (k + 1), 300, direction[k], k, character[k], displayWidth, displayHeight, this.stageObjects, false);
                     PlayerClass[k].LoadContent(content);
 
                     if (character[k] == "Pichu")
@@ -101,7 +101,7 @@ namespace SmashBrosShippuden
 
                 for (int i = 1; i < 4; i++)
                 {
-                    PlayerClass[i] = new Character(200 * (i + 1), 200, direction[i], i, character[i], displayWidth, displayHeight, this.stageObjects, true);
+                    PlayerClass[i] = new Character(400 * (i + 1), 300, direction[i], i, character[i], displayWidth, displayHeight, this.stageObjects, true);
                     PlayerClass[i].LoadContent(this.content);
                 }
             }
@@ -193,7 +193,7 @@ namespace SmashBrosShippuden
             {
                 if (this.PlayerClass[i] != null && this.isOffscreen(this.PlayerClass[i]))
                 {
-                    this.PlayerClass[i] = new Character(200 * (i + 1), 200, "Right", i, character[i], displayWidth, displayHeight, this.stageObjects, false);
+                    this.PlayerClass[i] = new Character(400 * (i + 1), 300, "Right", i, character[i], displayWidth, displayHeight, this.stageObjects, false);
                     this.PlayerClass[i].LoadContent(this.content);
                 }
             }
@@ -348,7 +348,7 @@ namespace SmashBrosShippuden
                                 playerLastHit[i] = this.projectiles[j].player;
 
                                 //projectile gets destoryed after making contact
-                                if (character[this.projectiles[j].player] == "Blastoise" || (character[this.projectiles[j].player] == "Sasuke" && this.projectiles[j].attackType == AttackType.Special))
+                                if (character[this.projectiles[j].player] == "Blastoise")
                                 {
                                     // persistent projectiles are not destroyed
                                 }

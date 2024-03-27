@@ -6,6 +6,7 @@
         SideSmash,
         Special,
         SideSpecial,
+        DownSpecial,
         Aerial,
         None,
     }

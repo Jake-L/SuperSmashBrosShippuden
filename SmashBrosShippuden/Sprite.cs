@@ -19,6 +19,7 @@ namespace SmashBrosShippuden
         protected int hitboxHeight;
         // graphics scaling must be multiple of 3!!
         protected int graphicsScaling = 3;
+        protected int spriteScaling = 3;
         protected float rotation = 0f;
 
 
@@ -38,10 +39,10 @@ namespace SmashBrosShippuden
             if (texture != null)
             {
                 this.rectangle = new Rectangle(
-                    this.x - (this.texture.Width * graphicsScaling) / 2,
-                    this.y + (this.hitboxYOffset - this.texture.Height) * graphicsScaling,
-                    this.texture.Width * graphicsScaling,
-                    this.texture.Height * graphicsScaling
+                    this.x - (this.texture.Width * spriteScaling) / 2,
+                    this.y + (this.hitboxYOffset - this.texture.Height) * spriteScaling,
+                    this.texture.Width * spriteScaling,
+                    this.texture.Height * spriteScaling
                 );
 
                 SpriteEffects spriteEffects;
@@ -57,12 +58,12 @@ namespace SmashBrosShippuden
 
                 spriteBatch.Draw(
                     texture, 
-                    new Vector2(x, y - (hitboxHeight * graphicsScaling / 2)), 
+                    new Vector2(x, y - (hitboxHeight * spriteScaling / 2)), 
                     null, 
                     Color.White, 
                     rotation, 
-                    new Vector2(texture.Width / 2, texture.Height - hitboxHeight / 2 - hitboxYOffset), 
-                    graphicsScaling,
+                    new Vector2(texture.Width / 2, texture.Height - hitboxHeight / 2 - hitboxYOffset),
+                    spriteScaling,
                     spriteEffects, 
                     0f
                 );

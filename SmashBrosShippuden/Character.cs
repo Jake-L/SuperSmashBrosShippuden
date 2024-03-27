@@ -26,6 +26,7 @@ namespace SmashBrosShippuden
         protected int spriteJumpLength;
         protected int jumpHeight;
         protected int jumpCounter;
+        protected int maxJumpCounter;
         protected int moveSpeed;
 
         public int damageTaken;
@@ -43,7 +44,7 @@ namespace SmashBrosShippuden
 
         //all the sprites
         Texture2D[] spriteRun;
-        Texture2D[][] spriteAttack = new Texture2D[4][];
+        Texture2D[][] spriteAttack = new Texture2D[5][];
         Texture2D[] spriteIdle;
         Texture2D[] spriteJump;
         Texture2D[] spriteJumpUp;
@@ -123,6 +124,7 @@ namespace SmashBrosShippuden
         private void Initialize()
         {
             this.spriteJumpLength = 1;
+            this.maxJumpCounter = 2;
 
             if (character == "Mario")
             {
@@ -250,6 +252,7 @@ namespace SmashBrosShippuden
                 this.hitboxWidth = 24;
                 this.hitboxHeight = 22;
                 this.hitboxYOffset = 13;
+                this.maxJumpCounter = 5;
             }
 
             else if (character == "King")
@@ -264,12 +267,15 @@ namespace SmashBrosShippuden
 
             else if (character == "Sasuke")
             {
-                this.moveSpeed = 5;
-                spriteIdleLength = 4;
-                spriteRunLength = 2;
+                this.moveSpeed = 6;
+                spriteIdleLength = 6;
+                spriteRunLength = 6;
+                this.spriteJumpLength = 2;
                 counterSpriteModifier = 8;
-                this.hitboxWidth = 14;
-                this.hitboxHeight = 34;
+                this.hitboxWidth = 26;
+                this.hitboxHeight = 50;
+                this.hitboxYOffset = 6;
+                this.spriteScaling = (this.graphicsScaling * 2) / 3;
             }
 
             else if (character == "waddle")
@@ -282,7 +288,7 @@ namespace SmashBrosShippuden
                 this.hitboxHeight = 30;
             }
 
-            this.jumpCounter = 1;
+            this.jumpCounter = this.maxJumpCounter;
         }
 
         public override void LoadContent(ContentManager content)
@@ -291,8 +297,8 @@ namespace SmashBrosShippuden
             spriteIdle = new Texture2D[spriteIdleLength];
             this.spriteJump = new Texture2D[spriteJumpLength];
             this.spriteJumpUp = new Texture2D[spriteJumpLength];
-            AttackType[] attackTypes = new AttackType[4] { AttackType.Jab, AttackType.SideSmash, AttackType.Special,  AttackType.SideSpecial };
-            string[] attackLabels = new string[4] { "Smash", "SideSmash", "Attack", "SideSpecial" };
+            AttackType[] attackTypes = new AttackType[5] { AttackType.Jab, AttackType.SideSmash, AttackType.Special, AttackType.SideSpecial, AttackType.DownSpecial };
+            string[] attackLabels = new string[5] { "Smash", "SideSmash", "Attack", "SideSpecial", "DownSpecial" };
 
             // load the characters attack sprites
             foreach (AttackType a in attackTypes)
@@ -469,6 +475,10 @@ namespace SmashBrosShippuden
             {
                 newAttack = AttackType.SideSpecial;
             }
+            else if (pad1.Buttons.X == ButtonState.Pressed && pad1.ThumbSticks.Left.Y < -0.4 && this.spriteAttack[(int)AttackType.DownSpecial] != null)
+            {
+                newAttack = AttackType.DownSpecial;
+            }
             else if (pad1.Buttons.X == ButtonState.Pressed)
             {
                 newAttack = AttackType.Special;
@@ -605,7 +615,7 @@ namespace SmashBrosShippuden
             // dy set to null when they land
             else if (this.isOnPlatform())
             {
-                this.jumpCounter = 1;
+                this.jumpCounter = this.maxJumpCounter;
                 this.dy = null;
                 if (this.knockup <= 4)
                 {

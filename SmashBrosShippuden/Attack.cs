@@ -23,7 +23,7 @@ namespace SmashBrosShippuden
         public bool createCompanion = false;
         public int[] dx;
         public int[] dy;
-        protected int graphicsScaling = 3;
+        protected int spriteScaling = 3;
 
         public Attack(string character, AttackType attackType, string direction)
         {
@@ -422,16 +422,18 @@ namespace SmashBrosShippuden
 
             if (character == "Sasuke")
             {
+                this.spriteScaling = 2;
+
                 if (this.attackType == AttackType.Jab)
                 {
                     this.damage = 6;
                     this.knockback = new int[] { 1 };
                     this.spriteLength = 4;
                     this.attackFrame = new int[] { 2 };
-                    this.hitboxHeight = 6;
-                    this.hitboxWidth = 10;
-                    this.hitboxYOffset = new int[] { 23 };
-                    this.hitboxXOffset = new int[] { 13 };
+                    this.hitboxHeight = 10;
+                    this.hitboxWidth = 24;
+                    this.hitboxYOffset = new int[] { 31 };
+                    this.hitboxXOffset = new int[] { 18 };
                 }
                 else if (this.attackType == AttackType.SideSmash)
                 {
@@ -440,18 +442,18 @@ namespace SmashBrosShippuden
                     this.knockup = 2;
                     this.spriteLength = 4;
                     this.attackFrame = new int[] { 2 };
-                    this.hitboxHeight = 8;
-                    this.hitboxWidth = 12;
-                    this.hitboxYOffset = new int[] { 23 };
+                    this.hitboxHeight = 14;
+                    this.hitboxWidth = 30;
+                    this.hitboxYOffset = new int[] { 30 };
                     this.hitboxXOffset = new int[] { 12 };
                 }
                 else if (this.attackType == AttackType.Special)
                 {
-                    this.spriteLength = 9;
-                    this.attackFrame = new int[] { 4 };
+                    this.spriteLength = 21;
+                    this.attackFrame = new int[] { 11, 13, 15, 17, 19 };
                     this.createProjectile = true;
-                    this.hitboxYOffset = new int[] { -10 };
-                    this.hitboxXOffset = new int[] { 52 };
+                    this.hitboxYOffset = new int[] { 8, 8, 8, 8, 8 };
+                    this.hitboxXOffset = new int[] { 30, 30, 30, 30, 30 };
                 }
                 else if (this.attackType == AttackType.SideSpecial)
                 {
@@ -460,6 +462,19 @@ namespace SmashBrosShippuden
                     this.attackFrame = new int[] { 3 };
                     this.hitboxYOffset = new int[] { 13 };
                     this.hitboxXOffset = new int[] { 22 };
+                }
+                else if (this.attackType == AttackType.DownSpecial)
+                {
+                    this.damage = 7;
+                    this.knockback = new int[] { 1, 1, 3 };
+                    this.knockup = 2;
+                    this.spriteLength = 32;
+                    this.attackFrame = new int[] { 16, 20, 25 };
+                    this.hitboxHeight = 36;
+                    this.hitboxWidth = 40;
+                    this.hitboxYOffset = new int[] { 20, 20, 26 };
+                    this.hitboxXOffset = new int[] { 0, 0, 10 };
+                    this.dx = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 8, 8, 8, 8, 8, 8, 8, 4, 0, 0, 0 };
                 }
             }
         }
@@ -476,18 +491,18 @@ namespace SmashBrosShippuden
                 int xAdjustment;
                 if (this.direction == "Right")
                 {
-                    xAdjustment = (this.hitboxXOffset[frameIndex] - this.hitboxWidth / 2) * graphicsScaling;
+                    xAdjustment = (this.hitboxXOffset[frameIndex] - this.hitboxWidth / 2) * spriteScaling;
                 }
                 else
                 {
-                    xAdjustment = (-1 * this.hitboxXOffset[frameIndex] - this.hitboxWidth / 2) * graphicsScaling;
+                    xAdjustment = (-1 * this.hitboxXOffset[frameIndex] - this.hitboxWidth / 2) * spriteScaling;
                 }
 
                 return new Rectangle(
                     playerX + xAdjustment,
-                    playerY - (this.hitboxYOffset[frameIndex] + this.hitboxHeight / 2) * graphicsScaling,
-                    this.hitboxWidth * graphicsScaling,
-                    this.hitboxHeight * graphicsScaling
+                    playerY - (this.hitboxYOffset[frameIndex] + this.hitboxHeight / 2) * spriteScaling,
+                    this.hitboxWidth * spriteScaling,
+                    this.hitboxHeight * spriteScaling
                 );
             }
         }
